@@ -6,11 +6,8 @@ using UnityEngine;
 
 namespace Kocmoc
 {
-    public class Grid<T>
+    public class Grid<T> : GridBase
     {
-        public Vector2Int dimensions { get; private set; }
-        public float cellSize;
-
         private T[] cells;
 
         #region Cell setters
@@ -179,19 +176,13 @@ namespace Kocmoc
         }
         #endregion
 
-        public Grid(Vector2Int dimensions, float cellSize = 0)
+        public Grid(Vector2Int dimensions, float cellSize = 0) : base(dimensions, cellSize)
         {
-            this.dimensions = dimensions;
-            this.cellSize = cellSize;
-
             cells = new T[dimensions.x * dimensions.y];
         }
 
-        public Grid(Vector2Int dimensions, T defaultValue, float cellSize = 0)
+        public Grid(Vector2Int dimensions, T defaultValue, float cellSize = 0) : base(dimensions, cellSize)
         {
-            this.dimensions = dimensions;
-            this.cellSize = cellSize;
-
             cells = new T[dimensions.x * dimensions.y];
             for (int i = 0; i < cells.Length; i++) cells[i] = defaultValue; 
         }
