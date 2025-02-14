@@ -15,7 +15,5 @@ namespace Kocmoc
                 return p_instance;
             }
         }
-
-        public Material unlitDefaultMaterial;
     }
 }

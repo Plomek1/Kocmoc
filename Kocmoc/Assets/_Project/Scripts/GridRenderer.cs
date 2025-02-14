@@ -1,3 +1,4 @@
+using com.cyborgAssets.inspectorButtonPro;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,25 +6,39 @@ namespace Kocmoc
 {
     public class GridRenderer : MonoBehaviour
     {
-        public GridBase gridToDraw = null;
-        private bool render = true;
+        [HideInInspector] public bool rendering { get; private set; }
 
         [SerializeField] private DrawType drawType;
+        [SerializeField] private bool renderOnStart;
+        [Space(20)]
+
+        [Header("Sprite Rendering")]
+        [SerializeField] private Transform spritesRoot;
+        [SerializeField] private Sprite cellSprite;
+        [Space(10)]
 
         [Header("Line rendering")]
         [SerializeField] private Color lineColor;
-        private LineRenderer lineRenderer;
+        [Space(20)]
 
+        private List<GameObject> cellSprites;
+        private GridBase gridToDraw = null;
+        private LineRenderer lineRenderer;
+        
         void Start()
         {
             lineRenderer = gameObject.GetComponent<LineRenderer>();
-            SetGrid(new Grid<int>(new Vector2Int(10, 10), cellSize: 1));
+            lineRenderer.material.color = lineColor;
+            cellSprites = new List<GameObject>();
+            SetGrid(new Grid<int>(new Vector2Int(12, 9), cellSize: 1));
+
+            if (renderOnStart && gridToDraw != null)
+                StartRendering();
         }
 
         void Update()
         {
-            if (!render || gridToDraw == null) return;
-
+            if (!rendering || gridToDraw == null) return;
             lineRenderer.startWidth = Camera.main.orthographicSize * 0.005f;
         }
 
@@ -37,35 +52,71 @@ namespace Kocmoc
                 case DrawType.LINES:
                     UpdateLineRenderer();
                     break;
+                case DrawType.SPRITES:
+                    UpdateSprites();
+                    break;
             }
+        }
+
+        [ProPlayButton]
+        public void ToggleRendering()
+        {
+            if (rendering) StopRendering();
+            else           StartRendering();
         }
 
         public void StartRendering()
         {
-            if (render) return;
-            
+            if (rendering || gridToDraw == null) return;
             switch (drawType)
             {
                 case DrawType.LINES:
                     lineRenderer.enabled = true;
                     break;
+                case DrawType.SPRITES:
+                    spritesRoot.gameObject.SetActive(true);
+                    break;
             }
 
-            render = true;
+            rendering = true;
         }
 
         public void StopRendering()
         {
-            if (!render) return;
+            if (!rendering) return;
 
             switch (drawType)
             {
                 case DrawType.LINES:
-                    lineRenderer.enabled = true;
+                    lineRenderer.enabled = false;
+                    break;
+                case DrawType.SPRITES:
+                    spritesRoot.gameObject.SetActive(false);
                     break;
             }
 
-            render = false;
+            rendering = false;
+        }
+
+        private void UpdateSprites()
+        {
+            int cellCount = gridToDraw.cellCount;
+
+            for (int i = 0; i < cellCount; i++)
+            {
+                Vector2 spritePos = gridToDraw.GetGridPosition(i, true);
+
+                if(cellSprites.Count > i)
+                    cellSprites[i].transform.position = spritePos;
+                else
+                {
+                    GameObject sprite = new GameObject($"CellSprite{i}");
+                    sprite.transform.SetParent(spritesRoot);
+                    sprite.transform.localPosition = spritePos;
+                    sprite.AddComponent<SpriteRenderer>().sprite = cellSprite;
+                    cellSprites.Add(sprite);
+                }   
+            }
         }
 
         private void UpdateLineRenderer()
