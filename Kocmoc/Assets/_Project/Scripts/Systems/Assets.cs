@@ -1,3 +1,4 @@
+using Kocmoc.Gameplay;
 using UnityEngine;
 
 namespace Kocmoc
@@ -15,5 +16,8 @@ namespace Kocmoc
                 return p_instance;
             }
         }
+
+        [Header("Prefabs")]
+        public Ship shipPrefab;
     }
 }

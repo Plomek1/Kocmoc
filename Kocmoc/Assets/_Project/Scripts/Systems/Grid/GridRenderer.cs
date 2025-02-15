@@ -1,5 +1,6 @@
 using com.cyborgAssets.inspectorButtonPro;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Kocmoc
@@ -8,7 +9,7 @@ namespace Kocmoc
     {
         [HideInInspector] public bool rendering { get; private set; }
 
-        [SerializeField] private DrawType drawType;
+        [SerializeField] private RenderType drawType;
         [SerializeField] private bool renderOnStart;
         [Space(20)]
 
@@ -21,8 +22,9 @@ namespace Kocmoc
         [SerializeField] private Color lineColor;
         [Space(20)]
 
-        private List<GameObject> cellSprites;
         private GridBase gridToDraw = null;
+        private List<GameObject> cellSprites;
+        private SpriteRenderer repeatingSprite;
         private LineRenderer lineRenderer;
         
         void Start()
@@ -30,7 +32,7 @@ namespace Kocmoc
             lineRenderer = gameObject.GetComponent<LineRenderer>();
             lineRenderer.material.color = lineColor;
             cellSprites = new List<GameObject>();
-            SetGrid(new Grid<int>(new Vector2Int(12, 9), cellSize: 1));
+            SetGrid(new Grid<int>(new Vector2Int(7, 3), startingValue: 5,  cellSize: 1, centered: true));
 
             if (renderOnStart && gridToDraw != null)
                 StartRendering();
@@ -49,11 +51,14 @@ namespace Kocmoc
 
             switch (drawType)
             {
-                case DrawType.LINES:
+                case RenderType.Lines:
                     UpdateLineRenderer();
                     break;
-                case DrawType.SPRITES:
+                case RenderType.Sprites:
                     UpdateSprites();
+                    break;
+                case RenderType.SpritesRepeating:
+                    UpdateRepeatingSprite();
                     break;
             }
         }
@@ -70,10 +75,13 @@ namespace Kocmoc
             if (rendering || gridToDraw == null) return;
             switch (drawType)
             {
-                case DrawType.LINES:
+                case RenderType.Lines:
                     lineRenderer.enabled = true;
                     break;
-                case DrawType.SPRITES:
+                case RenderType.Sprites:
+                    spritesRoot.gameObject.SetActive(true);
+                    break;
+                case RenderType.SpritesRepeating:
                     spritesRoot.gameObject.SetActive(true);
                     break;
             }
@@ -87,10 +95,13 @@ namespace Kocmoc
 
             switch (drawType)
             {
-                case DrawType.LINES:
+                case RenderType.Lines:
                     lineRenderer.enabled = false;
                     break;
-                case DrawType.SPRITES:
+                case RenderType.Sprites:
+                    spritesRoot.gameObject.SetActive(false);
+                    break;
+                case RenderType.SpritesRepeating:
                     spritesRoot.gameObject.SetActive(false);
                     break;
             }
@@ -102,9 +113,10 @@ namespace Kocmoc
         {
             int cellCount = gridToDraw.cellCount;
 
-            for (int i = 0; i < cellCount; i++)
+            for (int i = 0; i < gridToDraw.cellCount; i++)
             {
-                Vector2 spritePos = gridToDraw.GetGridPosition(i, true);
+                int cellIndex = gridToDraw.centered ? gridToDraw.CenterInput(i) : i;
+                Vector2 spritePos = gridToDraw.GetCellPosition(cellIndex, true);
 
                 if(cellSprites.Count > i)
                     cellSprites[i].transform.position = spritePos;
@@ -119,23 +131,37 @@ namespace Kocmoc
             }
         }
 
+        private void UpdateRepeatingSprite()
+        {
+            if (!repeatingSprite)
+            {
+                repeatingSprite = spritesRoot.AddComponent<SpriteRenderer>();
+                repeatingSprite.sprite = cellSprite;
+                repeatingSprite.drawMode = SpriteDrawMode.Tiled;
+            }
+            Vector2 gridCenter = gridToDraw.centered ? Vector2.zero: gridToDraw.worldSize * .5f;
+            repeatingSprite.transform.localPosition = gridCenter;
+            repeatingSprite.size = gridToDraw.size;
+        }
+
         private void UpdateLineRenderer()
         {
             List<Vector3> positions = new List<Vector3>();
 
-            float gridWidth  = gridToDraw.dimensions.x * gridToDraw.cellSize;
-            float gridHeight = gridToDraw.dimensions.y * gridToDraw.cellSize;
+            float gridWidth  = gridToDraw.size.x * gridToDraw.cellSize;
+            float gridHeight = gridToDraw.size.y * gridToDraw.cellSize;
 
             Vector2 nextPos = (Vector2)transform.position;
+            if (gridToDraw.centered) nextPos -= gridToDraw.worldSize * .5f;
             positions.Add(nextPos);
 
             int polarity = 1;
-            for (int x = 0; x <= gridToDraw.dimensions.x; x++)
+            for (int x = 0; x <= gridToDraw.size.x; x++)
             {
                 nextPos += new Vector2(0, gridHeight) * polarity;
                 positions.Add(nextPos);
 
-                if (x < gridToDraw.dimensions.x)
+                if (x < gridToDraw.size.x)
                 {
                     nextPos += new Vector2(gridToDraw.cellSize, 0);
                     positions.Add(nextPos);
@@ -146,12 +172,12 @@ namespace Kocmoc
 
             int verticalDirection = polarity;
 
-            for (int y = 0; y <= gridToDraw.dimensions.y; y++)
+            for (int y = 0; y <= gridToDraw.size.y; y++)
             {
                 nextPos += new Vector2(gridWidth, 0) * polarity;
                 positions.Add(nextPos);
 
-                if (y < gridToDraw.dimensions.y)
+                if (y < gridToDraw.size.y)
                 {
                     nextPos += new Vector2(0, gridToDraw.cellSize * verticalDirection);
                     positions.Add(nextPos);
@@ -164,10 +190,11 @@ namespace Kocmoc
             lineRenderer.SetPositions(positions.ToArray());
         }
         
-        public enum DrawType
+        public enum RenderType
         {
-            LINES,
-            SPRITES
+            Lines,
+            Sprites,
+            SpritesRepeating
         }
     }
 }
