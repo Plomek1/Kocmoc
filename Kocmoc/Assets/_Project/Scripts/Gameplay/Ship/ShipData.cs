@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Kocmoc.Gameplay
 {
-    public class ShipData : MonoBehaviour
+    public class ShipData : ScriptableObject
     {
         public Grid<ShipCellData> grid;
     }
