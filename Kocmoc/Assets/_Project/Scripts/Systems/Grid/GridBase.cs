@@ -15,13 +15,7 @@ namespace Kocmoc
         public float cellSize { get; private set; }
 
         #region Cell position getters
-        public Vector2 GetCellPosition(int index, bool centerOfCell = false)
-        {
-            Vector2 cellPosition = (Vector2)IndexToCoordinates(index) * cellSize;
-            Vector2 halfCellSize = Vector2.one * cellSize * .5f;
-            if (centered) cellPosition -= halfCellSize;
-            return centerOfCell ? cellPosition + halfCellSize : cellPosition;
-        }
+        public Vector2 GetCellPosition(int index, bool centerOfCell = false) => GetCellPosition(IndexToCoordinates(index), centerOfCell);
 
         public Vector2 GetCellPosition(Vector2Int coordinates, bool centerOfCell = false)
         {
@@ -34,19 +28,13 @@ namespace Kocmoc
         public Vector2 GetCellPositionLimited(int index, bool centerOfCell = false)
         {
             LimitInput(index, out int limitedIndex);
-            Vector2 cellPosition = (Vector2)IndexToCoordinates(limitedIndex) * cellSize;
-            Vector2 halfCellSize = Vector2.one * cellSize * .5f;
-            if (centered) cellPosition -= halfCellSize;
-            return centerOfCell ? cellPosition + halfCellSize : cellPosition;
+            return GetCellPosition(IndexToCoordinates(limitedIndex), centerOfCell);
         }
 
         public Vector2 GetCellPositionLimited(Vector2Int coordinates, bool centerOfCell = false)
         {
             LimitInput(coordinates, out Vector2Int limitedCoordinates);
-            Vector2 cellPosition = (Vector2)limitedCoordinates * cellSize;
-            Vector2 halfCellSize = Vector2.one * cellSize * .5f;
-            if (centered) cellPosition -= halfCellSize;
-            return centerOfCell ? cellPosition + halfCellSize : cellPosition;
+            return GetCellPosition(limitedCoordinates, centerOfCell);
         }
         #endregion
 
