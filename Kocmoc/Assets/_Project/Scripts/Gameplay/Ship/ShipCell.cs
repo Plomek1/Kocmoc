@@ -1,19 +1,15 @@
 using UnityEngine;
 
-namespace Kocmoc
+namespace Kocmoc.Gameplay
 {
     public class ShipCell : MonoBehaviour
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-        
-        }
+        ShipCellData data;
 
-        // Update is called once per frame
-        void Update()
+        public void Init(ShipCellData data)
         {
-        
+            this.data = data;
+            Debug.Log(data.prefab);
         }
     }
 }

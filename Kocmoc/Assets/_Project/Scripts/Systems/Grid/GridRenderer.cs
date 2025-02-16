@@ -7,10 +7,9 @@ namespace Kocmoc
 {
     public class GridRenderer : MonoBehaviour
     {
-        [HideInInspector] public bool rendering { get; private set; }
+        public bool rendering { get; private set; }
 
         [SerializeField] private RenderType drawType;
-        [SerializeField] private bool renderOnStart;
         [Space(20)]
 
         [Header("Sprite Rendering")]
@@ -26,16 +25,13 @@ namespace Kocmoc
         private List<GameObject> cellSprites;
         private SpriteRenderer repeatingSprite;
         private LineRenderer lineRenderer;
-        
+
+        private bool initialized;
+
         void Start()
         {
-            lineRenderer = gameObject.GetComponent<LineRenderer>();
-            lineRenderer.material.color = lineColor;
-            cellSprites = new List<GameObject>();
-            SetGrid(new Grid<int>(new Vector2Int(7, 3), startingValue: 5,  cellSize: 1, centered: true));
-
-            if (renderOnStart && gridToDraw != null)
-                StartRendering();
+            if (initialized) return;
+            Init();
         }
 
         void Update()
@@ -44,9 +40,20 @@ namespace Kocmoc
             lineRenderer.startWidth = Camera.main.orthographicSize * 0.005f;
         }
 
+        private void Init()
+        {
+            if (initialized) return;
+
+            lineRenderer = gameObject.GetComponent<LineRenderer>();
+            lineRenderer.material.color = lineColor;
+            cellSprites = new List<GameObject>();
+            initialized = true;
+        }
+
         public void SetGrid(GridBase grid)
         {
             if (grid == null) return;
+            if (!initialized) Init();
             gridToDraw = grid;
 
             switch (drawType)

@@ -4,7 +4,7 @@ namespace Kocmoc.Gameplay
 {
     public static class ShipSpawner
     {
-        const int SHIP_GRID_SIZE = 3;
+        const int SHIP_GRID_SIZE = 31;
 
         public static Ship SpawnShip(ShipCellData[] cells, Vector2 position)
         {
@@ -14,7 +14,6 @@ namespace Kocmoc.Gameplay
             ShipData shipData = (ShipData)ScriptableObject.CreateInstance(typeof(ShipData));
             shipData.grid = CreateShipGrid(cells);
             ship.Init(shipData);
-            Debug.Log(cells.Length);
             return ship;
         }
 

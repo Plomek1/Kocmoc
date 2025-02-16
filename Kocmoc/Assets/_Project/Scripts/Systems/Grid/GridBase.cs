@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Kocmoc
 {
+    [System.Serializable]
     public class GridBase
     {
         public Vector2Int size { get; private set; }

@@ -6,18 +6,29 @@ namespace Kocmoc.Gameplay
     {
         public ShipData shipData;
 
+        private GridRenderer gridRenderer;
+
         public void Init(ShipData shipData)
         {
             this.shipData = shipData;
 
-            Debug.Log(shipData.grid.cellCount);
-
             for (int i = shipData.grid.firstCell; i < shipData.grid.lastCell; i++)
             {
                 ShipCellData cell = shipData.grid.GetCell(i);
-                if (!cell) continue;
+                if (cell == null) continue;
                 Instantiate(cell.prefab, shipData.grid.GetCellPosition(i), Quaternion.identity, transform);
             }
+
+            gridRenderer = GetComponentInChildren<GridRenderer>();
+            gridRenderer.SetGrid(shipData.grid);
+            gridRenderer.StartRendering();
+
+            Camera.main.GetComponent<CameraDrag>().SetTarget(transform);
+        }
+
+        private void FixedUpdate()
+        {
+            transform.position += Vector3.up * Time.deltaTime * 5;
         }
     }
 }

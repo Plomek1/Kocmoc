@@ -149,7 +149,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cells:
-  - {fileID: 11400000, guid: 4bd2988960372b64cac7bbba1f205b7a, type: 2}
+  - blueprint: {fileID: 11400000, guid: 4c9bc1aadea21be4789273e6ee07a8d7, type: 2}
+    coordinates: {x: 0, y: 0}
+    health: 0
+  - blueprint: {fileID: 11400000, guid: 924c085561f034d47917d4cae374ee6f, type: 2}
+    coordinates: {x: 1, y: 0}
+    health: 0
+  - blueprint: {fileID: 11400000, guid: 924c085561f034d47917d4cae374ee6f, type: 2}
+    coordinates: {x: -1, y: 0}
+    health: 0
 --- !u!4 &504425343
 Transform:
   m_ObjectHideFlags: 0
@@ -159,7 +167,7 @@ Transform:
   m_GameObject: {fileID: 504425341}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.067229845, y: -0.023071416, z: -0.051489085}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -177,6 +185,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -246,7 +255,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.0744037, g: 0.074792065, b: 0.0754717, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -302,6 +311,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b29c99546fa55b54c8f534564412fd0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0, z: -10}
+  bounds: {x: 10, y: 10, z: 0}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0

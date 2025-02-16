@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8b7eb56b391a874b984468a83896035, type: 3}
-  m_Name: ControlPanel
+  m_Script: {fileID: 11500000, guid: 7ca7edfbf147a3a4186769a42e3f924b, type: 3}
+  m_Name: ControlCellBlueprint
   m_EditorClassIdentifier: 
-  prefab: {fileID: 147940390550124972, guid: e8ba1a8e2be6bba4d88218cd13c09515, type: 3}
-  coordinates: {x: 0, y: 0}
-  health: 0
+  prefab: {fileID: 4365332631223097924, guid: 5309af4a20a888d43974c95b8c66b579, type: 3}

@@ -18,7 +18,6 @@ namespace Kocmoc
         public void SetCell(Vector2Int coordinates, T value)
         {
             if (centered) coordinates = UncenterInput(coordinates);
-            Debug.Log(coordinates);
             if (!ValidateInput(coordinates)) return;
             SetCellRaw(coordinates, value);
         }
