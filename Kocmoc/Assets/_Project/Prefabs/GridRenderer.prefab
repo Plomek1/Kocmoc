@@ -78,9 +78,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawType: 0
-  renderOnStart: 1
   spritesRoot: {fileID: 2952655714465908666}
   cellSprite: {fileID: 21300000, guid: 296f747e5f0eec14f831c85ee2e6d762, type: 3}
+  lineWidth: 1
   lineColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!120 &2738776097011608468
 LineRenderer:
@@ -106,7 +106,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bf4fd690db97fa54b85a70e23bf87d79, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

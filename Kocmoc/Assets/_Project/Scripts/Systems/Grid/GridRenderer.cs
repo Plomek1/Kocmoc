@@ -18,6 +18,7 @@ namespace Kocmoc
         [Space(10)]
 
         [Header("Line rendering")]
+        [SerializeField] private float lineWidth = 1;
         [SerializeField] private Color lineColor;
         [Space(20)]
 
@@ -37,7 +38,7 @@ namespace Kocmoc
         void Update()
         {
             if (!rendering || gridToDraw == null) return;
-            lineRenderer.startWidth = Camera.main.orthographicSize * 0.005f;
+            lineRenderer.startWidth = Camera.main.orthographicSize * 0.001f * lineWidth;
         }
 
         private void Init()
@@ -178,6 +179,7 @@ namespace Kocmoc
             }
 
             int verticalDirection = polarity;
+            polarity = -1;
 
             for (int y = 0; y <= gridToDraw.size.y; y++)
             {

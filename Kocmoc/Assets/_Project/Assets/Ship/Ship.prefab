@@ -56,11 +56,35 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2194552192971101485, guid: cbaf318c23e561a4793f9d76e11ea05a, type: 3}
       propertyPath: drawType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2194552192971101485, guid: cbaf318c23e561a4793f9d76e11ea05a, type: 3}
+      propertyPath: lineWidth
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2194552192971101485, guid: cbaf318c23e561a4793f9d76e11ea05a, type: 3}
+      propertyPath: lineColor.a
+      value: 0.14117648
+      objectReference: {fileID: 0}
+    - target: {fileID: 2194552192971101485, guid: cbaf318c23e561a4793f9d76e11ea05a, type: 3}
+      propertyPath: lineColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2194552192971101485, guid: cbaf318c23e561a4793f9d76e11ea05a, type: 3}
+      propertyPath: lineColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2194552192971101485, guid: cbaf318c23e561a4793f9d76e11ea05a, type: 3}
+      propertyPath: lineColor.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2194552192971101485, guid: cbaf318c23e561a4793f9d76e11ea05a, type: 3}
       propertyPath: renderOnStart
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2738776097011608468, guid: cbaf318c23e561a4793f9d76e11ea05a, type: 3}
+      propertyPath: m_SortingOrder
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6202699641706718786, guid: cbaf318c23e561a4793f9d76e11ea05a, type: 3}
       propertyPath: m_Name

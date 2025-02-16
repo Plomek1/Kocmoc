@@ -26,9 +26,9 @@ namespace Kocmoc.Gameplay
             Camera.main.GetComponent<CameraDrag>().SetTarget(transform);
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
-            transform.position += Vector3.up * Time.deltaTime * 5;
+            //transform.position += Vector3.up * Time.deltaTime * 5;
         }
     }
 }
