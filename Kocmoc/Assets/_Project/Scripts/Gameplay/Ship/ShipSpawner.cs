@@ -8,7 +8,6 @@ namespace Kocmoc.Gameplay
 
         public static Ship SpawnShip(ShipCellData[] cells, Vector2 position)
         {
-
             Ship ship = GameObject.Instantiate(Assets.Instance.shipPrefab, position, Quaternion.identity);
             
             ShipData shipData = (ShipData)ScriptableObject.CreateInstance(typeof(ShipData));

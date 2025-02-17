@@ -1,13 +1,17 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Kocmoc
 {
     public class Grid<T> : GridBase
     {
-        private GridCell<T>[] cells;
+        private bool[] occupied;
+        private Dictionary<int, GridCell<T>> cells;
 
         #region Cell setters
+        public GridCell<T>[] GetCells() => cells.Values.ToArray();
+
         public void SetCell(int index, T value)
         {
             if (centered) index = UncenterInput(index);
@@ -54,7 +58,7 @@ namespace Kocmoc
 
         public T GetCellLimited(int index)
         {
-            if (centered) index= UncenterInput(index);
+            if (centered) index = UncenterInput(index);
             LimitInput(index, out int limitedIndex);
             return GetCellRaw(limitedIndex);
         }
@@ -68,22 +72,52 @@ namespace Kocmoc
         #endregion
 
         #region Raw getters and setters
-        private T GetCellRaw(int index) => cells[index].data;
-        private T GetCellRaw(Vector2Int coordinates) => cells[CoordinatesToIndex(coordinates)].data;
+        private T GetCellRaw(int index) => occupied[index] ? cells[index].data : default;
+        private T GetCellRaw(Vector2Int coordinates) => GetCellRaw(CoordinatesToIndex(coordinates));
 
-        private void SetCellRaw(int index, T value) => cells[index].SetData(value);
-        private void SetCellRaw(Vector2Int coordinates, T value) => cells[CoordinatesToIndex(coordinates)].SetData(value);
+        private void SetCellRaw(int index, T value)
+        {
+            if (object.Equals(value, default(T)) && occupied[index])
+            {
+                cells.Remove(index);
+                occupied[index] = false;
+                return;
+            }
+
+            if (occupied[index])
+            {
+                cells[index].SetData(value);
+                return;
+            }
+            Vector2Int coordinates = IndexToCoordinates(index, alreadyUncenter: true);
+            cells.Add(index, new GridCell<T>(coordinates, value));
+            occupied[index] = true;
+        }
+        private void SetCellRaw(Vector2Int coordinates, T value) => SetCellRaw(CoordinatesToIndex(coordinates), value);
         #endregion
 
-        public Grid(Vector2Int size, T startingValue = default, float cellSize = 1, bool centered = false) : base(size, cellSize, centered)
+        public bool IsOccupied(int index) => occupied[index];
+        public bool IsOccupied(Vector2Int coordinates) => occupied[CoordinatesToIndex(coordinates)];
+
+        public Grid (Vector2Int size, float cellSize = 1, bool centered = false) : base(size, cellSize, centered)
         {
-            cells = new GridCell<T>[size.x * size.y];
+            cells = new Dictionary<int, GridCell<T>>();
+            occupied = new bool[size.x * size.y];
+        }
+
+        public Grid (Vector2Int size, T startingValue, float cellSize = 1, bool centered = false) : base(size, cellSize, centered)
+        {
+            cells = new Dictionary<int, GridCell<T>>(size.x * size.y);
+            occupied = new bool[size.x * size.y];
+
             for (int y = 0; y < size.y; y++)
             {
                 for (int x = 0; x < size.x; x++)
                 {
                     Vector2Int coordinates = new Vector2Int(x, y);
-                    cells[CoordinatesToIndex(coordinates)] = new GridCell<T>(coordinates, startingValue);
+                    int index = CoordinatesToIndex(coordinates);
+                    cells.Add(index, new GridCell<T>(coordinates, startingValue));
+                    occupied[index] = true;
                 }
             }
         }

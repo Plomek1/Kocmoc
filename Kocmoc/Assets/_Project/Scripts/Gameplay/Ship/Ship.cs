@@ -12,12 +12,8 @@ namespace Kocmoc.Gameplay
         {
             this.shipData = shipData;
 
-            for (int i = shipData.grid.firstCell; i < shipData.grid.lastCell; i++)
-            {
-                ShipCellData cell = shipData.grid.GetCell(i);
-                if (cell == null) continue;
-                Instantiate(cell.prefab, shipData.grid.GetCellPosition(i), Quaternion.identity, transform);
-            }
+            foreach (GridCell<ShipCellData> cell in shipData.grid.GetCells())
+                Instantiate(cell.data.prefab, shipData.grid.GetCellPosition(cell.coordinates), Quaternion.identity, transform);
 
             gridRenderer = GetComponentInChildren<GridRenderer>();
             gridRenderer.SetGrid(shipData.grid);

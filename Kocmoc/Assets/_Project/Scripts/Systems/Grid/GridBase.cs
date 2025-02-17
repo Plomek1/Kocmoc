@@ -91,9 +91,9 @@ namespace Kocmoc
         }
 
         protected int CoordinatesToIndex(Vector2Int coordinates) => coordinates.y * size.x + coordinates.x;
-        protected Vector2Int IndexToCoordinates(int index)
+        protected Vector2Int IndexToCoordinates(int index, bool alreadyUncenter = false)
         {
-            if (centered) index = UncenterInput(index);
+            if (centered && !alreadyUncenter) index = UncenterInput(index);
             int x = index % size.x;
             int y = index / size.x;
             return centered ? CenterInput(new Vector2Int(x, y)) : new Vector2Int(x, y);

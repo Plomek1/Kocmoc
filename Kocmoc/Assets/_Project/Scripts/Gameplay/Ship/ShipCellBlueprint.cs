@@ -7,10 +7,12 @@ namespace Kocmoc.Gameplay
     {
         public GameObject prefab;
 
+        
+
     }
 
     [System.Serializable]
-    public class ShipCellData
+    public struct ShipCellData
     {
         [SerializeField] private ShipCellBlueprint blueprint;
 
@@ -22,6 +24,8 @@ namespace Kocmoc.Gameplay
         public ShipCellData(ShipCellBlueprint blueprint)
         {
             this.blueprint = blueprint;
+            coordinates = Vector2Int.zero;
+            health = 0;
         }
     }
 }
