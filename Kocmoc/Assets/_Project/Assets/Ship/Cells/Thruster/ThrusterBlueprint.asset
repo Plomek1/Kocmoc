@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ca7edfbf147a3a4186769a42e3f924b, type: 3}
   m_Name: ThrusterBlueprint
   m_EditorClassIdentifier: 
-  prefab: {fileID: 6975977231131621730, guid: c4b34a3203d166f4282f4cbc964c0cb8, type: 3}
+  prefab: {fileID: 6138459358621207694, guid: c4b34a3203d166f4282f4cbc964c0cb8, type: 3}
+  modules:
+  - {fileID: 11400000, guid: 684a7482acc700b48a5f333fa9ab1de2, type: 2}

@@ -20,7 +20,11 @@ namespace Kocmoc.Gameplay
         {
             Grid<ShipCellData> shipGrid = new Grid<ShipCellData>(Vector2Int.one * SHIP_GRID_SIZE, centered: true);
             foreach (ShipCellData cell in cells)
+            {
+                cell.Init();
                 shipGrid.SetCell(cell.coordinates, cell);
+            }
+
             return shipGrid;
         }
     }

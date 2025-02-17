@@ -5,27 +5,36 @@ namespace Kocmoc.Gameplay
     [CreateAssetMenu(fileName = "Cell", menuName = "Ship/Cell Blueprint", order = 0)]
     public class ShipCellBlueprint : ScriptableObject
     {
-        public GameObject prefab;
+        public ShipCell prefab;
 
-        
-
+        public ModuleBlueprint[] modules;
     }
 
     [System.Serializable]
-    public struct ShipCellData
+    public class ShipCellData
     {
         [SerializeField] private ShipCellBlueprint blueprint;
+
+        public ShipCell prefab => blueprint.prefab;
+        public ModuleData[] modules;
 
         public Vector2Int coordinates;
         public int health;
 
-        public GameObject prefab => blueprint.prefab;
 
         public ShipCellData(ShipCellBlueprint blueprint)
         {
             this.blueprint = blueprint;
-            coordinates = Vector2Int.zero;
-            health = 0;
+            Init();
+        }
+
+        public void Init()
+        {
+            int modulesCount = blueprint.modules.Length;
+
+            modules = new ModuleData[modulesCount];
+            for (int i = 0; i < modulesCount; i++)
+                modules[i] = blueprint.modules[i].CreateDataClass();
         }
     }
 }
