@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Kocmoc.Gameplay
@@ -13,6 +14,8 @@ namespace Kocmoc.Gameplay
             ShipData shipData = (ShipData)ScriptableObject.CreateInstance(typeof(ShipData));
             shipData.Init(CreateShipGrid(cells));
             ship.Init(shipData);
+            ship.AddComponent<PlayerShipController>();
+
             return ship;
         }
 

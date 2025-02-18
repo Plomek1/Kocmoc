@@ -18,20 +18,20 @@ namespace Kocmoc.Gameplay
         private void Start()
         {
             cam = GetComponent<Camera>();
-            resetPosition = target ? target.position : Vector3.zero + offset;
+            resetPosition = (target ? target.position : Vector3.zero) + offset;
         }
 
         public void SetTarget(Transform newTarget)
         {
             target = newTarget;
-            resetPosition = target ? target.position : Vector3.zero + offset;
+            resetPosition = (target ? target.position: Vector3.zero) + offset;
         }
 
         public void LateUpdate()
         {
             Vector3 targetPosition = target ? target.position : Vector3.zero;
 
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetKeyDown(KeyCode.R))
             {
                 transform.position = resetPosition;
                 dragPosition = Vector3.zero;

@@ -6,10 +6,16 @@ namespace Kocmoc.Gameplay
     {
         public ShipData shipData;
 
+        public Vector2 velocity { get; set; }
+        public float rotationSpeedTarget { get; set; }
+        public float currentRotationSpeed { get; private set; }
+
         [SerializeField] private Transform centerOfMass;
         [SerializeField] private Transform cellsRoot;
 
         private GridRenderer gridRenderer;
+
+        public Transform GetCenterOfMass() => centerOfMass;
 
         public void Init(ShipData shipData)
         {
@@ -43,9 +49,24 @@ namespace Kocmoc.Gameplay
             }
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
-            //transform.position += Vector3.up * Time.deltaTime * 5;
+            HandleRotation();
+            HandleVelocity();
+        }
+
+        private void HandleRotation()
+        {
+            float rotationSpeedTargetDelta = Mathf.Abs(rotationSpeedTarget - currentRotationSpeed);
+            if (rotationSpeedTargetDelta > 0)
+                currentRotationSpeed += Mathf.Sign(rotationSpeedTarget - currentRotationSpeed) * Mathf.Min(rotationSpeedTargetDelta, shipData.rotationAcceleration);
+
+            centerOfMass.rotation = Quaternion.Euler(0, 0, centerOfMass.rotation.eulerAngles.z + currentRotationSpeed);
+        }
+
+        private void HandleVelocity()
+        {
+            transform.position = transform.position + (Vector3)velocity;
         }
     }
 }

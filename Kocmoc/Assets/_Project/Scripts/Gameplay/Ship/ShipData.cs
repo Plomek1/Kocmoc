@@ -10,11 +10,13 @@ namespace Kocmoc.Gameplay
         public Grid<ShipCellData> grid {  get; private set; }
 
         public Vector2 centerOfMass { get; private set; }
+        public float totalMass { get; private set; }
+        public float rotationAcceleration { get; private set; } = .05f;
 
         private void UpdateCenterOfMass()
         {
             Vector2 newCenterOfMass = Vector2.zero;
-            float totalMass = 0;
+            totalMass = 0;
 
             foreach (var cell in grid.GetCells())
             {
