@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Kocmoc
@@ -10,7 +9,7 @@ namespace Kocmoc
         private Dictionary<int, GridCell<T>> cells;
 
         #region Cell setters
-        public GridCell<T>[] GetCells() => cells.Values.ToArray();
+        public ICollection<GridCell<T>> GetCells() => cells.Values;
 
         public void SetCell(int index, T value)
         {

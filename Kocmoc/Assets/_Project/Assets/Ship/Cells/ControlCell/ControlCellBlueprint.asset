@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: ControlCellBlueprint
   m_EditorClassIdentifier: 
   prefab: {fileID: 678725165376565160, guid: 5309af4a20a888d43974c95b8c66b579, type: 3}
+  mass: 10
   modules: []

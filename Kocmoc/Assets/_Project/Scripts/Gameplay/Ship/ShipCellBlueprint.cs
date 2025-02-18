@@ -6,7 +6,9 @@ namespace Kocmoc.Gameplay
     public class ShipCellBlueprint : ScriptableObject
     {
         public ShipCell prefab;
+        public float mass;
 
+        [Space(20)]
         public ModuleBlueprint[] modules;
     }
 
@@ -16,6 +18,7 @@ namespace Kocmoc.Gameplay
         [SerializeField] private ShipCellBlueprint blueprint;
 
         public ShipCell prefab => blueprint.prefab;
+        public float mass => blueprint.mass;
         public ModuleData[] modules;
 
         public Vector2Int coordinates;

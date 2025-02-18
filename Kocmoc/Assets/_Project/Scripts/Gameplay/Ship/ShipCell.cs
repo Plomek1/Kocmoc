@@ -24,8 +24,6 @@ namespace Kocmoc.Gameplay
             modules = new Module[modulesCount];
             for (int i = 0; i < modulesCount; i++)
                 modules[i] = data.modules[i].CreateModuleComponent(this);
-
-            Debug.Log(GetModule(ModuleType.Thruster));
         }
     }
 }
