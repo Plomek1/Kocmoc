@@ -15,6 +15,8 @@ namespace Kocmoc.Gameplay
     [System.Serializable]
     public class ShipCellData
     {
+        public ShipData ship { get; private set; }
+
         [SerializeField] private ShipCellBlueprint blueprint;
 
         public ShipCell prefab => blueprint.prefab;
@@ -22,22 +24,26 @@ namespace Kocmoc.Gameplay
         public ModuleData[] modules;
 
         public Vector2Int coordinates;
+        public Rotation currentRotation;
         public int health;
 
-
-        public ShipCellData(ShipCellBlueprint blueprint)
+        public ShipCellData(ShipCellBlueprint blueprint, ShipData ship)
         {
             this.blueprint = blueprint;
-            Init();
+            Init(ship);
         }
 
-        public void Init()
+        public void Init(ShipData ship)
         {
+            this.ship = ship;
             int modulesCount = blueprint.modules.Length;
 
             modules = new ModuleData[modulesCount];
             for (int i = 0; i < modulesCount; i++)
-                modules[i] = blueprint.modules[i].CreateDataClass();
+            {
+                modules[i] = blueprint.modules[i].CreateDataClass(this);
+                modules[i].Init();
+            }
         }
     }
 }

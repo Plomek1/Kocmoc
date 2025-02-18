@@ -19,6 +19,7 @@ namespace Kocmoc.Gameplay
         public void Init(Ship ship, ShipCellData data)
         {
             this.data = data;
+            this.ship = ship;
 
             int modulesCount = data.modules.Length;
             modules = new Module[modulesCount];

@@ -20,7 +20,7 @@ namespace Kocmoc.Gameplay
         public void Init(ShipData shipData)
         {
             this.shipData = shipData;
-            shipData.CenterOfMassChanged += OnCenterOfMassUpdate;
+            shipData.MassUpdated += OnMassUpdate;
 
             foreach (GridCell<ShipCellData> cell in shipData.grid.GetCells())
             {
@@ -28,7 +28,7 @@ namespace Kocmoc.Gameplay
                 cellGo.Init(this, cell.data);
             }
 
-            OnCenterOfMassUpdate();
+            OnMassUpdate();
 
             gridRenderer = GetComponentInChildren<GridRenderer>();
             gridRenderer.SetGrid(shipData.grid);
@@ -37,7 +37,7 @@ namespace Kocmoc.Gameplay
             Camera.main.GetComponent<CameraDrag>().SetTarget(transform);
         }
 
-        private void OnCenterOfMassUpdate()
+        private void OnMassUpdate()
         {
             //HACK: Reassigning children position after updating CoM isnt great but it works for now
             Vector3 centerOfMassDelta = (Vector3)shipData.centerOfMass - centerOfMass.position;

@@ -253,15 +253,39 @@ MonoBehaviour:
   cells:
   - blueprint: {fileID: 11400000, guid: 4c9bc1aadea21be4789273e6ee07a8d7, type: 2}
     coordinates: {x: 0, y: 0}
+    currentRotation: 1
     health: 0
   - blueprint: {fileID: 11400000, guid: 924c085561f034d47917d4cae374ee6f, type: 2}
     coordinates: {x: 1, y: 0}
+    currentRotation: 1
     health: 0
   - blueprint: {fileID: 11400000, guid: 924c085561f034d47917d4cae374ee6f, type: 2}
     coordinates: {x: -1, y: 0}
+    currentRotation: 1
     health: 0
   - blueprint: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
-    coordinates: {x: 0, y: -1}
+    coordinates: {x: -1, y: -1}
+    currentRotation: 1
+    health: 0
+  - blueprint: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
+    coordinates: {x: 1, y: -1}
+    currentRotation: 1
+    health: 0
+  - blueprint: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
+    coordinates: {x: -2, y: 0}
+    currentRotation: 2
+    health: 0
+  - blueprint: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
+    coordinates: {x: 2, y: 0}
+    currentRotation: 8
+    health: 0
+  - blueprint: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
+    coordinates: {x: -1, y: 1}
+    currentRotation: 4
+    health: 0
+  - blueprint: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
+    coordinates: {x: 1, y: 1}
+    currentRotation: 4
     health: 0
 --- !u!4 &504425343
 Transform:

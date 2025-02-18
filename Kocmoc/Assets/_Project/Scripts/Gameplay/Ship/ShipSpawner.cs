@@ -12,19 +12,19 @@ namespace Kocmoc.Gameplay
             Ship ship = GameObject.Instantiate(Assets.Instance.shipPrefab, position, Quaternion.identity);
             
             ShipData shipData = (ShipData)ScriptableObject.CreateInstance(typeof(ShipData));
-            shipData.Init(CreateShipGrid(cells));
+            shipData.Init(CreateShipGrid(cells, shipData));
             ship.Init(shipData);
             ship.AddComponent<PlayerShipController>();
 
             return ship;
         }
 
-        private static Grid<ShipCellData> CreateShipGrid(ShipCellData[] cells)
+        private static Grid<ShipCellData> CreateShipGrid(ShipCellData[] cells, ShipData ship)
         {
             Grid<ShipCellData> shipGrid = new Grid<ShipCellData>(Vector2Int.one * SHIP_GRID_SIZE, centered: true);
             foreach (ShipCellData cell in cells)
             {
-                cell.Init();
+                cell.Init(ship);
                 shipGrid.SetCell(cell.coordinates, cell);
             }
 
