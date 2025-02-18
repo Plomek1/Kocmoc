@@ -25,6 +25,15 @@ namespace Kocmoc.Gameplay
             modules = new Module[modulesCount];
             for (int i = 0; i < modulesCount; i++)
                 modules[i] = data.modules[i].CreateModuleComponent(this);
+        
+            UpdateRotation();
+        }
+
+        private void UpdateRotation()
+        {
+            float rotationAngle = Mathf.Log((int)data.currentRotation, 2);
+            Debug.Log(rotationAngle);
+            transform.rotation = Quaternion.Euler(new Vector3(0, 0, -rotationAngle * 90));
         }
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Kocmoc
 {
-    public static class Extensions
+    public static class Utility
     {
       
     }

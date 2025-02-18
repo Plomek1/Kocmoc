@@ -95,9 +95,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 586604168877241540, guid: fb52d4f05d8a41640b5dfe561fd6fa78, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -2828792731324806410, guid: 371f7c3bfe302b7439e6e4105c2bb802, type: 3}
+    - target: {fileID: 586604168877241540, guid: fb52d4f05d8a41640b5dfe561fd6fa78, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6311137735059369463, guid: fb52d4f05d8a41640b5dfe561fd6fa78, type: 3}
       propertyPath: m_Name
-      value: CellBase Variant
+      value: ControlCell
       objectReference: {fileID: 0}
     - target: {fileID: 7014034760705626742, guid: fb52d4f05d8a41640b5dfe561fd6fa78, type: 3}
       propertyPath: m_LocalPosition.x

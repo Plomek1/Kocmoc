@@ -48,7 +48,6 @@ namespace Kocmoc.Gameplay
         public void Init(Grid<ShipCellData> grid)
         {
             this.grid = grid;
-
             UpdateMass();
         }
     }
