@@ -14,7 +14,7 @@ namespace Kocmoc.Gameplay
             ShipData shipData = (ShipData)ScriptableObject.CreateInstance(typeof(ShipData));
             shipData.Init(CreateShipGrid(cells, shipData));
             ship.Init(shipData);
-            ship.AddComponent<PlayerShipController>();
+            ship.AttachController(ShipControllerType.Player);
 
             return ship;
         }

@@ -37,7 +37,6 @@ namespace Kocmoc.Gameplay
             gridRenderer.SetGrid(shipData.grid);
             gridRenderer.StartRendering();
 
-            Camera.main.GetComponent<CameraDrag>().SetTarget(transform);
         }
 
         public void AttachController(ShipControllerType type)
@@ -46,7 +45,7 @@ namespace Kocmoc.Gameplay
             switch (type)
             {
                 case ShipControllerType.Player:
-                    controller = transform.AddComponent<ShipController>(); 
+                    controller = transform.AddComponent<PlayerShipController>();
                     break;
             }
 
@@ -55,17 +54,17 @@ namespace Kocmoc.Gameplay
 
         private void OnMassUpdate()
         {
-            rb.mass = shipData.totalMass;
-            rb.inertia = shipData.totalMass;
 
-            //HACK: Reassigning children position after updating CoM isnt great but it works for now
             Vector3 centerOfMassDelta = (Vector3)shipData.centerOfMass - centerOfMass.position;
             if (centerOfMassDelta.sqrMagnitude > 0)
             {
                 centerOfMass.position = shipData.centerOfMass;
-                foreach (Transform child in centerOfMass)
-                    child.localPosition -= centerOfMassDelta;
+
+                rb.mass = shipData.totalMass;
+                rb.inertia = shipData.totalMass;
+                rb.centerOfMass = shipData.centerOfMass;
             }
+
         }
     }
 }

@@ -7,25 +7,19 @@ namespace Kocmoc.Gameplay
     {
         private const float ROTATION_STOP_TRESHOLD = .001f;
 
-        private Ship ship;
-        private Rigidbody2D shipRb;
+        protected Ship ship;
+        protected Rigidbody2D shipRb;
 
         private bool rotatingTowardsTarget;
         private float targetAngle;
 
         private float angularVelocityTarget;
 
-        private void Start()
-        {
-            ship = GetComponent<Ship>();
-            shipRb = GetComponent<Rigidbody2D>();
-        }
-
         protected void SetRotationTarget(Vector2 target)
         {
             Vector2 directionToTarget = (target - shipRb.position).normalized;
             targetAngle = Mathf.Atan2(directionToTarget.x, directionToTarget.y) * Mathf.Rad2Deg;
-
+            
             rotatingTowardsTarget = true;
         }
 
@@ -55,14 +49,18 @@ namespace Kocmoc.Gameplay
             }
         }
 
-        private void FixedUpdate()
-        {
-            OnFixedUpdate();
-        }
+        private void Start() => OnStart();
+        private void FixedUpdate() => OnFixedUpdate();
 
         protected virtual void OnFixedUpdate()
         {
             HandleRotation();
+        }
+
+        protected virtual void OnStart()
+        {
+            ship = GetComponent<Ship>();
+            shipRb = GetComponent<Rigidbody2D>();
         }
     }
 
