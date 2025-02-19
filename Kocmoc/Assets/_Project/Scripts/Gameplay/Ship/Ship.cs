@@ -1,18 +1,20 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Kocmoc.Gameplay
 {
+    [RequireComponent(typeof(Rigidbody2D))]
     public class Ship : MonoBehaviour
     {
-        public ShipData shipData;
+        public Action<ShipController> ControllerAttached;
 
-        public Vector2 velocity { get; set; }
-        public float rotationSpeedTarget { get; set; }
-        public float currentRotationSpeed { get; private set; }
+        public ShipData shipData;
 
         [SerializeField] private Transform centerOfMass;
         [SerializeField] private Transform cellsRoot;
 
+        private Rigidbody2D rb;
         private GridRenderer gridRenderer;
 
         public Transform GetCenterOfMass() => centerOfMass;
@@ -24,10 +26,11 @@ namespace Kocmoc.Gameplay
 
             foreach (GridCell<ShipCellData> cell in shipData.grid.GetCells())
             {
-                ShipCell cellGo = Instantiate(cell.data.prefab, shipData.grid.GetCellPosition(cell.coordinates), Quaternion.identity, cellsRoot);
+                ShipCell cellGo = Instantiate(cell.data.prefab, shipData.grid.GetCellPosition(cell.coordinates, centerOfCell: true), Quaternion.identity, cellsRoot);
                 cellGo.Init(this, cell.data);
             }
 
+            rb = GetComponent<Rigidbody2D>();
             OnMassUpdate();
 
             gridRenderer = GetComponentInChildren<GridRenderer>();
@@ -37,8 +40,24 @@ namespace Kocmoc.Gameplay
             Camera.main.GetComponent<CameraDrag>().SetTarget(transform);
         }
 
+        public void AttachController(ShipControllerType type)
+        {
+            ShipController controller = null;
+            switch (type)
+            {
+                case ShipControllerType.Player:
+                    controller = transform.AddComponent<ShipController>(); 
+                    break;
+            }
+
+            ControllerAttached?.Invoke(controller);
+        }
+
         private void OnMassUpdate()
         {
+            rb.mass = shipData.totalMass;
+            rb.inertia = shipData.totalMass;
+
             //HACK: Reassigning children position after updating CoM isnt great but it works for now
             Vector3 centerOfMassDelta = (Vector3)shipData.centerOfMass - centerOfMass.position;
             if (centerOfMassDelta.sqrMagnitude > 0)
@@ -47,26 +66,6 @@ namespace Kocmoc.Gameplay
                 foreach (Transform child in centerOfMass)
                     child.localPosition -= centerOfMassDelta;
             }
-        }
-
-        private void FixedUpdate()
-        {
-            HandleRotation();
-            HandleVelocity();
-        }
-
-        private void HandleRotation()
-        {
-            float rotationSpeedTargetDelta = Mathf.Abs(rotationSpeedTarget - currentRotationSpeed);
-            if (rotationSpeedTargetDelta > 0)
-                currentRotationSpeed += Mathf.Sign(rotationSpeedTarget - currentRotationSpeed) * Mathf.Min(rotationSpeedTargetDelta, shipData.rotationAcceleration);
-
-            centerOfMass.rotation = Quaternion.Euler(0, 0, centerOfMass.rotation.eulerAngles.z + currentRotationSpeed);
-        }
-
-        private void HandleVelocity()
-        {
-            transform.position = transform.position + (Vector3)velocity;
         }
     }
 }

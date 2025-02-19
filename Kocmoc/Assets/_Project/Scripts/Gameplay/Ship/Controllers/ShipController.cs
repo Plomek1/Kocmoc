@@ -5,30 +5,26 @@ namespace Kocmoc.Gameplay
     [RequireComponent(typeof(Ship))]
     public class ShipController : MonoBehaviour
     {
-        private const float ROTATION_ANGLE_TRESHOLD = 1f;
+        private const float ROTATION_STOP_TRESHOLD = .001f;
 
         private Ship ship;
+        private Rigidbody2D shipRb;
 
-        private Vector2 rotationTarget;
         private bool rotatingTowardsTarget;
+        private float targetAngle;
 
-        private Transform centerOfMass => ship.GetCenterOfMass();
+        private float angularVelocityTarget;
 
         private void Start()
         {
             ship = GetComponent<Ship>();
+            shipRb = GetComponent<Rigidbody2D>();
         }
 
         protected void SetRotationTarget(Vector2 target)
         {
-            float angleToTarget = Vector2.Angle(centerOfMass.up, target - (Vector2)centerOfMass.localPosition);
-            if (angleToTarget < ROTATION_ANGLE_TRESHOLD) return;
-            Debug.Log(angleToTarget);
-            rotationTarget = target - (Vector2)centerOfMass.localPosition;
-            rotationTarget.Normalize();
-
-            float crossProduct = Vector3.Cross(centerOfMass.up, rotationTarget.normalized).z;
-            ship.rotationSpeedTarget = 10000 * ship.shipData.rotationAcceleration * Mathf.Sign(crossProduct);
+            Vector2 directionToTarget = (target - shipRb.position).normalized;
+            targetAngle = Mathf.Atan2(directionToTarget.x, directionToTarget.y) * Mathf.Rad2Deg;
 
             rotatingTowardsTarget = true;
         }
@@ -37,36 +33,42 @@ namespace Kocmoc.Gameplay
         {
             if (!rotatingTowardsTarget) return;
 
-            float brakingAngle = (ship.currentRotationSpeed * ship.currentRotationSpeed) / (2f * ship.shipData.rotationAcceleration);
-            float angleToTarget = Vector2.Angle(centerOfMass.up, rotationTarget.normalized);
-            if (brakingAngle >= angleToTarget)
+            float currentAngle = Mathf.Atan2(transform.up.x, transform.up.y) * Mathf.Rad2Deg;
+            float angleDelta = Mathf.DeltaAngle(currentAngle, targetAngle);
+            float brakingAngle = (shipRb.angularVelocity * shipRb.angularVelocity * Time.deltaTime) / (2f * ship.shipData.angularAcceleration) * shipRb.inertia;
+
+            if (Mathf.Abs(angleDelta) > brakingAngle) angularVelocityTarget = Mathf.Sign(angleDelta) * ship.shipData.angularAcceleration;
+            else angularVelocityTarget = 0;
+
+            if (Mathf.Abs(angleDelta) > ROTATION_STOP_TRESHOLD * ship.shipData.angularAcceleration)
             {
-                ship.rotationSpeedTarget = 0;
+                float torgue;
+                if (angularVelocityTarget == 0) torgue = Mathf.Sign(shipRb.angularVelocity) * ship.shipData.angularAcceleration * -1;
+                else torgue = Mathf.Sign(angularVelocityTarget) * ship.shipData.angularAcceleration * -1;
+                shipRb.AddTorque(torgue);
+            }
+            else
+            {
+                shipRb.rotation = -targetAngle;
+                shipRb.angularVelocity = 0;
                 rotatingTowardsTarget = false;
-                return;
             }
         }
 
-        private void OnDrawGizmosSelected()
+        private void FixedUpdate()
         {
-            if (rotatingTowardsTarget)
-            {
-                Gizmos.color = Color.blue;
-                Gizmos.DrawLine(centerOfMass.position, centerOfMass.position + transform.up * 100);
-
-                Gizmos.color = Color.red;
-                Gizmos.DrawLine(centerOfMass.position, centerOfMass.position + (Vector3)rotationTarget);
-            }
+            OnFixedUpdate();
         }
 
-        private void Update()
-        {
-            OnUpdate();
-        }
-
-        protected virtual void OnUpdate()
+        protected virtual void OnFixedUpdate()
         {
             HandleRotation();
         }
+    }
+
+    public enum ShipControllerType
+    {
+        Player,
+        AI
     }
 }

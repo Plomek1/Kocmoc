@@ -4,9 +4,9 @@ namespace Kocmoc.Gameplay
 {
     public class PlayerShipController : ShipController
     {
-        protected override void OnUpdate()
+        private void Update()
         {
-            base.OnUpdate();
+            base.OnFixedUpdate();
             if (Input.GetMouseButtonDown(1))
             {
                 Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);

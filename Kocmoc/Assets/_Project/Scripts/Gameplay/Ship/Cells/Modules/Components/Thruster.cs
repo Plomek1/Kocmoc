@@ -12,7 +12,6 @@ namespace Kocmoc.Gameplay
 
         private void Start()
         {
-            Debug.Log(ship.shipData.GetStrongestThrustDirection());
         }
     }
 }

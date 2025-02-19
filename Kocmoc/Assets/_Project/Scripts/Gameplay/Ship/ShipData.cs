@@ -13,7 +13,7 @@ namespace Kocmoc.Gameplay
 
         public Vector2 centerOfMass { get; private set; }
         public float totalMass { get; private set; }
-        public float rotationAcceleration { get; private set; } = .05f;
+        public float angularAcceleration { get; private set; } = 25f;
 
         public Dictionary<Rotation, float> thrustForces { get; private set; } = new Dictionary<Rotation, float>(4) 
         { 
