@@ -446,8 +446,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1725503598}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &519420033
@@ -463,6 +462,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 0, z: -10}
+  boundCamera: 0
   bounds: {x: 32, y: 24, z: 0}
 --- !u!114 &519420034
 MonoBehaviour:
@@ -478,7 +478,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startZoom: 5
   minZoom: 2
-  maxZoom: 100
+  maxZoom: 30
   zoomSensitivity: 0.3
   smoothness: 20
 --- !u!1 &619394800
@@ -575,6 +575,7 @@ GameObject:
   m_Component:
   - component: {fileID: 734827899}
   - component: {fileID: 734827898}
+  - component: {fileID: 734827900}
   m_Layer: 0
   m_Name: Stars
   m_TagString: Untagged
@@ -631,7 +632,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 64, y: 64}
+  m_Size: {x: 388, y: 256}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -652,6 +653,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1725503598}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &734827900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 734827897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b6993a3c935be6459f268d562a9d1f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parallaxFactor: {x: 0.2, y: 0.2}
 --- !u!1 &857869222
 GameObject:
   m_ObjectHideFlags: 0
@@ -662,6 +676,7 @@ GameObject:
   m_Component:
   - component: {fileID: 857869223}
   - component: {fileID: 857869224}
+  - component: {fileID: 857869225}
   m_Layer: 0
   m_Name: StarsClose
   m_TagString: Untagged
@@ -733,12 +748,25 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 64, y: 64}
+  m_Size: {x: 388, y: 256}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &857869225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 857869222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b6993a3c935be6459f268d562a9d1f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parallaxFactor: {x: 0.2, y: 0.2}
 --- !u!1 &996710496
 GameObject:
   m_ObjectHideFlags: 0
@@ -977,6 +1005,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1601704449}
   - component: {fileID: 1601704448}
+  - component: {fileID: 1601704450}
+  - component: {fileID: 1601704451}
   m_Layer: 0
   m_Name: Nebula
   m_TagString: Untagged
@@ -1033,8 +1063,8 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 64, y: 64}
-  m_AdaptiveModeThreshold: 0.5
+  m_Size: {x: 388, y: 256}
+  m_AdaptiveModeThreshold: 0.546
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
@@ -1054,6 +1084,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1725503598}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!222 &1601704450
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1601704447}
+  m_CullTransparentMesh: 1
+--- !u!114 &1601704451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1601704447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b6993a3c935be6459f268d562a9d1f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parallaxFactor: {x: 0.8, y: 0.8}
 --- !u!1 &1725503597
 GameObject:
   m_ObjectHideFlags: 0
@@ -1063,7 +1114,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1725503598}
-  - component: {fileID: 1725503599}
   m_Layer: 0
   m_Name: ParallaxBackgrounds
   m_TagString: Untagged
@@ -1079,41 +1129,23 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1725503597}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 10}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1601704449}
   - {fileID: 734827899}
   - {fileID: 857869223}
-  m_Father: {fileID: 519420032}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1725503599
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1725503597}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b6993a3c935be6459f268d562a9d1f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  backgrounds:
-  - renderer: {fileID: 1601704448}
-    parallaxFactor: {x: 0.2, y: 0.2}
-  - renderer: {fileID: 734827898}
-    parallaxFactor: {x: 0.2, y: 0.2}
-  - renderer: {fileID: 857869224}
-    parallaxFactor: {x: 0.25, y: 0.25}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 519420032}
-  - {fileID: 619394802}
   - {fileID: 504425343}
+  - {fileID: 619394802}
   - {fileID: 127064237}
+  - {fileID: 519420032}
+  - {fileID: 1725503598}
   - {fileID: 1532860457}

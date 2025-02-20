@@ -3,29 +3,48 @@ using UnityEngine;
 
 namespace Kocmoc.Gameplay
 {
+    [RequireComponent(typeof(SpriteRenderer))]
     public class ParallaxBackground : MonoBehaviour
     {
-        [SerializeField] private Background[] backgrounds;
+        [SerializeField] private Vector2 parallaxFactor;
 
-        private Vector2 lastFramePosition; 
+
+        private Transform cameraTransform;
+        private Vector2 lastCameraPosition;
+
+        private float textureUnitSizeX;
+        private float textureUnitSizeY;
+
+        private void Start()
+        {
+            cameraTransform = Camera.main.transform;
+            CalculateUnitSize();
+        }
 
         private void LateUpdate()
         {
-            Vector2 positionDelta = (Vector2)transform.position - lastFramePosition;
+            Vector2 positionDelta = (Vector2)cameraTransform.position - lastCameraPosition;
+            transform.position += (Vector3)(positionDelta * parallaxFactor);
+            lastCameraPosition = cameraTransform.position;
 
-            foreach (Background background in backgrounds)
+            if (Mathf.Abs(cameraTransform.position.x - transform.position.x) >= textureUnitSizeX)
             {
-                background.renderer.transform.localPosition = (Vector2)background.renderer.transform.localPosition - positionDelta * background.parallaxFactor;
+                float offsetPositionX = (cameraTransform.position.x - transform.position.x) % textureUnitSizeX;
+                transform.position = new Vector3(cameraTransform.position.x + offsetPositionX, transform.position.y);
             }
 
-            lastFramePosition = transform.position;
+            if (Mathf.Abs(cameraTransform.position.y - transform.position.y) >= textureUnitSizeY)
+            {
+                float offsetPositionY = (cameraTransform.position.y - transform.position.y) % textureUnitSizeY;
+                transform.position = new Vector3(transform.position.x, cameraTransform.position.y + offsetPositionY);
+            }
         }
 
-        [System.Serializable]
-        public struct Background
+        public void CalculateUnitSize()
         {
-            public SpriteRenderer renderer;
-            public Vector2 parallaxFactor;
+            SpriteRenderer renderer = GetComponent<SpriteRenderer>();
+            textureUnitSizeX = renderer.sprite.texture.width / renderer.sprite.pixelsPerUnit;
+            textureUnitSizeY = renderer.sprite.texture.height / renderer.sprite.pixelsPerUnit;
         }
     }
 }

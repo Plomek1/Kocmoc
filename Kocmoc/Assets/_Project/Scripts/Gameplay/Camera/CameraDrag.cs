@@ -7,6 +7,8 @@ namespace Kocmoc.Gameplay
     public class CameraDrag : MonoBehaviour
     {
         [SerializeField] private Vector3 offset;
+
+        [SerializeField] private bool boundCamera;
         [SerializeField] private Vector3 bounds;
 
         private Vector3 resetPosition;
@@ -46,11 +48,14 @@ namespace Kocmoc.Gameplay
                 dragPosition -= difference * 2;
             }
 
-            Vector2 screenBottomLeftWorldPos = cam.ScreenToWorldPoint(Vector2.zero) - transform.position;
-            Vector2 screenTopRightWorldPos = cam.ScreenToWorldPoint(new Vector2(cam.pixelWidth, cam.pixelHeight)) - transform.position;
+            if(boundCamera)
+            {
+                Vector2 screenBottomLeftWorldPos = cam.ScreenToWorldPoint(Vector2.zero) - transform.position;
+                Vector2 screenTopRightWorldPos = cam.ScreenToWorldPoint(new Vector2(cam.pixelWidth, cam.pixelHeight)) - transform.position;
 
-            dragPosition.x = Mathf.Clamp(dragPosition.x, -screenBottomLeftWorldPos.x - bounds.x, -screenTopRightWorldPos.x + bounds.x);
-            dragPosition.y = Mathf.Clamp(dragPosition.y, -screenBottomLeftWorldPos.y - bounds.y, -screenTopRightWorldPos.y + bounds.y);
+                dragPosition.x = Mathf.Clamp(dragPosition.x, -screenBottomLeftWorldPos.x - bounds.x, -screenTopRightWorldPos.x + bounds.x);
+                dragPosition.y = Mathf.Clamp(dragPosition.y, -screenBottomLeftWorldPos.y - bounds.y, -screenTopRightWorldPos.y + bounds.y);
+            }
 
             transform.position = targetPosition + (Vector3)dragPosition + offset;
         }
