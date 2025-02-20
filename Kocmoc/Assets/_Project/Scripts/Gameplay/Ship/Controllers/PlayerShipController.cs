@@ -7,7 +7,7 @@ namespace Kocmoc.Gameplay
         protected override void OnStart()
         {
             base.OnStart();
-            Camera.main.GetComponent<CameraDrag>().SetTarget(ship.GetCenterOfMass());
+            Camera.main.GetComponent<CameraDrag>().SetTarget(centerOfMass);
         }
 
         private void Update()
@@ -16,6 +16,7 @@ namespace Kocmoc.Gameplay
             if (Input.GetMouseButtonDown(1))
             {
                 Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                SetPositionTarget(mousePos);
                 SetRotationTarget(mousePos);
             }
         }
