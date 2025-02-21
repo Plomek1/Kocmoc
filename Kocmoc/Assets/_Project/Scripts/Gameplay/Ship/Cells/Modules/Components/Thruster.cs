@@ -34,10 +34,11 @@ namespace Kocmoc.Gameplay
                 return;
             }
 
-            float angleToThrustDirection = Vector2.Angle(transform.up, currentThrustDirection);
-            if (angleToThrustDirection < 45f)
+            float thrustDirectionDot = Vector2.Dot(transform.up, currentThrustDirection);
+            
+            if (thrustDirectionDot > .001f)
             {
-                shipRb.AddForce(transform.up * data.thrustForce);
+                shipRb.AddForce(transform.up * data.thrustForce * thrustDirectionDot);
                 GetComponent<SpriteRenderer>().color = Color.red;
             }
             else
