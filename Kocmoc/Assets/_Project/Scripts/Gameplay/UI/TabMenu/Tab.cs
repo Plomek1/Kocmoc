@@ -4,16 +4,14 @@ namespace Kocmoc
 {
     public class Tab : MonoBehaviour
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        public virtual void Open()
         {
-        
+            gameObject.SetActive(true);
         }
 
-        // Update is called once per frame
-        void Update()
+        public virtual void Close() 
         {
-        
+            gameObject.SetActive(false);
         }
     }
 }
