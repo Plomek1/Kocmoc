@@ -1,3 +1,4 @@
+using System.Xml.Serialization;
 using TMPro;
 using UnityEngine;
 
@@ -6,39 +7,41 @@ namespace Kocmoc.Gameplay
     [RequireComponent(typeof(Camera))]
     public class CameraDrag : MonoBehaviour
     {
+        public bool followTarget;
+        public Transform target;
+        [Space(10)]
+
+        public bool boundCamera;
+        public Vector3 bounds;
+        [Space(10)]
+        
         [SerializeField] private Vector3 offset;
 
-        [SerializeField] private bool boundCamera;
-        [SerializeField] private Vector3 bounds;
-
-        private Vector3 resetPosition;
+        private Vector3 lastTargetPosition;
+        private Vector3 resetPosition => (Vector3)GetTargetPosition() + offset;
         private Vector2 dragPosition;
         
-        private Transform target;
         private Camera cam;
 
         private void Start()
         {
             cam = GetComponent<Camera>();
-            resetPosition = (target ? target.position : Vector3.zero) + offset;
-        }
-
-        public void SetTarget(Transform newTarget)
-        {
-            target = newTarget;
-            resetPosition = (target ? target.position: Vector3.zero) + offset;
+            transform.position = resetPosition;
         }
 
         public void LateUpdate()
         {
-            Vector3 targetPosition = target ? target.position : Vector3.zero;
+            if (Input.GetKeyDown(KeyCode.Z))
+                followTarget = !followTarget;
 
-            if (Input.GetKeyDown(KeyCode.R))
+                if (Input.GetKeyDown(KeyCode.R))
             {
                 transform.position = resetPosition;
                 dragPosition = Vector3.zero;
                 return;
             }
+
+            Vector2 lastDragPosition = dragPosition;
 
             if (Input.GetMouseButton(2))
             {
@@ -57,8 +60,20 @@ namespace Kocmoc.Gameplay
                 dragPosition.y = Mathf.Clamp(dragPosition.y, -screenBottomLeftWorldPos.y - bounds.y, -screenTopRightWorldPos.y + bounds.y);
             }
 
-            transform.position = targetPosition + (Vector3)dragPosition + offset;
+            Vector3 dragPositionDelta = dragPosition - lastDragPosition;
+            Vector3 targetPosition = GetTargetPosition();
+
+            if (followTarget)
+            {
+                Vector3 targetPositionDelta = targetPosition - lastTargetPosition;
+                transform.position += targetPositionDelta;
+            }
+            
+            transform.position += dragPositionDelta;
+            lastTargetPosition = targetPosition;
         }
+
+        private Vector2 GetTargetPosition() => target ? target.position : Vector3.zero;
 
         private void OnDrawGizmosSelected()
         {

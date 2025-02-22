@@ -4,16 +4,20 @@ namespace Kocmoc.Gameplay
 {
     public class PlayerShipController : ShipController
     {
+
+        private bool buildingMoveOpened;
+
+        private GridRenderer gridRenderer;
+
         protected override void OnStart()
         {
             base.OnStart();
-            Camera.main.GetComponent<CameraDrag>().SetTarget(centerOfMass);
+            Camera.main.GetComponent<CameraDrag>().target = centerOfMass;
+            gridRenderer = GetComponentInChildren<GridRenderer>();
         }
 
         private void Update()
         {
-            base.OnFixedUpdate();
-
             float horizontalInput = Input.GetAxisRaw("Horizontal");
             float verticalInput   = Input.GetAxisRaw("Vertical");
 

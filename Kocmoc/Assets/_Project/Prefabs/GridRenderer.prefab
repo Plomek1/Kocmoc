@@ -40,8 +40,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9203338268929033544}
-  - component: {fileID: 2194552192971101485}
   - component: {fileID: 2738776097011608468}
+  - component: {fileID: 2194552192971101485}
   m_Layer: 0
   m_Name: GridRenderer
   m_TagString: Untagged
@@ -65,23 +65,6 @@ Transform:
   - {fileID: 2952655714465908666}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2194552192971101485
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6202699641706718786}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e145ed3daa9fcdb40907baca4edb02a6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  drawType: 0
-  spritesRoot: {fileID: 2952655714465908666}
-  cellSprite: {fileID: 21300000, guid: 296f747e5f0eec14f831c85ee2e6d762, type: 3}
-  lineWidth: 1
-  lineColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!120 &2738776097011608468
 LineRenderer:
   serializedVersion: 2
@@ -187,3 +170,20 @@ LineRenderer:
   m_UseWorldSpace: 0
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &2194552192971101485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6202699641706718786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e145ed3daa9fcdb40907baca4edb02a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  drawType: 0
+  spritesRoot: {fileID: 2952655714465908666}
+  cellSprite: {fileID: 21300000, guid: 296f747e5f0eec14f831c85ee2e6d762, type: 3}
+  lineWidth: 1
+  lineColor: {r: 1, g: 1, b: 1, a: 1}

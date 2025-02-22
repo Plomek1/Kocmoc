@@ -35,8 +35,6 @@ namespace Kocmoc.Gameplay
 
             gridRenderer = GetComponentInChildren<GridRenderer>();
             gridRenderer.SetGrid(shipData.grid);
-            gridRenderer.StartRendering();
-
         }
 
         public void AttachController(ShipControllerType type)
