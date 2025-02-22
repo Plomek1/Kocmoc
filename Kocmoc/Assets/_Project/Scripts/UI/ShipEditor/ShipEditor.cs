@@ -1,15 +1,11 @@
 using UnityEngine;
 using Kocmoc.Gameplay;
-using System;
 
 namespace Kocmoc.UI
 {
-    public class ShipEditor : MonoBehaviour
+    public class ShipEditor : Menu
     {
-        public Action EditorOpened;
-        public Action EditorClosed;
-
-        private Ship ship;
+        [SerializeField]private Ship ship;
         private ShipController shipController;
 
         private CameraDrag cameraDrag;
@@ -25,8 +21,16 @@ namespace Kocmoc.UI
         {
             if (Input.GetKeyDown(KeyCode.B))
             {
-                gameObject.SetActive(!gameObject.activeSelf);
-                shipGridRenderer.ToggleRendering();
+                if (opened)
+                {
+                    shipGridRenderer.StopRendering();
+                    Close();
+                }
+                else
+                {
+                    shipGridRenderer.StartRendering();
+                    Open();
+                }
             }
         }
 
