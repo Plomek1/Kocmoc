@@ -31,10 +31,7 @@ namespace Kocmoc.Gameplay
 
         public void LateUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.Z))
-                followTarget = !followTarget;
-
-                if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R))
             {
                 transform.position = resetPosition;
                 dragPosition = Vector3.zero;

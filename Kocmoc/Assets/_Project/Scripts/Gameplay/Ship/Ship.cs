@@ -9,19 +9,24 @@ namespace Kocmoc.Gameplay
     {
         public Action<ShipController> ControllerAttached;
 
-        public ShipData shipData;
+        public ShipData shipData { get; private set; }
+        public ShipType type;
+
+        public GridRenderer gridRenderer { get; private set; }
 
         [SerializeField] private Transform centerOfMass;
         [SerializeField] private Transform cellsRoot;
 
         private Rigidbody2D rb;
-        private GridRenderer gridRenderer;
 
         public Transform GetCenterOfMass() => centerOfMass;
 
-        public void Init(ShipData shipData)
+        public void Init(ShipData shipData, ShipType type)
         {
             this.shipData = shipData;
+            this.type = type;
+            AttachController(type);
+
             shipData.MassUpdated += OnMassUpdate;
 
             foreach (GridCell<ShipCellData> cell in shipData.grid.GetCells())
@@ -37,12 +42,12 @@ namespace Kocmoc.Gameplay
             gridRenderer.SetGrid(shipData.grid);
         }
 
-        public void AttachController(ShipControllerType type)
+        public void AttachController(ShipType type)
         {
             ShipController controller = null;
             switch (type)
             {
-                case ShipControllerType.Player:
+                case ShipType.Player:
                     controller = transform.AddComponent<PlayerShipController>();
                     break;
             }
@@ -62,7 +67,13 @@ namespace Kocmoc.Gameplay
                 rb.inertia = shipData.totalMass;
                 rb.centerOfMass = shipData.centerOfMass;
             }
-
         }
+
+        
+    }
+    public enum ShipType
+    {
+        Player,
+        AI
     }
 }

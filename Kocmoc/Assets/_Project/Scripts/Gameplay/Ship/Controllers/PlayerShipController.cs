@@ -13,7 +13,6 @@ namespace Kocmoc.Gameplay
         {
             base.OnStart();
             Camera.main.GetComponent<CameraDrag>().target = centerOfMass;
-            gridRenderer = GetComponentInChildren<GridRenderer>();
         }
 
         private void Update()

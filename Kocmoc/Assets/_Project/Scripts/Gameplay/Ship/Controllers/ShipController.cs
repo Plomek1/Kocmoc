@@ -19,7 +19,7 @@ namespace Kocmoc.Gameplay
         protected bool movingTowardsTarget;
         private Vector2 targetPosition;
 
-        protected bool  rotatingTowardsTarget;
+        protected bool rotatingTowardsTarget;
         private float targetAngle;
         private float targetAngularVelocity;
 
@@ -69,7 +69,7 @@ namespace Kocmoc.Gameplay
         private void HandleRotation()
         {
             if (!rotatingTowardsTarget) return;
-            
+
             float currentAngle = Mathf.Atan2(centerOfMass.up.x, centerOfMass.up.y) * Mathf.Rad2Deg;
             float angleDelta = Mathf.DeltaAngle(currentAngle, targetAngle);
 
@@ -108,11 +108,5 @@ namespace Kocmoc.Gameplay
             shipRb = GetComponent<Rigidbody2D>();
             centerOfMass = ship.GetCenterOfMass();
         }
-    }
-
-    public enum ShipControllerType
-    {
-        Player,
-        AI
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Kocmoc
+namespace Kocmoc.UI
 {
     public class Tab : MonoBehaviour
     {

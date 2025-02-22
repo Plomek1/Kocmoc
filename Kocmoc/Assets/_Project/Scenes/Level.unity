@@ -493,6 +493,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 601062718}
+  - component: {fileID: 601062719}
   m_Layer: 5
   m_Name: Tabs
   m_TagString: Untagged
@@ -521,6 +522,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -10, y: -10}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &601062719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 601062717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df3924c51aa10f740afa9a01f9294164, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startingTab: {fileID: 2030519104}
 --- !u!1 &606903376
 GameObject:
   m_ObjectHideFlags: 0
@@ -557,7 +571,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -170.44409, y: 0.00065613}
+  m_AnchoredPosition: {x: 253, y: -0.023611}
   m_SizeDelta: {x: 340.8887, y: 1079.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &606903378
@@ -569,10 +583,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 606903376}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df3924c51aa10f740afa9a01f9294164, type: 3}
+  m_Script: {fileID: 11500000, guid: c09a2378590fb8642952e19c36233576, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingTab: {fileID: 2030519104}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1441,7 +1454,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5900549633eedf543b20f57657df26bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  group: {fileID: 606903378}
+  group: {fileID: 601062719}
   tab: {fileID: 1453892438}
 --- !u!1 &1411170775
 GameObject:
@@ -1690,7 +1703,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5900549633eedf543b20f57657df26bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  group: {fileID: 606903378}
+  group: {fileID: 601062719}
   tab: {fileID: 2030519104}
 --- !u!1 &1532860454
 GameObject:

@@ -1,8 +1,7 @@
-using System.Collections;
-using TMPro;
 using UnityEngine;
+using TMPro;
 
-namespace Kocmoc
+namespace Kocmoc.UI
 {
     public class FPSCounter : MonoBehaviour
     {
@@ -11,7 +10,6 @@ namespace Kocmoc
         private void Start()
         {
             label = GetComponent<TMP_Text>();
-            //InvokeRepeating("UpdateCounter", 0f, .5f);
         }
 
         private void Update()

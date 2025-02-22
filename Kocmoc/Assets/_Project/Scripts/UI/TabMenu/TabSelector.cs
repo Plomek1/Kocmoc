@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Kocmoc
+namespace Kocmoc.UI
 {
     [RequireComponent(typeof(Button))]
     public class TabSelector : MonoBehaviour
@@ -11,7 +11,7 @@ namespace Kocmoc
 
         private Button btn;
 
-        private void Start()
+        private void Awake()
         {
             btn = GetComponent<Button>();
             btn.onClick.AddListener(OpenTab);

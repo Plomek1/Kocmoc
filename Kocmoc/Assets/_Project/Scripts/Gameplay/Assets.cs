@@ -1,7 +1,6 @@
-using Kocmoc.Gameplay;
 using UnityEngine;
 
-namespace Kocmoc
+namespace Kocmoc.Gameplay
 {
     public class Assets : MonoBehaviour
     {

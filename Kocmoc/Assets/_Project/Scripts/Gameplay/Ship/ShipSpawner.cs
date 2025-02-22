@@ -1,10 +1,12 @@
-using Unity.VisualScripting;
+using System;
 using UnityEngine;
 
 namespace Kocmoc.Gameplay
 {
     public static class ShipSpawner
     {
+        public static Action<Ship> shipSpawned;
+
         const int SHIP_GRID_SIZE = 31;
 
         public static Ship SpawnShip(ShipCellData[] cells, Vector2 position)
@@ -13,9 +15,10 @@ namespace Kocmoc.Gameplay
             
             ShipData shipData = (ShipData)ScriptableObject.CreateInstance(typeof(ShipData));
             shipData.Init(CreateShipGrid(cells, shipData));
-            ship.Init(shipData);
-            ship.AttachController(ShipControllerType.Player);
+            
+            ship.Init(shipData, ShipType.Player);
 
+            shipSpawned?.Invoke(ship);
             return ship;
         }
 

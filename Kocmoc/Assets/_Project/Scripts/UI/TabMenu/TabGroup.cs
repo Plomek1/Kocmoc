@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Kocmoc
+namespace Kocmoc.UI
 {
     public class TabGroup : MonoBehaviour
     {
