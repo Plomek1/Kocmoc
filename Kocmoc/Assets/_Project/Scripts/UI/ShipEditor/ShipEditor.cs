@@ -8,13 +8,15 @@ namespace Kocmoc.UI
         [SerializeField]private Ship ship;
         private ShipController shipController;
 
-        private CameraDrag cameraDrag;
+        private CameraMovement cameraMovement;
+        private GridSelector gridSelector;
         private GridRenderer shipGridRenderer;
 
         private void Awake()
         {
             ShipSpawner.shipSpawned += OnShipSpawned;
-            cameraDrag = Camera.main.GetComponent<CameraDrag>();
+            cameraMovement = Camera.main.GetComponent<CameraMovement>();
+            gridSelector = GetComponent<GridSelector>();
         }
 
         private void Update()
@@ -35,6 +37,7 @@ namespace Kocmoc.UI
             this.ship = ship;
             shipController = ship.GetComponent<ShipController>();
             shipGridRenderer = ship.gridRenderer;
+            gridSelector.SetGrid(ship.data.grid);
         }
 
         private void OnShipSpawned(Ship ship)
@@ -47,17 +50,21 @@ namespace Kocmoc.UI
         {
             base.Open();
             shipController.enabled = false;
-            shipGridRenderer.StartRendering();
-            cameraDrag.ResetPosition();
+            shipGridRenderer.Activate();
+            gridSelector.Activate();
+
+            cameraMovement.ResetPosition();
         }
 
         public override void Close()
         {
             base.Close();
             shipController.enabled = true;
-            shipGridRenderer.StopRendering();
+            shipGridRenderer.Deactivate();
+            gridSelector.Deactivate();
+
         }
 
-        
+
     }
 }

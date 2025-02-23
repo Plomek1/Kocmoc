@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Kocmoc
@@ -6,6 +5,8 @@ namespace Kocmoc
     [System.Serializable]
     public class GridBase
     {
+        public Transform origin { get; private set; }
+
         public Vector2Int size { get; private set; }
         public Vector2 worldSize { get; private set; }
         public bool centered {  get; private set; }
@@ -37,6 +38,28 @@ namespace Kocmoc
             LimitInput(coordinates, out Vector2Int limitedCoordinates);
             return GetCellPosition(limitedCoordinates, centerOfCell);
         }
+
+        public Vector2Int PositionToCell(Vector2 position)
+        {
+            if (origin) 
+            {
+                position -= (Vector2)origin.position;
+                float angle = -Vector2.SignedAngle(Vector2.up, origin.up);
+                position = Quaternion.AngleAxis(angle, Vector3.forward) * position;
+            }
+
+            int x = Mathf.RoundToInt(position.x / cellSize);
+            int y = Mathf.RoundToInt(position.y / cellSize);
+
+            return new Vector2Int(x, y);
+        }
+
+        public Vector2Int PositionToCellLimited(Vector2 position)
+        {
+            LimitInput(PositionToCell(position), out Vector2Int limitedCoordinates);
+            return limitedCoordinates;
+        }
+        
         #endregion
 
         #region Parameter setters
@@ -100,9 +123,12 @@ namespace Kocmoc
         }
         #endregion
 
-        public GridBase(Vector2Int size, float cellSize = 0, bool centered = false)
+        public void SetOrigin(Transform origin) => this.origin = origin;
+
+        public GridBase(Vector2Int size, Transform origin = null, float cellSize = 0, bool centered = false)
         {
             this.size = size;
+            this.origin = origin;
             cellCount = size.x * size.y;
 
             SetCellSize(cellSize);

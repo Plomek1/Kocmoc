@@ -73,16 +73,16 @@ namespace Kocmoc.Gameplay
             float currentAngle = Mathf.Atan2(centerOfMass.up.x, centerOfMass.up.y) * Mathf.Rad2Deg;
             float angleDelta = Mathf.DeltaAngle(currentAngle, targetAngle);
 
-            float brakingAngle = (Mathf.Pow(shipRb.angularVelocity, 2) * Time.deltaTime) / (2f * ship.shipData.angularAcceleration / shipRb.inertia);
+            float brakingAngle = (Mathf.Pow(shipRb.angularVelocity, 2) * Time.deltaTime) / (2f * ship.data.angularAcceleration / shipRb.inertia);
 
-            if (Mathf.Abs(angleDelta) > brakingAngle) targetAngularVelocity = Mathf.Sign(angleDelta) * ship.shipData.angularAcceleration;
+            if (Mathf.Abs(angleDelta) > brakingAngle) targetAngularVelocity = Mathf.Sign(angleDelta) * ship.data.angularAcceleration;
             else targetAngularVelocity = 0;
 
-            if (Mathf.Abs(angleDelta) > ROTATION_STOP_TRESHOLD * ship.shipData.angularAcceleration)
+            if (Mathf.Abs(angleDelta) > ROTATION_STOP_TRESHOLD * ship.data.angularAcceleration)
             {
                 float torgue;
-                if (targetAngularVelocity == 0) torgue = Mathf.Sign(shipRb.angularVelocity) * ship.shipData.angularAcceleration * -1;
-                else torgue = Mathf.Sign(targetAngularVelocity) * ship.shipData.angularAcceleration * -1;
+                if (targetAngularVelocity == 0) torgue = Mathf.Sign(shipRb.angularVelocity) * ship.data.angularAcceleration * -1;
+                else torgue = Mathf.Sign(targetAngularVelocity) * ship.data.angularAcceleration * -1;
                 shipRb.AddTorque(torgue);
             }
             else

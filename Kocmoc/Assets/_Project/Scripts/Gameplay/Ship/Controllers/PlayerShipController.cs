@@ -12,7 +12,7 @@ namespace Kocmoc.Gameplay
         protected override void OnStart()
         {
             base.OnStart();
-            Camera.main.GetComponent<CameraDrag>().target = centerOfMass;
+            Camera.main.GetComponent<CameraMovement>().target = centerOfMass;
         }
 
         private void Update()

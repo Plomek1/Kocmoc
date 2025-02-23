@@ -9,7 +9,7 @@ namespace Kocmoc.Gameplay
     {
         public Action<ShipController> ControllerAttached;
 
-        public ShipData shipData { get; private set; }
+        public ShipData data { get; private set; }
         public ShipType type { get; private set; }
 
         public GridRenderer gridRenderer { get; private set; }
@@ -24,17 +24,18 @@ namespace Kocmoc.Gameplay
 
         public Transform GetCenterOfMass() => centerOfMass;
 
-        public void Init(ShipData shipData, ShipType type)
+        public void Init(ShipData data, ShipType type)
         {
-            this.shipData = shipData;
+            this.data = data;
             this.type = type;
             AttachController(type);
 
-            shipData.MassUpdated += OnMassUpdate;
+            this.data.grid.SetOrigin(transform);
+            this.data.MassUpdated += OnMassUpdate;
 
-            foreach (GridCell<ShipCellData> cell in shipData.grid.GetCells())
+            foreach (GridCell<ShipCellData> cell in data.grid.GetCells())
             {
-                ShipCell cellGo = Instantiate(cell.data.prefab, shipData.grid.GetCellPosition(cell.coordinates, centerOfCell: true), Quaternion.identity, cellsRoot);
+                ShipCell cellGo = Instantiate(cell.data.prefab, data.grid.GetCellPosition(cell.coordinates, centerOfCell: true), Quaternion.identity, cellsRoot);
                 cellGo.Init(this, cell.data);
             }
 
@@ -42,7 +43,7 @@ namespace Kocmoc.Gameplay
             OnMassUpdate();
 
             gridRenderer = GetComponentInChildren<GridRenderer>();
-            gridRenderer.SetGrid(shipData.grid);
+            gridRenderer.SetGrid(data.grid);
         }
 
         public void AttachController(ShipType type)
@@ -61,14 +62,14 @@ namespace Kocmoc.Gameplay
         private void OnMassUpdate()
         {
 
-            Vector3 centerOfMassDelta = (Vector3)shipData.centerOfMass - centerOfMass.position;
+            Vector3 centerOfMassDelta = (Vector3)data.centerOfMass - centerOfMass.position;
             if (centerOfMassDelta.sqrMagnitude > 0)
             {
-                centerOfMass.position = shipData.centerOfMass;
+                centerOfMass.position = data.centerOfMass;
 
-                rb.mass = shipData.totalMass;
-                rb.inertia = shipData.totalMass;
-                rb.centerOfMass = shipData.centerOfMass;
+                rb.mass = data.totalMass;
+                rb.inertia = data.totalMass;
+                rb.centerOfMass = data.centerOfMass;
             }
         }
 

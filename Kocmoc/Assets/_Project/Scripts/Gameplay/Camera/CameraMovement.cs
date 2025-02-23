@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Kocmoc.Gameplay
 {
     [RequireComponent(typeof(Camera))]
-    public class CameraDrag : MonoBehaviour
+    public class CameraMovement : MonoBehaviour
     {
         public bool followTarget;
         public Transform target;

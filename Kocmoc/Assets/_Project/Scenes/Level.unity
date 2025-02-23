@@ -490,7 +490,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
-  - component: {fileID: 519420033}
+  - component: {fileID: 519420035}
   - component: {fileID: 519420034}
   m_Layer: 0
   m_Name: Main Camera
@@ -617,23 +617,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &519420033
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b29c99546fa55b54c8f534564412fd0c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  followTarget: 0
-  target: {fileID: 0}
-  boundCamera: 0
-  bounds: {x: 32, y: 24, z: 0}
-  offset: {x: 0, y: 0, z: -10}
 --- !u!114 &519420034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -651,6 +634,23 @@ MonoBehaviour:
   maxZoom: 30
   zoomSensitivity: 0.3
   smoothness: 20
+--- !u!114 &519420035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b153fa6a6da12447a6eb1d4c5c20cb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  followTarget: 0
+  target: {fileID: 0}
+  boundCamera: 0
+  bounds: {x: 10, y: 10, z: 0}
+  offset: {x: 0, y: 0, z: -10}
 --- !u!1 &601062717
 GameObject:
   m_ObjectHideFlags: 0
@@ -711,8 +711,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 606903377}
-  - component: {fileID: 606903378}
   - component: {fileID: 606903379}
+  - component: {fileID: 606903378}
+  - component: {fileID: 606903380}
   m_Layer: 5
   m_Name: ShipEditor
   m_TagString: Untagged
@@ -800,6 +801,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enterDuration: 0.2
   enterPos: {x: 0, y: 0}
+--- !u!114 &606903380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606903376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8d2196ce52ec87409efa1515a6f253d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightSelector: {fileID: 0}
+  clickSelector: {fileID: 0}
 --- !u!1 &619111016
 GameObject:
   m_ObjectHideFlags: 0

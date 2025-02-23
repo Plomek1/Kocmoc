@@ -98,13 +98,13 @@ namespace Kocmoc
         public bool IsOccupied(int index) => occupied[index];
         public bool IsOccupied(Vector2Int coordinates) => occupied[CoordinatesToIndex(coordinates)];
 
-        public Grid (Vector2Int size, float cellSize = 1, bool centered = false) : base(size, cellSize, centered)
+        public Grid (Vector2Int size, Transform origin = null, float cellSize = 1, bool centered = false) : base(size, origin, cellSize, centered)
         {
             cells = new Dictionary<int, GridCell<T>>();
             occupied = new bool[size.x * size.y];
         }
 
-        public Grid (Vector2Int size, T startingValue, float cellSize = 1, bool centered = false) : base(size, cellSize, centered)
+        public Grid (Vector2Int size, T startingValue, Transform origin = null, float cellSize = 1, bool centered = false) : base(size, origin, cellSize, centered)
         {
             cells = new Dictionary<int, GridCell<T>>(size.x * size.y);
             occupied = new bool[size.x * size.y];

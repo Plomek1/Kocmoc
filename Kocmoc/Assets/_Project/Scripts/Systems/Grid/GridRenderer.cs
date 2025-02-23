@@ -7,7 +7,7 @@ namespace Kocmoc
 {
     public class GridRenderer : MonoBehaviour
     {
-        public bool rendering { get; private set; }
+        public bool active { get; private set; }
 
         [SerializeField] private RenderType drawType;
         [Space(20)]
@@ -22,7 +22,7 @@ namespace Kocmoc
         [SerializeField] private Color lineColor;
         [Space(20)]
 
-        private GridBase gridToDraw = null;
+        private GridBase grid = null;
         private List<GameObject> cellSprites;
         private SpriteRenderer repeatingSprite;
         private LineRenderer lineRenderer;
@@ -37,7 +37,7 @@ namespace Kocmoc
 
         void Update()
         {
-            if (!rendering || gridToDraw == null) return;
+            if (!active || grid == null) return;
             lineRenderer.startWidth = Camera.main.orthographicSize * 0.001f * lineWidth;
         }
 
@@ -55,7 +55,7 @@ namespace Kocmoc
         {
             if (grid == null) return;
             if (!initialized) Init();
-            gridToDraw = grid;
+            this.grid = grid;
 
             switch (drawType)
             {
@@ -71,16 +71,18 @@ namespace Kocmoc
             }
         }
 
+        public GridBase GetGrid() => grid;
+
         [ProPlayButton]
-        public void ToggleRendering()
+        public void ToggleActivation()
         {
-            if (rendering) StopRendering();
-            else           StartRendering();
+            if (active) Deactivate();
+            else        Activate();
         }
 
-        public void StartRendering()
+        public void Activate()
         {
-            if (rendering || gridToDraw == null) return;
+            if (active || grid == null) return;
             switch (drawType)
             {
                 case RenderType.Lines:
@@ -94,12 +96,12 @@ namespace Kocmoc
                     break;
             }
 
-            rendering = true;
+            active = true;
         }
 
-        public void StopRendering()
+        public void Deactivate()
         {
-            if (!rendering) return;
+            if (!active) return;
 
             switch (drawType)
             {
@@ -114,17 +116,17 @@ namespace Kocmoc
                     break;
             }
 
-            rendering = false;
+            active = false;
         }
 
         private void UpdateSprites()
         {
-            int cellCount = gridToDraw.cellCount;
+            int cellCount = grid.cellCount;
 
-            for (int i = 0; i < gridToDraw.cellCount; i++)
+            for (int i = 0; i < grid.cellCount; i++)
             {
-                int cellIndex = gridToDraw.centered ? gridToDraw.CenterInput(i) : i;
-                Vector2 spritePos = gridToDraw.GetCellPosition(cellIndex, true);
+                int cellIndex = grid.centered ? grid.CenterInput(i) : i;
+                Vector2 spritePos = grid.GetCellPosition(cellIndex, true);
 
                 if(cellSprites.Count > i)
                     cellSprites[i].transform.position = spritePos;
@@ -147,31 +149,31 @@ namespace Kocmoc
                 repeatingSprite.sprite = cellSprite;
                 repeatingSprite.drawMode = SpriteDrawMode.Tiled;
             }
-            Vector2 gridCenter = gridToDraw.centered ? Vector2.zero: gridToDraw.worldSize * .5f;
+            Vector2 gridCenter = grid.centered ? Vector2.zero: grid.worldSize * .5f;
             repeatingSprite.transform.localPosition = gridCenter;
-            repeatingSprite.size = gridToDraw.size;
+            repeatingSprite.size = grid.size;
         }
 
         private void UpdateLineRenderer()
         {
             List<Vector3> positions = new List<Vector3>();
 
-            float gridWidth  = gridToDraw.size.x * gridToDraw.cellSize;
-            float gridHeight = gridToDraw.size.y * gridToDraw.cellSize;
+            float gridWidth  = grid.size.x * grid.cellSize;
+            float gridHeight = grid.size.y * grid.cellSize;
 
             Vector2 nextPos = (Vector2)transform.position;
-            if (gridToDraw.centered) nextPos -= gridToDraw.worldSize * .5f;
+            if (grid.centered) nextPos -= grid.worldSize * .5f;
             positions.Add(nextPos);
 
             int polarity = 1;
-            for (int x = 0; x <= gridToDraw.size.x; x++)
+            for (int x = 0; x <= grid.size.x; x++)
             {
                 nextPos += new Vector2(0, gridHeight) * polarity;
                 positions.Add(nextPos);
 
-                if (x < gridToDraw.size.x)
+                if (x < grid.size.x)
                 {
-                    nextPos += new Vector2(gridToDraw.cellSize, 0);
+                    nextPos += new Vector2(grid.cellSize, 0);
                     positions.Add(nextPos);
                 }
 
@@ -181,14 +183,14 @@ namespace Kocmoc
             int verticalDirection = polarity;
             polarity = -1;
 
-            for (int y = 0; y <= gridToDraw.size.y; y++)
+            for (int y = 0; y <= grid.size.y; y++)
             {
                 nextPos += new Vector2(gridWidth, 0) * polarity;
                 positions.Add(nextPos);
 
-                if (y < gridToDraw.size.y)
+                if (y < grid.size.y)
                 {
-                    nextPos += new Vector2(0, gridToDraw.cellSize * verticalDirection);
+                    nextPos += new Vector2(0, grid.cellSize * verticalDirection);
                     positions.Add(nextPos);
                 }
 
