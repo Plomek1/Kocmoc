@@ -9,7 +9,6 @@ namespace Kocmoc
 {
     public class Menu : MonoBehaviour
     {
-        
         [Header("Menu Events")]
         public UnityEvent MenuOpened;
         public UnityEvent MenuClosed;
@@ -29,6 +28,12 @@ namespace Kocmoc
             if (!opened) return;
             opened = false;
             MenuClosed?.Invoke();
+        }
+
+        public void Toggle()
+        {
+            if (opened) Close();
+            else Open();
         }
     }
 }

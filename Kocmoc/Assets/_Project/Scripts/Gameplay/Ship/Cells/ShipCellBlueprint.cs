@@ -6,6 +6,11 @@ namespace Kocmoc.Gameplay
     public class ShipCellBlueprint : ScriptableObject
     {
         public ShipCell prefab;
+        [Space(10)]
+
+        [Header("General")]
+        public string cellName;
+        public Sprite icon;
         public float mass;
 
         [Space(20)]

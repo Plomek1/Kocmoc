@@ -23,18 +23,23 @@ namespace Kocmoc.Gameplay
         
         private Camera cam;
 
+        public void ResetPosition()
+        {
+            transform.position = resetPosition;
+            dragPosition = Vector3.zero;
+        }
+
         private void Start()
         {
             cam = GetComponent<Camera>();
             transform.position = resetPosition;
         }
 
-        public void LateUpdate()
+        private void LateUpdate()
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
-                transform.position = resetPosition;
-                dragPosition = Vector3.zero;
+                ResetPosition();
                 return;
             }
 

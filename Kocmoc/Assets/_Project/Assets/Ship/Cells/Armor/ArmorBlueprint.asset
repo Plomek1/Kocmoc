@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: ArmorBlueprint
   m_EditorClassIdentifier: 
   prefab: {fileID: 636513044177330267, guid: a7cd24f6b51b73f499a71936e0d39928, type: 3}
+  cellName: Armor
+  icon: {fileID: -2757887451555568444, guid: b8770b03c53b8064887d822ea9f896c5, type: 3}
   mass: 6
   modules: []

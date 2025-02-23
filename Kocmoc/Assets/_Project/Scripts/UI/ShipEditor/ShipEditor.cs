@@ -21,16 +21,12 @@ namespace Kocmoc.UI
         {
             if (Input.GetKeyDown(KeyCode.B))
             {
-                if (opened)
+                if (ship.inMotion)
                 {
-                    shipGridRenderer.StopRendering();
-                    Close();
+                    Debug.Log("Can't open ship editor, stop first!");
+                    return;
                 }
-                else
-                {
-                    shipGridRenderer.StartRendering();
-                    Open();
-                }
+                Toggle();
             }
         }
 
@@ -46,5 +42,22 @@ namespace Kocmoc.UI
             if (ship.type == ShipType.Player)
                 SetShip(ship);
         }
+
+        public override void Open()
+        {
+            base.Open();
+            shipController.enabled = false;
+            shipGridRenderer.StartRendering();
+            cameraDrag.ResetPosition();
+        }
+
+        public override void Close()
+        {
+            base.Close();
+            shipController.enabled = true;
+            shipGridRenderer.StopRendering();
+        }
+
+        
     }
 }

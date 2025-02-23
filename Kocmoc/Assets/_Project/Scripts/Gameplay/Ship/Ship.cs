@@ -10,9 +10,12 @@ namespace Kocmoc.Gameplay
         public Action<ShipController> ControllerAttached;
 
         public ShipData shipData { get; private set; }
-        public ShipType type;
+        public ShipType type { get; private set; }
 
         public GridRenderer gridRenderer { get; private set; }
+
+        public bool inMotion => rb.linearVelocity.magnitude > 0 || rb.angularVelocity != 0;
+        public bool inCombat => false;
 
         [SerializeField] private Transform centerOfMass;
         [SerializeField] private Transform cellsRoot;
