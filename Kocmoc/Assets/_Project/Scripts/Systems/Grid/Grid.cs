@@ -14,14 +14,14 @@ namespace Kocmoc
         public void SetCell(int index, T value)
         {
             if (centered) index = UncenterInput(index);
-            if (!ValidateInput(index)) return;
+            if (!ValidateInputUncentered(index)) return;
             SetCellRaw(index, value);
         }
 
         public void SetCell(Vector2Int coordinates, T value)
         {
             if (centered) coordinates = UncenterInput(coordinates);
-            if (!ValidateInput(coordinates)) return;
+            if (!ValidateInputUncentered(coordinates)) return;
             SetCellRaw(coordinates, value);
         }
 
@@ -44,14 +44,14 @@ namespace Kocmoc
         public T GetCell(int index)
         {
             if (centered) index = UncenterInput(index);
-            if (!ValidateInput(index)) return default;
+            if (!ValidateInputUncentered(index)) return default;
             return GetCellRaw(index);
         }
 
         public T GetCell(Vector2Int coordinates)
         {
             if (centered) coordinates = UncenterInput(coordinates);
-            if (!ValidateInput(coordinates)) return default;
+            if (!ValidateInputUncentered(coordinates)) return default;
             return GetCellRaw(coordinates);
         }
 

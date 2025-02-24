@@ -17,6 +17,8 @@ namespace Kocmoc.UI
             ShipSpawner.shipSpawned += OnShipSpawned;
             cameraMovement = Camera.main.GetComponent<CameraMovement>();
             gridSelector = GetComponent<GridSelector>();
+
+            if (ship) SetShip(ship);
         }
 
         private void Update()

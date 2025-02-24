@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Kocmoc
@@ -9,7 +10,7 @@ namespace Kocmoc
 
         public Vector2Int size { get; private set; }
         public Vector2 worldSize { get; private set; }
-        public bool centered {  get; private set; }
+        public bool centered { get; private set; }
 
         public int cellCount { get; private set; }
         public int firstCell { get; private set; }
@@ -39,9 +40,26 @@ namespace Kocmoc
             return GetCellPosition(limitedCoordinates, centerOfCell);
         }
 
+        public Vector2 GetCellWorldPosition(int index, bool centerOfCell = false) => ApplyOriginTransform(GetCellPosition(index, centerOfCell));
+        public Vector2 GetCellWorldPosition(Vector2Int coordinates, bool centerOfCell = false) => ApplyOriginTransform(GetCellPosition(coordinates, centerOfCell));
+
+        public Vector2 GetCellWorldPositionLimited(int index, bool centerOfCell = false) => ApplyOriginTransform(GetCellPositionLimited(index, centerOfCell));
+        public Vector2 GetCellWorldPositionLimited(Vector2Int coordinates, bool centerOfCell = false) => ApplyOriginTransform(GetCellPositionLimited(coordinates, centerOfCell));
+
+        private Vector2 ApplyOriginTransform(Vector2 position)
+        {
+            if (origin)
+            {
+                float angle = Vector2.SignedAngle(Vector2.up, origin.up);
+                Vector2 cellPosition = Quaternion.AngleAxis(angle, Vector3.forward) * position;
+                return (Vector2)origin.position + cellPosition;
+            }
+            return position;
+        }
+
         public Vector2Int PositionToCell(Vector2 position)
         {
-            if (origin) 
+            if (origin)
             {
                 position -= (Vector2)origin.position;
                 float angle = -Vector2.SignedAngle(Vector2.up, origin.up);
@@ -59,7 +77,7 @@ namespace Kocmoc
             LimitInput(PositionToCell(position), out Vector2Int limitedCoordinates);
             return limitedCoordinates;
         }
-        
+
         #endregion
 
         #region Parameter setters
@@ -71,15 +89,27 @@ namespace Kocmoc
 
         public void SetCentered(bool centered)
         {
-            this.centered = centered; 
+            this.centered = centered;
             firstCell = centered ? CenterInput(0) : 0;
             lastCell = centered ? CenterInput(cellCount - 1) : cellCount - 1;
         }
         #endregion
 
         #region Input validation
-        public bool ValidateInput(int index) => index >= 0 && index < cellCount;
-        public bool ValidateInput(Vector2Int coordinates) => coordinates.x >= 0 && coordinates.y >= 0 && coordinates.x < size.x && coordinates.y < size.y;
+
+        public bool ValidateInput(int index)
+        {
+            if (centered) index = UncenterInput(index);
+            return ValidateInputUncentered(index);
+        }
+        public bool ValidateInput(Vector2Int coordinates)
+        {
+            if (centered) coordinates = UncenterInput(coordinates);
+            return ValidateInputUncentered(coordinates);
+        }
+
+        protected bool ValidateInputUncentered(int index) => index >= 0 && index < cellCount;
+        protected bool ValidateInputUncentered(Vector2Int coordinates) => coordinates.x >= 0 && coordinates.y >= 0 && coordinates.x < size.x && coordinates.y < size.y;
 
         public bool LimitInput(int index, out int limitedIndex)
         {
