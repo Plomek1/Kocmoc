@@ -505,6 +505,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88376d0c6a52764428afa69baffee6c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  editorMenu: {fileID: 606903381}
   cells:
   - blueprint: {fileID: 11400000, guid: 4c9bc1aadea21be4789273e6ee07a8d7, type: 2}
     coordinates: {x: 0, y: 0}
@@ -788,7 +789,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df3924c51aa10f740afa9a01f9294164, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingTab: {fileID: 2030519104}
+  defaultTab: {fileID: 0}
+  resetTabOnClose: 1
 --- !u!1 &606903376
 GameObject:
   m_ObjectHideFlags: 0
@@ -798,6 +800,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 606903377}
+  - component: {fileID: 606903381}
   - component: {fileID: 606903379}
   - component: {fileID: 606903378}
   - component: {fileID: 606903380}
@@ -842,38 +845,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c09a2378590fb8642952e19c36233576, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MenuOpened:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 606903379}
-        m_TargetAssemblyTypeName: Kocmoc.UITween, Assembly-CSharp
-        m_MethodName: PlayEnterTween
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  MenuClosed:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 606903379}
-        m_TargetAssemblyTypeName: Kocmoc.UITween, Assembly-CSharp
-        m_MethodName: PlayExitTween
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  opened: 0
   ship: {fileID: 0}
+  gridSelector: {fileID: 606903380}
 --- !u!114 &606903379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -902,6 +875,73 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highlightSprite: {fileID: 885655527}
   selectSprite: {fileID: 0}
+--- !u!114 &606903381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606903376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e9fc1af07dbd2d4dbff02d46b1bdbbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  opened: 0
+  MenuOpened:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 606903379}
+        m_TargetAssemblyTypeName: Kocmoc.UITween, Assembly-CSharp
+        m_MethodName: PlayEnterTween
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 606903378}
+        m_TargetAssemblyTypeName: Kocmoc.UI.ShipEditor, Assembly-CSharp
+        m_MethodName: Open
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  MenuClosed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 606903379}
+        m_TargetAssemblyTypeName: Kocmoc.UITween, Assembly-CSharp
+        m_MethodName: PlayExitTween
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 606903378}
+        m_TargetAssemblyTypeName: Kocmoc.UI.ShipEditor, Assembly-CSharp
+        m_MethodName: Close
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &619111016
 GameObject:
   m_ObjectHideFlags: 0
@@ -2385,7 +2425,7 @@ MonoBehaviour:
   selectorPrefab: {fileID: 5031739363272823786, guid: 932c7bc0c2d93da43a4482ef8e164268, type: 3}
   listRoot: {fileID: 1338865568}
   scrollbar: {fileID: 935416931}
-  editor: {fileID: 0}
+  editor: {fileID: 606903378}
 --- !u!1 &1462998226
 GameObject:
   m_ObjectHideFlags: 0
@@ -3163,7 +3203,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1784637751}
   m_HandleRect: {fileID: 1784637750}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3384,7 +3424,7 @@ MonoBehaviour:
   selectorPrefab: {fileID: 5031739363272823786, guid: 932c7bc0c2d93da43a4482ef8e164268, type: 3}
   listRoot: {fileID: 674842782}
   scrollbar: {fileID: 1633240857}
-  editor: {fileID: 0}
+  editor: {fileID: 606903378}
 --- !u!1 &2092831752
 GameObject:
   m_ObjectHideFlags: 0

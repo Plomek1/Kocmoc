@@ -1,12 +1,15 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
 
 namespace Kocmoc.UI
 {
     public abstract class ListSelector<T> : MonoBehaviour
     {
+        public Action<T> ValueSelected;
+        public Action ValueDeselected;
+
         [SerializeField] protected T[] values;
         [Space(10)]
         
@@ -17,7 +20,8 @@ namespace Kocmoc.UI
         private Dictionary<T, SelectorButton<T>> selectors;
         private T selectedValue;
 
-        private void Start()
+        private void Start() => OnStart();
+        protected virtual void OnStart()
         {
             selectors = new Dictionary<T, SelectorButton<T>>(values.Length);
             foreach (T value in values)
@@ -44,21 +48,22 @@ namespace Kocmoc.UI
             Deselect();
             selectedValue = value;
             selectors[selectedValue].Select();
-            Debug.Log(selectedValue);
+
+            ValueSelected?.Invoke(selectedValue);
         }
 
         protected virtual void Deselect()
         {
             if (object.Equals(selectedValue, default)) return;
-            Debug.Log($"DESELECTED: {selectedValue}");
             selectors[selectedValue].Deselect();
             selectedValue = default;
 
+            ValueDeselected?.Invoke();
         }
 
         private void OnDisable()
         {
-            Deselect();
+            //Deselect();
         }
     }
 }

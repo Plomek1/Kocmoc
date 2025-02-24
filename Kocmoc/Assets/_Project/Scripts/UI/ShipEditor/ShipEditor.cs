@@ -1,37 +1,39 @@
+using System;
 using UnityEngine;
 using Kocmoc.Gameplay;
 
 namespace Kocmoc.UI
 {
-    public class ShipEditor : Menu
+    public class ShipEditor : MonoBehaviour
     {
+        public Action Opened;
+        public Action Closed;
+
         [SerializeField]private Ship ship;
         private ShipController shipController;
+        private GridRenderer shipGridRenderer;
+        [Space(10)]
+
+        [SerializeField] private GridSelector gridSelector;
 
         private CameraMovement cameraMovement;
-        private GridSelector gridSelector;
-        private GridRenderer shipGridRenderer;
 
         private void Awake()
         {
-            ShipSpawner.shipSpawned += OnShipSpawned;
             cameraMovement = Camera.main.GetComponent<CameraMovement>();
-            gridSelector = GetComponent<GridSelector>();
+            ConnectCallbacks();
 
             if (ship) SetShip(ship);
         }
 
-        private void Update()
+        public void SelectCell(ShipCellBlueprint cell)
         {
-            if (Input.GetKeyDown(KeyCode.B))
-            {
-                if (ship.inMotion)
-                {
-                    Debug.Log("Can't open ship editor, stop first!");
-                    return;
-                }
-                Toggle();
-            }
+            gridSelector.GetHighlightSprite().sprite = cell.icon;
+        }
+
+        public void DeselectCell()
+        {
+            gridSelector.ResetHighlightSprite();
         }
 
         public void SetShip(Ship ship)
@@ -48,25 +50,28 @@ namespace Kocmoc.UI
                 SetShip(ship);
         }
 
-        public override void Open()
+        public void Open()
         {
-            base.Open();
             shipController.enabled = false;
             shipGridRenderer.Activate();
             gridSelector.Activate();
 
             cameraMovement.ResetPosition();
+            Opened?.Invoke();
         }
 
-        public override void Close()
+        public void Close()
         {
-            base.Close();
             shipController.enabled = true;
             shipGridRenderer.Deactivate();
             gridSelector.Deactivate();
-
+            Closed?.Invoke();
         }
 
+        private void ConnectCallbacks()
+        {
+            ShipSpawner.shipSpawned += OnShipSpawned;
 
+        }
     }
 }

@@ -9,12 +9,11 @@ namespace Kocmoc
 {
     public class Menu : MonoBehaviour
     {
+        [SerializeField] protected bool opened;
+        
         [Header("Menu Events")]
         public UnityEvent MenuOpened;
         public UnityEvent MenuClosed;
-
-        
-        [SerializeField] protected bool opened;
 
         public virtual void Open()
         {
