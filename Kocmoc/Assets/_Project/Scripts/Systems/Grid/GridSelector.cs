@@ -35,7 +35,21 @@ namespace Kocmoc
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2Int hoveredCell = grid.PositionToCell(mousePos);
 
-            if (grid.ValidateInput(hoveredCell))
+            bool cellValid = grid.ValidateInput(hoveredCell);
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (cellValid)
+                {
+                    if (selectedCell.HasValue && selectedCell.Value == hoveredCell)
+                        DeselectCell();
+                    else
+                        SelectCell(hoveredCell);
+                }
+                else DeselectCell();
+            }
+
+            if (cellValid)
             {
                 if (highlightedCell != hoveredCell)
                     HighlightCell(hoveredCell);
@@ -63,12 +77,17 @@ namespace Kocmoc
 
         private void SelectCell(Vector2Int? cell)
         {
-
+            Vector2Int? previousSelectedCell = selectedCell;
+            selectedCell = cell;
+            CellSelected?.Invoke(selectedCell.Value, previousSelectedCell);
         }
 
-        private void DeselectCell()
+        public void DeselectCell()
         {
+            if (!selectedCell.HasValue) return;
 
+            CellDeselected?.Invoke(selectedCell.Value);
+            selectedCell = null;
         }
 
         public SpriteRenderer GetHighlightSprite() => highlightSprite;
