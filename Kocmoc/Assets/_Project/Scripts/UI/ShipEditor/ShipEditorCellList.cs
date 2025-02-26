@@ -17,13 +17,13 @@ namespace Kocmoc.UI
         protected override void Select(ShipCellBlueprint value)
         {
             base.Select(value);
-            editor.SelectCell(value);
+            editor.SelectBlueprint(value);
         }
 
         protected override void Deselect()
         {
             base.Deselect();
-            editor.DeselectCell();
+            editor.DeselectBlueprint();
         }
     }
 }

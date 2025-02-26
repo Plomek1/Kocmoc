@@ -32,15 +32,16 @@ namespace Kocmoc.Gameplay
         public Rotation currentRotation;
         public int health;
 
-        public ShipCellData(ShipCellBlueprint blueprint, ShipData ship)
+        public ShipCellData(ShipCellBlueprint blueprint, Vector2Int coordinates, Rotation rotation)
         {
             this.blueprint = blueprint;
-            Init(ship);
+            this.coordinates = coordinates;
+            this.currentRotation = rotation;
+            Init();
         }
 
-        public void Init(ShipData ship)
+        public void Init()
         {
-            this.ship = ship;
             int modulesCount = blueprint.modules.Length;
 
             modules = new ModuleData[modulesCount];
@@ -50,5 +51,7 @@ namespace Kocmoc.Gameplay
                 modules[i].Init();
             }
         }
+
+        public void SetShip(ShipData ship) => this.ship = ship;
     }
 }

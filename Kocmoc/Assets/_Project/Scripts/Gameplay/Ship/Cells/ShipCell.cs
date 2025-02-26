@@ -32,7 +32,7 @@ namespace Kocmoc.Gameplay
         private void UpdateRotation()
         {
             float rotationAngle = Mathf.Log((int)data.currentRotation, 2);
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, -rotationAngle * 90));
+            transform.localRotation = Quaternion.Euler(new Vector3(0, 0, -rotationAngle * 90));
         }
     }
 }

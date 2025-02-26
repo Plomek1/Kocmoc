@@ -15,8 +15,9 @@ namespace Kocmoc.UI
         [Space(10)]
 
         [SerializeField] private GridSelector gridSelector;
-
         private CameraMovement cameraMovement;
+
+        private ShipCellBlueprint selectedBlueprint;
 
         private void Awake()
         {
@@ -26,13 +27,16 @@ namespace Kocmoc.UI
             if (ship) SetShip(ship);
         }
 
-        public void SelectCell(ShipCellBlueprint cell)
+        public void SelectBlueprint(ShipCellBlueprint blueprint)
         {
-            gridSelector.GetHighlightSprite().sprite = cell.icon;
+            selectedBlueprint = blueprint;
+            gridSelector.GetHighlightSprite().sprite = selectedBlueprint.icon;
+            gridSelector.DeselectCell();
         }
 
-        public void DeselectCell()
+        public void DeselectBlueprint()
         {
+            selectedBlueprint = null;
             gridSelector.ResetHighlightSprite();
         }
 
@@ -42,6 +46,21 @@ namespace Kocmoc.UI
             shipController = ship.GetComponent<ShipController>();
             shipGridRenderer = ship.gridRenderer;
             gridSelector.SetGrid(ship.data.grid);
+        }
+
+        private void OnCellSelected(Vector2Int selectedCell, Vector2Int? previousSelectedCell)
+        {
+            if (selectedBlueprint)
+            {
+                ShipCellData cellData = new ShipCellData(selectedBlueprint, selectedCell, Rotation.Up);
+                ship.AddCell(cellData);
+                gridSelector.DeselectCell();
+            }
+        }
+
+        private void OnCellHighlighted(Vector2Int highlightedCell)
+        {
+            //validate input
         }
 
         private void OnShipSpawned(Ship ship)
@@ -71,7 +90,8 @@ namespace Kocmoc.UI
         private void ConnectCallbacks()
         {
             ShipSpawner.shipSpawned += OnShipSpawned;
-
+            gridSelector.CellHighlighted += OnCellHighlighted;
+            gridSelector.CellSelected += OnCellSelected;
         }
     }
 }

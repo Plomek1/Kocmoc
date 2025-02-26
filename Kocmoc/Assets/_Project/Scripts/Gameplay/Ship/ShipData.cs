@@ -45,9 +45,23 @@ namespace Kocmoc.Gameplay
             MassUpdated?.Invoke();
         }
 
+        public void AddCell(ShipCellData cellData)
+        {
+            grid.SetCell(cellData.coordinates, cellData);
+            UpdateMass();
+        }
+
+        public void RemoveCell(Vector2Int cellCoordinates)
+        {
+            grid.SetCell(cellCoordinates, null);
+            UpdateMass();
+        }
+
         public void Init(Grid<ShipCellData> grid)
         {
             this.grid = grid;
+            foreach (var cell in grid.GetCells()) cell.data.SetShip(this);
+
             UpdateMass();
         }
     }

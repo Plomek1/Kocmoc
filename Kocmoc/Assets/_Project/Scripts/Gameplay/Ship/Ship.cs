@@ -1,5 +1,4 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Kocmoc.Gameplay
@@ -34,10 +33,7 @@ namespace Kocmoc.Gameplay
             this.data.MassUpdated += OnMassUpdate;
 
             foreach (GridCell<ShipCellData> cell in data.grid.GetCells())
-            {
-                ShipCell cellGo = Instantiate(cell.data.prefab, data.grid.GetCellPosition(cell.coordinates, centerOfCell: true), Quaternion.identity, cellsRoot);
-                cellGo.Init(this, cell.data);
-            }
+                SpawnCell(cell.data);
 
             rb = GetComponent<Rigidbody2D>();
             OnMassUpdate();
@@ -46,22 +42,42 @@ namespace Kocmoc.Gameplay
             gridRenderer.SetGrid(data.grid);
         }
 
+        public void AddCell(ShipCellData cellData)
+        {
+            data.AddCell(cellData);
+            SpawnCell(cellData);
+        }
+
+        public void RemoveCell(Vector2Int cellCoordinates)
+        {
+            data.RemoveCell(cellCoordinates);
+            //DestroyGameObject
+        }
+
         public void AttachController(ShipType type)
         {
             ShipController controller = null;
             switch (type)
             {
                 case ShipType.Player:
-                    controller = transform.AddComponent<PlayerShipController>();
+                    controller = transform.gameObject.AddComponent<PlayerShipController>();
                     break;
             }
 
             ControllerAttached?.Invoke(controller);
         }
 
+        private void SpawnCell(ShipCellData cellData)
+        {
+            Vector2 cellLocalPosition = data.grid.GetCellPosition(cellData.coordinates, centerOfCell: true);
+            ShipCell cellGo = Instantiate(cellData.prefab, cellsRoot);
+            cellGo.transform.localPosition = cellLocalPosition;
+
+            cellGo.Init(this, cellData);
+        }
+
         private void OnMassUpdate()
         {
-
             Vector3 centerOfMassDelta = (Vector3)data.centerOfMass - centerOfMass.position;
             if (centerOfMassDelta.sqrMagnitude > 0)
             {
@@ -72,9 +88,8 @@ namespace Kocmoc.Gameplay
                 rb.centerOfMass = data.centerOfMass;
             }
         }
-
-        
     }
+
     public enum ShipType
     {
         Player,

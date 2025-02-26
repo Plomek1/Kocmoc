@@ -76,10 +76,13 @@ namespace Kocmoc
 
         private void SetCellRaw(int index, T value)
         {
-            if (object.Equals(value, default(T)) && occupied[index])
+            if (object.Equals(value, default(T)) )
             {
-                cells.Remove(index);
-                occupied[index] = false;
+                if (occupied[index])
+                {
+                    cells.Remove(index);
+                    occupied[index] = false;
+                }
                 return;
             }
 
@@ -88,7 +91,7 @@ namespace Kocmoc
                 cells[index].SetData(value);
                 return;
             }
-            Vector2Int coordinates = IndexToCoordinates(index, alreadyUncenter: true);
+            Vector2Int coordinates = IndexToCoordinates(index, alreadyUncentered: true);
             cells.Add(index, new GridCell<T>(coordinates, value));
             occupied[index] = true;
         }
