@@ -28,7 +28,7 @@ namespace Kocmoc.Gameplay
             foreach (ShipCellData cell in cells)
             {
                 cell.Init();
-                shipGrid.SetCell(cell.coordinates, cell);
+                shipGrid.CreateGroup(cell.coordinates, cell.size, cell);
             }
 
             return shipGrid;

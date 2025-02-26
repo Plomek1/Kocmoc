@@ -33,7 +33,7 @@ namespace Kocmoc.Gameplay
             this.data.MassUpdated += OnMassUpdate;
 
             foreach (GridCell<ShipCellData> cell in data.grid.GetCells())
-                SpawnCell(cell.data);
+                SpawnCell(cell.value);
 
             rb = GetComponent<Rigidbody2D>();
             OnMassUpdate();

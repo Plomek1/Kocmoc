@@ -9,20 +9,21 @@ namespace Kocmoc
         private Dictionary<int, GridCell<T>> cells;
 
         #region Cell setters
-        public ICollection<GridCell<T>> GetCells() => cells.Values;
 
-        public void SetCell(int index, T value)
+        public bool SetCell(int index, T value)
         {
             if (centered) index = UncenterInput(index);
-            if (!ValidateInputUncentered(index)) return;
+            if (!ValidateInputUncentered(index)) return false;
             SetCellRaw(index, value);
+            return true;
         }
 
-        public void SetCell(Vector2Int coordinates, T value)
+        public bool SetCell(Vector2Int coordinates, T value)
         {
             if (centered) coordinates = UncenterInput(coordinates);
-            if (!ValidateInputUncentered(coordinates)) return;
+            if (!ValidateInputUncentered(coordinates)) return false;
             SetCellRaw(coordinates, value);
+            return true;
         }
 
         public void SetCellLimited(int index, T value)
@@ -41,28 +42,30 @@ namespace Kocmoc
         #endregion
 
         #region Cell getters
-        public T GetCell(int index)
+        public ICollection<GridCell<T>> GetCells() => cells.Values;
+
+        public GridCell<T> GetCell(int index)
         {
             if (centered) index = UncenterInput(index);
             if (!ValidateInputUncentered(index)) return default;
             return GetCellRaw(index);
         }
 
-        public T GetCell(Vector2Int coordinates)
+        public GridCell<T> GetCell(Vector2Int coordinates)
         {
             if (centered) coordinates = UncenterInput(coordinates);
             if (!ValidateInputUncentered(coordinates)) return default;
             return GetCellRaw(coordinates);
         }
 
-        public T GetCellLimited(int index)
+        public GridCell<T> GetCellLimited(int index)
         {
             if (centered) index = UncenterInput(index);
             LimitInput(index, out int limitedIndex);
             return GetCellRaw(limitedIndex);
         }
 
-        public T GetCellLimited(Vector2Int coordinates)
+        public GridCell<T> GetCellLimited(Vector2Int coordinates)
         {
             if (centered) coordinates = UncenterInput(coordinates);
             LimitInput(coordinates, out Vector2Int limitedCoordinates);
@@ -70,11 +73,49 @@ namespace Kocmoc
         }
         #endregion
 
-        #region Raw getters and setters
-        private T GetCellRaw(int index) => occupied[index] ? cells[index].data : default;
-        private T GetCellRaw(Vector2Int coordinates) => GetCellRaw(CoordinatesToIndex(coordinates));
+        #region Cell groups
+        public bool CreateGroup(Vector2Int origin, Vector2Int size, T value)
+        {
+            if (size == Vector2Int.one)
+            {
+                SetCell(origin, value);
+                return true;
+            }
+            //Validate group bounds
+            GridGroup group = new GridGroup(origin, size);
 
-        private void SetCellRaw(int index, T value)
+            for (int y = 0; y < Mathf.Abs(size.y); y++)
+            {
+                for (int x = 0; x < Mathf.Abs(size.x); x++)
+                {
+                    Vector2Int coordinates = origin + new Vector2Int(x * (int)Mathf.Sign(size.x), y * (int)Mathf.Sign(size.y));
+                    if (centered) coordinates = UncenterInput(coordinates);
+                    SetCellRaw(coordinates, value, group: group);
+                }
+            }
+
+            return true;
+        }
+
+        public override bool IsInGroup(int index, out GridGroup group)
+        {
+            GridCell<T> cell = GetCell(index);
+            if (cell == null)
+            {
+                group = null;
+                return false;
+            }
+
+            group = cell.group;
+            return cell.inGroup;
+        }
+        #endregion
+
+        #region Raw getters and setters
+        private GridCell<T> GetCellRaw(int index) => occupied[index] ? cells[index]: null;
+        private GridCell<T> GetCellRaw(Vector2Int coordinates) => GetCellRaw(CoordinatesToIndex(coordinates));
+
+        private void SetCellRaw(int index, T value, GridGroup group = null)
         {
             if (object.Equals(value, default(T)) )
             {
@@ -83,23 +124,30 @@ namespace Kocmoc
                     cells.Remove(index);
                     occupied[index] = false;
                     GridUpdated?.Invoke();
+                    Debug.Log(IndexToCoordinates(index, alreadyUncentered: true));
+
                 }
                 return;
             }
 
             if (occupied[index])
             {
+                if (group != null) cells[index].AddToGroup(value, group);
                 cells[index].SetData(value);
                 GridUpdated?.Invoke();
+                Debug.Log(IndexToCoordinates(index, alreadyUncentered: true));
                 return;
             }
+
             Vector2Int coordinates = IndexToCoordinates(index, alreadyUncentered: true);
-            cells.Add(index, new GridCell<T>(coordinates, value));
+
+            cells.Add(index, new GridCell<T>(coordinates, value, group));
             occupied[index] = true;
+
             GridUpdated?.Invoke();
         }
 
-        private void SetCellRaw(Vector2Int coordinates, T value) => SetCellRaw(CoordinatesToIndex(coordinates), value);
+        private void SetCellRaw(Vector2Int coordinates, T value, GridGroup group = null) => SetCellRaw(CoordinatesToIndex(coordinates), value, group);
         #endregion
 
         public bool IsOccupied(Vector2Int coordinates) => IsOccupied(CoordinatesToIndex(coordinates));
@@ -130,6 +178,20 @@ namespace Kocmoc
                     occupied[index] = true;
                 }
             }
+        }
+    }
+
+    public class GridGroup
+    {
+        public Vector2Int origin;
+        public Vector2Int size;
+        public Vector2Int sizeAbs;
+
+        public GridGroup(Vector2Int origin, Vector2Int size)
+        {
+            this.origin = origin;
+            this.size = size;
+            sizeAbs = new Vector2Int(Mathf.Abs(size.x), Mathf.Abs(size.y));
         }
     }
 }

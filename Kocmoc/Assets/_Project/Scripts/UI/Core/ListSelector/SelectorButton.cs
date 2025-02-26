@@ -27,12 +27,12 @@ namespace Kocmoc.UI
 
         public void Select()
         {
-            button.interactable = false;
+            //button.interactable = false;
         }
 
         public void Deselect()
         {
-            button.interactable = true;
+            //button.interactable = true;
 
         }
     }

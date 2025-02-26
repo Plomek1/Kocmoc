@@ -15,6 +15,7 @@ MonoBehaviour:
   prefab: {fileID: 6138459358621207694, guid: c4b34a3203d166f4282f4cbc964c0cb8, type: 3}
   cellName: Thruster
   icon: {fileID: 5901323728722048983, guid: 23c503aab481bfd4397f352825a9a183, type: 3}
+  size: {x: 1, y: 1}
   mass: 5
   modules:
   - {fileID: 11400000, guid: 684a7482acc700b48a5f333fa9ab1de2, type: 2}

@@ -36,7 +36,7 @@ namespace Kocmoc.Gameplay
 
             foreach (var cell in grid.GetCells())
             {
-                float cellMass = cell.data.mass;
+                float cellMass = cell.value.mass;
                 newCenterOfMass += grid.GetCellPosition(cell.coordinates, centerOfCell: true) * cellMass;
                 totalMass += cellMass;
             }
@@ -60,7 +60,7 @@ namespace Kocmoc.Gameplay
         public void Init(Grid<ShipCellData> grid)
         {
             this.grid = grid;
-            foreach (var cell in grid.GetCells()) cell.data.SetShip(this);
+            foreach (var cell in grid.GetCells()) cell.value.SetShip(this);
 
             UpdateMass();
         }

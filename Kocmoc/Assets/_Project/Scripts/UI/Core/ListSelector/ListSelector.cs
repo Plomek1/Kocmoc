@@ -39,7 +39,8 @@ namespace Kocmoc.UI
 
         private void OnSelectorClicked(T value)
         {
-            if (object.Equals(value, selectedValue)) Deselect();
+            if (object.Equals(value, selectedValue))
+                Deselect();
             else Select(value);
         }
 

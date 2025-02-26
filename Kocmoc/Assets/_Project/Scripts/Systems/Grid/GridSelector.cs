@@ -1,5 +1,7 @@
+using DG.Tweening;
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Kocmoc
 {
@@ -9,42 +11,51 @@ namespace Kocmoc
         public Action<Vector2Int, Vector2Int?> CellSelected;
         public Action<Vector2Int> CellDeselected;
 
+        public GridBase grid;
         public bool active { get; private set; }
 
-        [SerializeField] private SpriteRenderer highlightSprite;
-        [SerializeField] private SpriteRenderer selectSprite;
-
-        [Header("Cell Validation")]
-        [SerializeField] private bool validateHighlightedCell;
-        [SerializeField] private Color validColor;
-        [SerializeField] private Color invalidColor;
-        private Func<Vector2Int, bool> ValidateInput;
-        private Color defaultColor;
+        [Header("Renderers")]
+        [field: SerializeField] public SpriteRenderer highlightSpriteRenderer { get; private set; }
+        [field: SerializeField] public SpriteRenderer selectSpriteRenderer { get; private set; }
 
         private Sprite defaultHighlightSprite;
         private Sprite defaultSelectSprite;
 
+        [Header("Cell Validation")]
+        [SerializeField] private bool validateHighlightCell;
+        [SerializeField] private Color validColor;
+        [SerializeField] private Color invalidColor;
+        private Color defaultColor;
+
+        private bool highlightCellValid;
+        public Func<Vector2Int, bool> ValidateInputFunc;
+
+        [Header("Group Handling")]
+        public bool fitToGroup;
+
         private Vector2Int? highlightedCell;
         private Vector2Int? selectedCell;
-
-        private bool highlightedCellValid;
         
-        private GridBase grid;
-
         private void Start()
         {
-            defaultHighlightSprite = highlightSprite.sprite;
-            //defaultSelectSprite = selectSprite.sprite;
-            defaultColor = highlightSprite.color;
+            defaultHighlightSprite = highlightSpriteRenderer.sprite;
+            defaultSelectSprite = selectSpriteRenderer.sprite;
+            defaultColor = highlightSpriteRenderer.color;
 
-            if (!validateHighlightedCell) highlightedCellValid = true;
-            grid.GridUpdated += ValidateHighlightSprite;
+            if (!validateHighlightCell) highlightCellValid = true;
+            grid.GridUpdated += ValidateHighlightCell;
         }
 
         private void Update()
         {
             if (!active || grid == null) return;
             
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                if (highlightedCell.HasValue) HighlightCell(null);
+                return;
+            }
+
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2Int hoveredCell = grid.PositionToCell(mousePos);
 
@@ -57,7 +68,7 @@ namespace Kocmoc
                     if (selectedCell.HasValue && selectedCell.Value == hoveredCell)
                         DeselectCell();
                     else
-                        if (highlightedCellValid) SelectCell(hoveredCell);
+                        if (highlightCellValid) SelectCell(hoveredCell);
                 }
                 else DeselectCell();
             }
@@ -69,7 +80,6 @@ namespace Kocmoc
             }
             else if (highlightedCell != null)
                 HighlightCell(null);
-
         }
 
         private void HighlightCell(Vector2Int? cell)
@@ -78,22 +88,22 @@ namespace Kocmoc
             
             if (highlightedCell == null)
             {
-                highlightSprite.gameObject.SetActive(false);
+                highlightSpriteRenderer.gameObject.SetActive(false);
                 return;
             }
-
-            highlightSprite.gameObject.SetActive(true);
-            highlightSprite.transform.position = grid.GetCellWorldPosition(highlightedCell.Value, centerOfCell: true);
-            highlightSprite.transform.rotation = grid.origin.rotation;
-
-            ValidateHighlightSprite();
+            
+            UpdateSelectorTransform(highlightSpriteRenderer, highlightedCell.Value);
+            ValidateHighlightCell();
             CellHighlighted?.Invoke(highlightedCell.Value);
         }
 
-        private void SelectCell(Vector2Int? cell)
+        private void SelectCell(Vector2Int cell)
         {
             Vector2Int? previousSelectedCell = selectedCell;
             selectedCell = cell;
+
+            UpdateSelectorTransform(selectSpriteRenderer, selectedCell.Value);
+
             CellSelected?.Invoke(selectedCell.Value, previousSelectedCell);
         }
 
@@ -101,15 +111,70 @@ namespace Kocmoc
         {
             if (!selectedCell.HasValue) return;
 
-            CellDeselected?.Invoke(selectedCell.Value);
+            Vector2Int lastSelectedCell = selectedCell.Value;
             selectedCell = null;
+
+            selectSpriteRenderer.gameObject.SetActive(false);
+            CellDeselected?.Invoke(lastSelectedCell);
         }
 
-        public SpriteRenderer GetHighlightSprite() => highlightSprite;
-        public SpriteRenderer GetSelectSprite() => selectSprite;
+        private void UpdateSelectorTransform(SpriteRenderer selector, Vector2Int coordinates)
+        {
+            bool centerCellPosition = selector.sprite.pivot != Vector2.zero;
+            Vector2 targetPosition;
+            Vector2 targetSize;
 
-        public void ResetHighlightSprite() => highlightSprite.sprite = defaultHighlightSprite;
-        public void ResetSelectSprite() => selectSprite.sprite = defaultSelectSprite;
+            if (fitToGroup && grid.IsInGroup(coordinates, out GridGroup group))
+            {
+                targetPosition = grid.GetCellWorldPosition(group.origin, centerCellPosition);
+                targetSize = group.size;
+            }
+            else
+            {
+                targetPosition = grid.GetCellWorldPosition(coordinates, centerOfCell: centerCellPosition);
+                targetSize = Vector2.one;
+            }
+
+            if (selector.gameObject.activeSelf == false)
+            {
+                selector.gameObject.SetActive(true);
+                selector.transform.position = targetPosition;
+                selector.size = targetSize;
+            }
+            else
+            {
+                selector.transform.DOMove(targetPosition, .04f).SetEase(Ease.OutCubic);
+                DOTween.To(() => highlightSpriteRenderer.size, x => selector.size = x, targetSize, .05f);
+            }
+
+            selector.transform.rotation = grid.origin.rotation;
+        }
+
+
+        #region Cell validation
+        public void SetHighlightCellValidation(bool validate)
+        {
+            validateHighlightCell = validate;
+            if (!validateHighlightCell)
+            {
+                highlightCellValid = true;
+                highlightSpriteRenderer.color = defaultColor;
+            }
+            else ValidateHighlightCell();
+        }
+
+        private void ValidateHighlightCell()
+        {
+            if (validateHighlightCell && highlightedCell.HasValue)
+            {
+                highlightCellValid = ValidateInputFunc != null ? ValidateInputFunc(highlightedCell.Value) : true;
+                highlightSpriteRenderer.color = highlightCellValid ? validColor : invalidColor;
+            }
+        }
+        #endregion
+
+        public void ResetHighlightSprite() => highlightSpriteRenderer.sprite = defaultHighlightSprite;
+        public void ResetSelectSprite() => selectSpriteRenderer.sprite = defaultSelectSprite;
 
         public void ToggleActivation()
         {
@@ -127,21 +192,8 @@ namespace Kocmoc
         {
             if (!active) return;
             HighlightCell(null);
+            DeselectCell();
             active = false;
-        }
-
-        public void SetGrid(GridBase grid) => this.grid = grid;
-        public GridBase GetGrid() => this.grid;
-    
-        public void SetValidationFunction(Func<Vector2Int, bool> func) => ValidateInput = func;
-    
-        private void ValidateHighlightSprite()
-        {
-            if (validateHighlightedCell)
-            {
-                highlightedCellValid = ValidateInput(highlightedCell.Value);
-                highlightSprite.color = highlightedCellValid ? validColor : invalidColor;
-            }
         }
     }
 }

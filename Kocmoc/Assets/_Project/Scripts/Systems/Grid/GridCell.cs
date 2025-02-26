@@ -4,15 +4,30 @@ namespace Kocmoc
 {
     public class GridCell<T>
     {
-        public T data { get; private set; }
+        public T value { get; private set; }
         public Vector2Int coordinates { get; private set; }
 
-        public void SetData(T data) => this.data = data;
+        public bool inGroup => group != null;
+        public bool isOrigin => coordinates == group.origin;
+        public GridGroup group { get; private set; }
 
-        public GridCell(Vector2Int coordinates, T value = default)
+        public void SetData(T value)
         {
-            this.data = value;
+            this.value = value;
+            group = null;
+        }
+
+        public void AddToGroup(T value, GridGroup group)
+        {
+            this.value = value;
+            this.group = group;
+        }
+
+        public GridCell(Vector2Int coordinates, T value = default, GridGroup group = null)
+        {
             this.coordinates = coordinates;
+            this.value = value;
+            this.group = group;
         }
     }
 }

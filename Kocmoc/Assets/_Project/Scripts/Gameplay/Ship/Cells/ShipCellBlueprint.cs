@@ -1,3 +1,4 @@
+using System.Drawing;
 using UnityEngine;
 
 namespace Kocmoc.Gameplay
@@ -11,7 +12,8 @@ namespace Kocmoc.Gameplay
         [Header("General")]
         public string cellName;
         public Sprite icon;
-        public float mass;
+        public Vector2Int size = Vector2Int.one;
+        public float mass = 1;
 
         [Space(20)]
         public ModuleBlueprint[] modules;
@@ -25,7 +27,11 @@ namespace Kocmoc.Gameplay
         [SerializeField] private ShipCellBlueprint blueprint;
 
         public ShipCell prefab => blueprint.prefab;
-        public float mass => blueprint.mass;
+        public string cellName => blueprint.cellName;
+        public Sprite icon     => blueprint.icon;
+        public Vector2Int size => blueprint.size;
+        public float mass      => blueprint.mass;
+
         public ModuleData[] modules;
 
         public Vector2Int coordinates;

@@ -30,14 +30,18 @@ namespace Kocmoc.UI
         public void SelectBlueprint(ShipCellBlueprint blueprint)
         {
             selectedBlueprint = blueprint;
-            gridSelector.GetHighlightSprite().sprite = selectedBlueprint.icon;
+            gridSelector.highlightSpriteRenderer.sprite = selectedBlueprint.icon;
             gridSelector.DeselectCell();
+            gridSelector.SetHighlightCellValidation(true);
+            gridSelector.fitToGroup = false;
         }
 
         public void DeselectBlueprint()
         {
             selectedBlueprint = null;
             gridSelector.ResetHighlightSprite();
+            gridSelector.SetHighlightCellValidation(false);
+            gridSelector.fitToGroup = true;
         }
 
         public void SetShip(Ship ship)
@@ -45,7 +49,7 @@ namespace Kocmoc.UI
             this.ship = ship;
             shipController = ship.GetComponent<ShipController>();
             shipGridRenderer = ship.gridRenderer;
-            gridSelector.SetGrid(ship.data.grid);
+            gridSelector.grid = ship.data.grid;
         }
 
         private void OnCellSelected(Vector2Int selectedCell, Vector2Int? previousSelectedCell)
@@ -60,7 +64,6 @@ namespace Kocmoc.UI
 
         private void OnCellHighlighted(Vector2Int highlightedCell)
         {
-            //validate input
         }
 
         private void OnShipSpawned(Ship ship)
@@ -92,7 +95,7 @@ namespace Kocmoc.UI
             ShipSpawner.shipSpawned += OnShipSpawned;
             gridSelector.CellHighlighted += OnCellHighlighted;
             gridSelector.CellSelected += OnCellSelected;
-            gridSelector.SetValidationFunction(ValidateCellPosition);
+            gridSelector.ValidateInputFunc = ValidateCellPosition;
         }
 
         private bool ValidateCellPosition(Vector2Int coordinates)

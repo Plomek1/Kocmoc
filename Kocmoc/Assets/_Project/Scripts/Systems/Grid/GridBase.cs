@@ -20,6 +20,13 @@ namespace Kocmoc
         public float cellSize { get; private set; }
 
         #region Cell position getters
+        public bool IsInGroup(Vector2Int coordinates, out GridGroup group) => IsInGroup(CoordinatesToIndex(coordinates), out group);
+        public virtual bool IsInGroup(int index, out GridGroup gridGroup)
+        {
+            gridGroup = null;
+            return false;
+        }
+
         public Vector2 GetCellPosition(int index, bool centerOfCell = false) => GetCellPosition(IndexToCoordinates(index), centerOfCell);
 
         public Vector2 GetCellPosition(Vector2Int coordinates, bool centerOfCell = false)

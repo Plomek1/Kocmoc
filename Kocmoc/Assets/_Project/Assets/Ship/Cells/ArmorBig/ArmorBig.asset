@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7ca7edfbf147a3a4186769a42e3f924b, type: 3}
-  m_Name: ArmorBlueprint
+  m_Name: ArmorBig
   m_EditorClassIdentifier: 
-  prefab: {fileID: 636513044177330267, guid: a7cd24f6b51b73f499a71936e0d39928, type: 3}
-  cellName: Armor
-  icon: {fileID: -2757887451555568444, guid: b8770b03c53b8064887d822ea9f896c5, type: 3}
-  size: {x: 1, y: 1}
-  mass: 6
+  prefab: {fileID: 3019000341654922761, guid: 0456ce3db00d503468699dec9353efc3, type: 3}
+  cellName: Big Armor
+  icon: {fileID: -424371101571379821, guid: 19232db07bd7f4647b6160189c20205f, type: 3}
+  size: {x: 2, y: 2}
+  mass: 20
   modules: []
