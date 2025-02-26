@@ -82,6 +82,7 @@ namespace Kocmoc
                 {
                     cells.Remove(index);
                     occupied[index] = false;
+                    GridUpdated?.Invoke();
                 }
                 return;
             }
@@ -89,17 +90,24 @@ namespace Kocmoc
             if (occupied[index])
             {
                 cells[index].SetData(value);
+                GridUpdated?.Invoke();
                 return;
             }
             Vector2Int coordinates = IndexToCoordinates(index, alreadyUncentered: true);
             cells.Add(index, new GridCell<T>(coordinates, value));
             occupied[index] = true;
+            GridUpdated?.Invoke();
         }
+
         private void SetCellRaw(Vector2Int coordinates, T value) => SetCellRaw(CoordinatesToIndex(coordinates), value);
         #endregion
 
-        public bool IsOccupied(int index) => occupied[index];
-        public bool IsOccupied(Vector2Int coordinates) => occupied[CoordinatesToIndex(coordinates)];
+        public bool IsOccupied(Vector2Int coordinates) => IsOccupied(CoordinatesToIndex(coordinates));
+        public bool IsOccupied(int index)
+        {
+            if (centered) index = UncenterInput(index);
+            return occupied[index];
+        }
 
         public Grid (Vector2Int size, Transform origin = null, float cellSize = 1, bool centered = false) : base(size, origin, cellSize, centered)
         {

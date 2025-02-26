@@ -92,6 +92,12 @@ namespace Kocmoc.UI
             ShipSpawner.shipSpawned += OnShipSpawned;
             gridSelector.CellHighlighted += OnCellHighlighted;
             gridSelector.CellSelected += OnCellSelected;
+            gridSelector.SetValidationFunction(ValidateCellPosition);
+        }
+
+        private bool ValidateCellPosition(Vector2Int coordinates)
+        {
+            return ship.data.grid.IsOccupied(coordinates) == false;
         }
     }
 }

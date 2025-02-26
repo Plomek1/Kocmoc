@@ -875,6 +875,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highlightSprite: {fileID: 885655527}
   selectSprite: {fileID: 0}
+  validateHighlightedCell: 1
+  validColor: {r: 1, g: 1, b: 1, a: 1}
+  invalidColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &606903381
 MonoBehaviour:
   m_ObjectHideFlags: 0

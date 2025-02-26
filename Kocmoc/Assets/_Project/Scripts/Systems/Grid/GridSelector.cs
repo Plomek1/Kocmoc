@@ -14,11 +14,20 @@ namespace Kocmoc
         [SerializeField] private SpriteRenderer highlightSprite;
         [SerializeField] private SpriteRenderer selectSprite;
 
+        [Header("Cell Validation")]
+        [SerializeField] private bool validateHighlightedCell;
+        [SerializeField] private Color validColor;
+        [SerializeField] private Color invalidColor;
+        private Func<Vector2Int, bool> ValidateInput;
+        private Color defaultColor;
+
         private Sprite defaultHighlightSprite;
         private Sprite defaultSelectSprite;
 
         private Vector2Int? highlightedCell;
         private Vector2Int? selectedCell;
+
+        private bool highlightedCellValid;
         
         private GridBase grid;
 
@@ -26,6 +35,10 @@ namespace Kocmoc
         {
             defaultHighlightSprite = highlightSprite.sprite;
             //defaultSelectSprite = selectSprite.sprite;
+            defaultColor = highlightSprite.color;
+
+            if (!validateHighlightedCell) highlightedCellValid = true;
+            grid.GridUpdated += ValidateHighlightSprite;
         }
 
         private void Update()
@@ -44,7 +57,7 @@ namespace Kocmoc
                     if (selectedCell.HasValue && selectedCell.Value == hoveredCell)
                         DeselectCell();
                     else
-                        SelectCell(hoveredCell);
+                        if (highlightedCellValid) SelectCell(hoveredCell);
                 }
                 else DeselectCell();
             }
@@ -72,6 +85,8 @@ namespace Kocmoc
             highlightSprite.gameObject.SetActive(true);
             highlightSprite.transform.position = grid.GetCellWorldPosition(highlightedCell.Value, centerOfCell: true);
             highlightSprite.transform.rotation = grid.origin.rotation;
+
+            ValidateHighlightSprite();
             CellHighlighted?.Invoke(highlightedCell.Value);
         }
 
@@ -116,7 +131,17 @@ namespace Kocmoc
         }
 
         public void SetGrid(GridBase grid) => this.grid = grid;
-
         public GridBase GetGrid() => this.grid;
+    
+        public void SetValidationFunction(Func<Vector2Int, bool> func) => ValidateInput = func;
+    
+        private void ValidateHighlightSprite()
+        {
+            if (validateHighlightedCell)
+            {
+                highlightedCellValid = ValidateInput(highlightedCell.Value);
+                highlightSprite.color = highlightedCellValid ? validColor : invalidColor;
+            }
+        }
     }
 }

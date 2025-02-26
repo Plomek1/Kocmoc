@@ -6,6 +6,8 @@ namespace Kocmoc
     [System.Serializable]
     public class GridBase
     {
+        public Action GridUpdated;
+
         public Transform origin { get; private set; }
 
         public Vector2Int size { get; private set; }
