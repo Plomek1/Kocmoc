@@ -81,7 +81,7 @@ namespace Kocmoc.Gameplay
             Vector3 centerOfMassDelta = (Vector3)data.centerOfMass - centerOfMass.position;
             if (centerOfMassDelta.sqrMagnitude > 0)
             {
-                centerOfMass.position = data.centerOfMass;
+                centerOfMass.localPosition = data.centerOfMass;
 
                 rb.mass = data.totalMass;
                 rb.inertia = data.totalMass;

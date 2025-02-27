@@ -12,7 +12,6 @@ namespace Kocmoc
         private Dictionary<int, GridCell<T>> cells;
 
         #region Cell setters
-
         public bool SetCell(int index, T value)
         {
             if (centered) index = UncenterInput(index);

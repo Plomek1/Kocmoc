@@ -37,8 +37,18 @@ namespace Kocmoc.Gameplay
             foreach (var cell in grid.GetCells())
             {
                 float cellMass = cell.value.mass;
-                newCenterOfMass += grid.GetCellPosition(cell.coordinates, centerOfCell: true) * cellMass;
-                totalMass += cellMass;
+                
+                if (cell.inGroup)
+                {
+                    if (!cell.isOrigin) continue;
+                    newCenterOfMass += grid.GetGroupCenterPosition(cell.group) * cellMass;
+                    totalMass += cellMass;
+                }
+                else
+                {
+                    newCenterOfMass += grid.GetCellPosition(cell.coordinates, centerOfCell: true) * cellMass;
+                    totalMass += cellMass;
+                }
             }
 
             centerOfMass = totalMass != 0 ? newCenterOfMass / totalMass : Vector2.zero;

@@ -128,10 +128,7 @@ namespace Kocmoc
             {
                 if (grid.IsInGroup(coordinates, out GridGroup group))
                 {
-                    targetPosition = grid.GetCellWorldPosition(group.origin, centerCellPosition);
-                    if (group.size.x < 0) targetPosition.x += grid.cellSize;
-                    if (group.size.y < 0) targetPosition.y += grid.cellSize;
-
+                    targetPosition = grid.GetGroupCenterWorldPosition(group);
                     targetSize = group.size;
                 }
                 else

@@ -36,7 +36,7 @@ namespace Kocmoc.UI
         private void Update()
         {
             if (!active) return;
-            if (Input.GetKeyDown(KeyCode.R)) SetRotation(currentRotation.Next(skipIndexZero: true));
+            if (selectedBlueprint && Input.GetKeyDown(KeyCode.R)) SetRotation(currentRotation.Next(skipIndexZero: true));
         }
 
         public void SelectBlueprint(ShipCellBlueprint blueprint)

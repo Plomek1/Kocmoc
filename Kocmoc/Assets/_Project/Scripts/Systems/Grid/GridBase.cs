@@ -55,17 +55,6 @@ namespace Kocmoc
         public Vector2 GetCellWorldPositionLimited(int index, bool centerOfCell = false) => ApplyOriginTransform(GetCellPositionLimited(index, centerOfCell));
         public Vector2 GetCellWorldPositionLimited(Vector2Int coordinates, bool centerOfCell = false) => ApplyOriginTransform(GetCellPositionLimited(coordinates, centerOfCell));
 
-        private Vector2 ApplyOriginTransform(Vector2 position)
-        {
-            if (origin)
-            {
-                float angle = Vector2.SignedAngle(Vector2.up, origin.up);
-                Vector2 cellPosition = Quaternion.AngleAxis(angle, Vector3.forward) * position;
-                return (Vector2)origin.position + cellPosition;
-            }
-            return position;
-        }
-
         public Vector2Int PositionToCell(Vector2 position)
         {
             if (origin)
@@ -87,6 +76,20 @@ namespace Kocmoc
             return limitedCoordinates;
         }
 
+        #endregion
+
+        #region Cell groups
+        public Vector2 GetGroupCenterCoordinates(GridGroup group)
+        {
+            Vector2 center = group.origin + (Vector2)(group.size - Vector2.one) * .5f;
+            if (group.size.x < 0) center.x += 1;
+            if (group.size.y < 0) center.y += 1;
+            Debug.Log(center);
+            return center;
+        }
+
+        public Vector2 GetGroupCenterPosition(GridGroup group) => GetGroupCenterCoordinates(group) * cellSize;
+        public Vector2 GetGroupCenterWorldPosition(GridGroup group) => ApplyOriginTransform(GetGroupCenterPosition(group) * cellSize);
         #endregion
 
         #region Parameter setters
@@ -159,6 +162,17 @@ namespace Kocmoc
             int x = index % size.x;
             int y = index / size.x;
             return centered ? CenterInput(new Vector2Int(x, y)) : new Vector2Int(x, y);
+        }
+
+        private Vector2 ApplyOriginTransform(Vector2 position)
+        {
+            if (origin)
+            {
+                float angle = Vector2.SignedAngle(Vector2.up, origin.up);
+                Vector2 cellPosition = Quaternion.AngleAxis(angle, Vector3.forward) * position;
+                return (Vector2)origin.position + cellPosition;
+            }
+            return position;
         }
         #endregion
 
