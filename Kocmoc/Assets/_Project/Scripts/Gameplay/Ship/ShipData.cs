@@ -47,7 +47,8 @@ namespace Kocmoc.Gameplay
 
         public void AddCell(ShipCellData cellData)
         {
-            grid.CreateGroup(cellData.coordinates, cellData.size, cellData);
+            Vector2Int rotatedSize = cellData.size.RightAngleRotate(cellData.currentRotation);
+            grid.CreateGroup(cellData.coordinates, rotatedSize, cellData, checkBounds: false);
             UpdateMass();
         }
 

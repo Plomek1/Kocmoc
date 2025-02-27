@@ -37,7 +37,7 @@ namespace Kocmoc.Gameplay
 
         private void LateUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 ResetPosition();
                 return;

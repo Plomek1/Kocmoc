@@ -17,4 +17,6 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: b8770b03c53b8064887d822ea9f896c5, type: 3}
   size: {x: 1, y: 1}
   mass: 6
+  possibleRotations: 1
+  connectionSides: -1
   modules: []

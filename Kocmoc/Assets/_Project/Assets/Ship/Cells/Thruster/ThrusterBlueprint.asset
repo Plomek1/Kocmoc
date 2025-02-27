@@ -17,5 +17,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 23c503aab481bfd4397f352825a9a183, type: 3}
   size: {x: 1, y: 1}
   mass: 5
+  possibleRotations: -1
+  connectionSides: 1
   modules:
   - {fileID: 11400000, guid: 684a7482acc700b48a5f333fa9ab1de2, type: 2}

@@ -1,8 +1,7 @@
 using System;
 using UnityEngine;
 using Kocmoc.Gameplay;
-using static UnityEngine.UI.Image;
-using System.Drawing;
+using DG.Tweening;
 
 namespace Kocmoc.UI
 {
@@ -11,7 +10,11 @@ namespace Kocmoc.UI
         public Action Opened;
         public Action Closed;
 
-        [SerializeField]private Ship ship;
+        public bool active {  get; private set; }
+
+        [SerializeField] private Ship ship;
+        
+        private Grid<ShipCellData> grid => ship.data.grid;
         private ShipController shipController;
         private GridRenderer shipGridRenderer;
         [Space(10)]
@@ -20,6 +23,7 @@ namespace Kocmoc.UI
         private CameraMovement cameraMovement;
 
         private ShipCellBlueprint selectedBlueprint;
+        private Rotation currentRotation = Rotation.Up;
 
         private void Awake()
         {
@@ -29,23 +33,35 @@ namespace Kocmoc.UI
             if (ship) SetShip(ship);
         }
 
+        private void Update()
+        {
+            if (!active) return;
+            if (Input.GetKeyDown(KeyCode.R)) SetRotation(currentRotation.Next(skipIndexZero: true));
+        }
+
         public void SelectBlueprint(ShipCellBlueprint blueprint)
         {
             selectedBlueprint = blueprint;
+            SetRotation(Rotation.Up);
+
+            gridSelector.fitToGroup = false;
+
             gridSelector.highlightSpriteRenderer.sprite = selectedBlueprint.icon;
+            gridSelector.highlightSpriteRenderer.size = blueprint.size;
+            
             gridSelector.DeselectCell();
             gridSelector.SetHighlightCellValidation(true);
-            gridSelector.fitToGroup = false;
-            Debug.Log(blueprint.size);
-            gridSelector.highlightSpriteRenderer.size = blueprint.size;
         }
 
         public void DeselectBlueprint()
         {
             selectedBlueprint = null;
+            SetRotation(Rotation.Up);
+
+            gridSelector.fitToGroup = true;
+            
             gridSelector.ResetHighlightSprite();
             gridSelector.SetHighlightCellValidation(false);
-            gridSelector.fitToGroup = true;
         }
 
         public void SetShip(Ship ship)
@@ -53,16 +69,25 @@ namespace Kocmoc.UI
             this.ship = ship;
             shipController = ship.GetComponent<ShipController>();
             shipGridRenderer = ship.gridRenderer;
-            gridSelector.grid = ship.data.grid;
+            gridSelector.grid = grid;
+        }
+
+        private void SetRotation(Rotation rotation)
+        {
+            if (currentRotation == rotation) return;
+            currentRotation = rotation;
+
+            Vector3 targetRendererRotation = grid.origin.rotation.eulerAngles + new Vector3(0, 0, currentRotation.Angle());
+            gridSelector.highlightSpriteRenderer.transform.DOLocalRotate(targetRendererRotation, .04f).SetEase(Ease.OutCubic);
+            gridSelector.UpdateHighlightCell();
         }
 
         private void OnCellSelected(Vector2Int selectedCell, Vector2Int? previousSelectedCell)
         {
             if (selectedBlueprint)
             {
-                ShipCellData cellData = new ShipCellData(selectedBlueprint, selectedCell, Rotation.Up);
+                ShipCellData cellData = new ShipCellData(selectedBlueprint, selectedCell, currentRotation);
                 ship.AddCell(cellData);
-                
                 gridSelector.DeselectCell();
             }
         }
@@ -75,7 +100,10 @@ namespace Kocmoc.UI
 
         public void Open()
         {
+            active = true;
             shipController.enabled = false;
+            SetRotation(Rotation.Up);
+
             shipGridRenderer.Activate();
             gridSelector.Activate();
 
@@ -85,9 +113,13 @@ namespace Kocmoc.UI
 
         public void Close()
         {
+            active = false;
             shipController.enabled = true;
+            SetRotation(Rotation.Up);
+
             shipGridRenderer.Deactivate();
             gridSelector.Deactivate();
+
             Closed?.Invoke();
         }
 
@@ -100,11 +132,10 @@ namespace Kocmoc.UI
 
         private bool ValidateCellPosition(Vector2Int coordinates)
         {
-            var grid = ship.data.grid;
             if (selectedBlueprint.size == Vector2Int.one) return grid.IsOccupied(coordinates) == false;
 
-            Vector2Int rotatedSize = selectedBlueprint.size; // TODO adjust by current rotation
-
+            Vector2Int rotatedSize = selectedBlueprint.size.RightAngleRotate(currentRotation);
+            
             for (int y = 0; y < Mathf.Abs(rotatedSize.y); y++)
             {
                 for (int x = 0; x < Mathf.Abs(rotatedSize.x); x++)

@@ -77,7 +77,7 @@ namespace Kocmoc
         #endregion
 
         #region Cell groups
-        public bool CreateGroup(Vector2Int origin, Vector2Int size, T value)
+        public bool CreateGroup(Vector2Int origin, Vector2Int size, T value, bool checkBounds = true)
         {
             if (size == Vector2Int.one)
             {
@@ -85,16 +85,60 @@ namespace Kocmoc
                 return true;
             }
 
-            if (!GroupInBounds(origin, size)) return false;
+            if (checkBounds && !GroupInBounds(origin, size)) return false;
             GridGroup group = new GridGroup(origin, size);
 
-            for (int y = 0; y < group.sizeAbs.y; y++)
+            foreach (Vector2Int cell in group.occupiedCells)
             {
-                for (int x = 0; x < group.sizeAbs.x; x++)
+                if (centered)
                 {
-                    Vector2Int coordinates = group.origin + new Vector2Int(x * (int)Mathf.Sign(group.size.x), y * (int)Mathf.Sign(group.size.y));
-                    if (centered) coordinates = UncenterInput(coordinates);
-                    SetCellRaw(coordinates, value, group: group);
+                    Vector2Int uncenteredCell = UncenterInput(cell);
+                    SetCellRaw(uncenteredCell, value, group: group);
+                    continue;
+                }
+                SetCellRaw(cell, value, group: group);
+            }
+
+            return true;
+        }
+
+        public void RemoveGroup(Vector2Int coordinates)
+        {
+            if (IsInGroup(coordinates, out GridGroup group))
+            {
+                foreach (Vector2Int cell in group.occupiedCells)
+                {
+                    if (centered)
+                    {
+                        Vector2Int uncenteredCell = UncenterInput(cell);
+                        SetCellRaw(uncenteredCell, default);
+                        continue;
+                    }
+                    SetCellRaw(cell, default);
+                }
+            }
+        }
+
+        public bool GroupInBounds(GridGroup group)
+        {
+            if (size == Vector2Int.one) return ValidateInput(group.origin);
+
+            foreach (Vector2Int cell in group.occupiedCells)
+                if (!ValidateInput(cell)) return false;
+            return true;
+        }
+
+
+        public bool GroupInBounds(Vector2Int origin, Vector2Int size)
+        {
+            if (size == Vector2Int.one) return ValidateInput(origin);
+
+            for (int y = 0; y < Mathf.Abs(size.y); y++)
+            {
+                for (int x = 0; x < Mathf.Abs(size.x); x++)
+                {
+                    Vector2Int coordinates = origin + new Vector2Int(x * (int)Mathf.Sign(size.x), y * (int)Mathf.Sign(size.y));
+                    if (!ValidateInput(coordinates)) return false;
                 }
             }
 
@@ -113,29 +157,13 @@ namespace Kocmoc
             group = cell.group;
             return cell.inGroup;
         }
-
-        public bool GroupInBounds(GridGroup group) => GroupInBounds(group.origin, group.size);
-        public bool GroupInBounds(Vector2Int origin, Vector2Int size)
-        {
-            if (size == Vector2Int.one) return ValidateInput(origin);
-
-            for (int y = 0; y < Mathf.Abs(size.y); y++)
-            {
-                for (int x = 0; x < Mathf.Abs(size.x); x++)
-                {
-                    Vector2Int coordinates = origin + new Vector2Int(x * (int)Mathf.Sign(size.x), y * (int)Mathf.Sign(size.y));
-                    if (!ValidateInput(coordinates)) return false;
-                }
-            }
-
-            return true;
-        }
         #endregion
 
         #region Raw getters and setters
         private GridCell<T> GetCellRaw(int index) => occupied[index] ? cells[index]: null;
         private GridCell<T> GetCellRaw(Vector2Int coordinates) => GetCellRaw(CoordinatesToIndex(coordinates));
 
+        private void SetCellRaw(Vector2Int coordinates, T value, GridGroup group = null) => SetCellRaw(CoordinatesToIndex(coordinates), value, group);
         private void SetCellRaw(int index, T value, GridGroup group = null)
         {
             if (object.Equals(value, default(T)) )
@@ -167,8 +195,6 @@ namespace Kocmoc
 
             GridUpdated?.Invoke();
         }
-
-        private void SetCellRaw(Vector2Int coordinates, T value, GridGroup group = null) => SetCellRaw(CoordinatesToIndex(coordinates), value, group);
         #endregion
 
         public bool IsOccupied(Vector2Int coordinates) => IsOccupied(CoordinatesToIndex(coordinates));
@@ -208,11 +234,25 @@ namespace Kocmoc
         public Vector2Int size;
         public Vector2Int sizeAbs;
 
+        public List<Vector2Int> occupiedCells; 
+
         public GridGroup(Vector2Int origin, Vector2Int size)
         {
             this.origin = origin;
             this.size = size;
             sizeAbs = new Vector2Int(Mathf.Abs(size.x), Mathf.Abs(size.y));
+
+            occupiedCells = new List<Vector2Int>(sizeAbs.x * sizeAbs.y);
+
+            for (int y = 0; y < sizeAbs.y; y++)
+            {
+                for (int x = 0; x < sizeAbs.x; x++)
+                {
+                    Vector2Int coordinates = this.origin + new Vector2Int(x * (int)Mathf.Sign(size.x), y * (int)Mathf.Sign(size.y));
+                    occupiedCells.Add(coordinates);
+                }
+            }
+
         }
     }
 }

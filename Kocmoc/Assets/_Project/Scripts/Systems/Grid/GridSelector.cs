@@ -43,7 +43,7 @@ namespace Kocmoc
             defaultColor = highlightSpriteRenderer.color;
 
             if (!validateHighlightCell) highlightCellValid = true;
-            grid.GridUpdated += ValidateHighlightCell;
+            grid.GridUpdated += UpdateHighlightCell;
         }
 
         private void Update()
@@ -93,7 +93,7 @@ namespace Kocmoc
             }
             
             UpdateSelectorTransform(highlightSpriteRenderer, highlightedCell.Value);
-            ValidateHighlightCell();
+            UpdateHighlightCell();
             CellHighlighted?.Invoke(highlightedCell.Value);
         }
 
@@ -154,10 +154,7 @@ namespace Kocmoc
                 selector.transform.DOMove(targetPosition, .04f).SetEase(Ease.OutCubic);
                 DOTween.To(() => highlightSpriteRenderer.size, x => selector.size = x, targetSize, .05f);
             }
-
-            selector.transform.rotation = grid.origin.rotation;
         }
-
 
         #region Cell validation
         public void SetHighlightCellValidation(bool validate)
@@ -168,10 +165,10 @@ namespace Kocmoc
                 highlightCellValid = true;
                 highlightSpriteRenderer.color = defaultColor;
             }
-            else ValidateHighlightCell();
+            else UpdateHighlightCell();
         }
 
-        private void ValidateHighlightCell()
+        public void UpdateHighlightCell()
         {
             if (validateHighlightCell && highlightedCell.HasValue)
             {
@@ -194,6 +191,9 @@ namespace Kocmoc
         {
             if (active) return;
             active = true;
+
+            highlightSpriteRenderer.transform.rotation = grid.origin.rotation;
+            selectSpriteRenderer.transform.rotation = grid.origin.rotation;
         }
 
         public void Deactivate() 

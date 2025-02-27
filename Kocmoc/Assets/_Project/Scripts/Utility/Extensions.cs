@@ -40,7 +40,23 @@ namespace Kocmoc
             }
         }
 
+        public static float Angle(this Rotation value)
+        {
+            return Mathf.Log((int)value, 2) * -90;
+        }
+
         public static Vector2 ToVector(this Rotation value) => rotationVectors[value];
+
+        public static Vector2Int RightAngleRotate(this Vector2Int value, Rotation angle)
+        {
+            switch (angle)
+            {
+                case Rotation.Right: return new Vector2Int( value.y, -value.x);
+                case Rotation.Down:  return new Vector2Int(-value.x, -value.y);
+                case Rotation.Left:  return new Vector2Int(-value.y,  value.x);
+                default: return value;
+            }
+        }
 
         private static Dictionary<Rotation, Vector2> rotationVectors = new Dictionary<Rotation, Vector2>() 
         {

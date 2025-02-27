@@ -12,8 +12,12 @@ namespace Kocmoc.Gameplay
         [Header("General")]
         public string cellName;
         public Sprite icon;
+        [Space(10)]
         public Vector2Int size = Vector2Int.one;
         public float mass = 1;
+        [Space(10)]
+        public Rotation possibleRotations = Rotation.Up;
+        public Rotation connectionSides;
 
         [Space(20)]
         public ModuleBlueprint[] modules;
