@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 using Kocmoc.Gameplay;
+using static UnityEngine.UI.Image;
+using System.Drawing;
 
 namespace Kocmoc.UI
 {
@@ -34,6 +36,8 @@ namespace Kocmoc.UI
             gridSelector.DeselectCell();
             gridSelector.SetHighlightCellValidation(true);
             gridSelector.fitToGroup = false;
+            Debug.Log(blueprint.size);
+            gridSelector.highlightSpriteRenderer.size = blueprint.size;
         }
 
         public void DeselectBlueprint()
@@ -58,12 +62,9 @@ namespace Kocmoc.UI
             {
                 ShipCellData cellData = new ShipCellData(selectedBlueprint, selectedCell, Rotation.Up);
                 ship.AddCell(cellData);
+                
                 gridSelector.DeselectCell();
             }
-        }
-
-        private void OnCellHighlighted(Vector2Int highlightedCell)
-        {
         }
 
         private void OnShipSpawned(Ship ship)
@@ -93,14 +94,27 @@ namespace Kocmoc.UI
         private void ConnectCallbacks()
         {
             ShipSpawner.shipSpawned += OnShipSpawned;
-            gridSelector.CellHighlighted += OnCellHighlighted;
             gridSelector.CellSelected += OnCellSelected;
             gridSelector.ValidateInputFunc = ValidateCellPosition;
         }
 
         private bool ValidateCellPosition(Vector2Int coordinates)
         {
-            return ship.data.grid.IsOccupied(coordinates) == false;
+            var grid = ship.data.grid;
+            if (selectedBlueprint.size == Vector2Int.one) return grid.IsOccupied(coordinates) == false;
+
+            Vector2Int rotatedSize = selectedBlueprint.size; // TODO adjust by current rotation
+
+            for (int y = 0; y < Mathf.Abs(rotatedSize.y); y++)
+            {
+                for (int x = 0; x < Mathf.Abs(rotatedSize.x); x++)
+                {
+                    Vector2Int currentCoordinates = coordinates + new Vector2Int(x * (int)Mathf.Sign(rotatedSize.x), y * (int)Mathf.Sign(rotatedSize.y));
+                    if (grid.ValidateInput(currentCoordinates) == false || grid.IsOccupied(currentCoordinates)) return false;
+                }
+            }
+
+            return true;
         }
     }
 }

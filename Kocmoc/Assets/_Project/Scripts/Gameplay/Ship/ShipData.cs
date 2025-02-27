@@ -47,12 +47,13 @@ namespace Kocmoc.Gameplay
 
         public void AddCell(ShipCellData cellData)
         {
-            grid.SetCell(cellData.coordinates, cellData);
+            grid.CreateGroup(cellData.coordinates, cellData.size, cellData);
             UpdateMass();
         }
 
         public void RemoveCell(Vector2Int cellCoordinates)
         {
+            //TODO Group removal
             grid.SetCell(cellCoordinates, null);
             UpdateMass();
         }

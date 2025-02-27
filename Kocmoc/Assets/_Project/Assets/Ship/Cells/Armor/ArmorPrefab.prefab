@@ -11,14 +11,14 @@ PrefabInstance:
     - target: {fileID: 586604168877241540, guid: fb52d4f05d8a41640b5dfe561fd6fa78, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -2757887451555568444, guid: b8770b03c53b8064887d822ea9f896c5, type: 3}
+      objectReference: {fileID: 21300000, guid: b8770b03c53b8064887d822ea9f896c5, type: 3}
     - target: {fileID: 586604168877241540, guid: fb52d4f05d8a41640b5dfe561fd6fa78, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6311137735059369463, guid: fb52d4f05d8a41640b5dfe561fd6fa78, type: 3}
       propertyPath: m_Name
-      value: Armor
+      value: ArmorPrefab
       objectReference: {fileID: 0}
     - target: {fileID: 7014034760705626742, guid: fb52d4f05d8a41640b5dfe561fd6fa78, type: 3}
       propertyPath: m_LocalPosition.x

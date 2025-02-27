@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace Kocmoc
 {
@@ -81,14 +84,15 @@ namespace Kocmoc
                 SetCell(origin, value);
                 return true;
             }
-            //Validate group bounds
+
+            if (!GroupInBounds(origin, size)) return false;
             GridGroup group = new GridGroup(origin, size);
 
-            for (int y = 0; y < Mathf.Abs(size.y); y++)
+            for (int y = 0; y < group.sizeAbs.y; y++)
             {
-                for (int x = 0; x < Mathf.Abs(size.x); x++)
+                for (int x = 0; x < group.sizeAbs.x; x++)
                 {
-                    Vector2Int coordinates = origin + new Vector2Int(x * (int)Mathf.Sign(size.x), y * (int)Mathf.Sign(size.y));
+                    Vector2Int coordinates = group.origin + new Vector2Int(x * (int)Mathf.Sign(group.size.x), y * (int)Mathf.Sign(group.size.y));
                     if (centered) coordinates = UncenterInput(coordinates);
                     SetCellRaw(coordinates, value, group: group);
                 }
@@ -108,6 +112,23 @@ namespace Kocmoc
 
             group = cell.group;
             return cell.inGroup;
+        }
+
+        public bool GroupInBounds(GridGroup group) => GroupInBounds(group.origin, group.size);
+        public bool GroupInBounds(Vector2Int origin, Vector2Int size)
+        {
+            if (size == Vector2Int.one) return ValidateInput(origin);
+
+            for (int y = 0; y < Mathf.Abs(size.y); y++)
+            {
+                for (int x = 0; x < Mathf.Abs(size.x); x++)
+                {
+                    Vector2Int coordinates = origin + new Vector2Int(x * (int)Mathf.Sign(size.x), y * (int)Mathf.Sign(size.y));
+                    if (!ValidateInput(coordinates)) return false;
+                }
+            }
+
+            return true;
         }
         #endregion
 

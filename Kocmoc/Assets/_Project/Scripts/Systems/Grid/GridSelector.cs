@@ -30,7 +30,7 @@ namespace Kocmoc
         private bool highlightCellValid;
         public Func<Vector2Int, bool> ValidateInputFunc;
 
-        [Header("Group Handling")]
+        [Header("Other")]
         public bool fitToGroup;
 
         private Vector2Int? highlightedCell;
@@ -124,15 +124,23 @@ namespace Kocmoc
             Vector2 targetPosition;
             Vector2 targetSize;
 
-            if (fitToGroup && grid.IsInGroup(coordinates, out GridGroup group))
+            if (fitToGroup)
             {
-                targetPosition = grid.GetCellWorldPosition(group.origin, centerCellPosition);
-                targetSize = group.size;
+                if (grid.IsInGroup(coordinates, out GridGroup group))
+                {
+                    targetPosition = grid.GetCellWorldPosition(group.origin, centerCellPosition);
+                    targetSize = group.size;
+                }
+                else
+                {
+                    targetPosition = grid.GetCellWorldPosition(coordinates, centerOfCell: centerCellPosition);
+                    targetSize = Vector2.one;
+                }
             }
             else
             {
                 targetPosition = grid.GetCellWorldPosition(coordinates, centerOfCell: centerCellPosition);
-                targetSize = Vector2.one;
+                targetSize = selector.size;
             }
 
             if (selector.gameObject.activeSelf == false)
