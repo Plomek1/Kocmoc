@@ -880,6 +880,7 @@ MonoBehaviour:
   <highlightSpriteRenderer>k__BackingField: {fileID: 885655527}
   <selectSpriteRenderer>k__BackingField: {fileID: 433367762}
   validateHighlightCell: 0
+  validateSelectCell: 1
   validColor: {r: 1, g: 1, b: 1, a: 0.47058824}
   invalidColor: {r: 0.9811321, g: 0.31933072, b: 0.31933072, a: 0.7058824}
   fitToGroup: 1

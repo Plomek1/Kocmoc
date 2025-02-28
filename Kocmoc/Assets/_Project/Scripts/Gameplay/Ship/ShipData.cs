@@ -64,8 +64,11 @@ namespace Kocmoc.Gameplay
 
         public void RemoveCell(Vector2Int cellCoordinates)
         {
-            //TODO Group removal
-            grid.SetCell(cellCoordinates, null);
+            if (grid.IsInGroup(cellCoordinates, out GridGroup group))
+                grid.RemoveGroup(group.origin);
+            else
+                grid.SetCell(cellCoordinates, null);
+            
             UpdateMass();
         }
 

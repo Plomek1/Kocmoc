@@ -20,13 +20,6 @@ namespace Kocmoc
         public float cellSize { get; private set; }
 
         #region Cell position getters
-        public bool IsInGroup(Vector2Int coordinates, out GridGroup group) => IsInGroup(CoordinatesToIndex(coordinates), out group);
-        public virtual bool IsInGroup(int index, out GridGroup gridGroup)
-        {
-            gridGroup = null;
-            return false;
-        }
-
         public Vector2 GetCellPosition(int index, bool centerOfCell = false) => GetCellPosition(IndexToCoordinates(index), centerOfCell);
 
         public Vector2 GetCellPosition(Vector2Int coordinates, bool centerOfCell = false)
@@ -79,12 +72,18 @@ namespace Kocmoc
         #endregion
 
         #region Cell groups
+        public bool IsInGroup(Vector2Int coordinates, out GridGroup group) => IsInGroup(CoordinatesToIndex(coordinates), out group);
+        public virtual bool IsInGroup(int index, out GridGroup gridGroup)
+        {
+            gridGroup = null;
+            return false;
+        }
+
         public Vector2 GetGroupCenterCoordinates(GridGroup group)
         {
             Vector2 center = group.origin + (Vector2)(group.size - Vector2.one) * .5f;
             if (group.size.x < 0) center.x += 1;
             if (group.size.y < 0) center.y += 1;
-            Debug.Log(center);
             return center;
         }
 
@@ -139,12 +138,13 @@ namespace Kocmoc
         #endregion
 
         #region Utility
-        public int UncenterInput(int index) => index + Mathf.RoundToInt((float)(cellCount- 1) / 2);
-        public Vector2Int UncenterInput(Vector2Int coordinates)
+        public int CoordinatesToIndex(Vector2Int coordinates) => coordinates.y * size.x + coordinates.x;
+        public Vector2Int IndexToCoordinates(int index, bool alreadyUncentered = false)
         {
-            coordinates.x += Mathf.RoundToInt((float)(size.x - 1) / 2);
-            coordinates.y += Mathf.RoundToInt((float)(size.y - 1) / 2);
-            return coordinates;
+            if (centered && !alreadyUncentered) index = UncenterInput(index);
+            int x = index % size.x;
+            int y = index / size.x;
+            return centered ? CenterInput(new Vector2Int(x, y)) : new Vector2Int(x, y);
         }
 
         public int CenterInput(int index) => index - Mathf.RoundToInt((float)(cellCount - 1) / 2);
@@ -155,13 +155,12 @@ namespace Kocmoc
             return coordinates;
         }
 
-        protected int CoordinatesToIndex(Vector2Int coordinates) => coordinates.y * size.x + coordinates.x;
-        protected Vector2Int IndexToCoordinates(int index, bool alreadyUncentered = false)
+        public int UncenterInput(int index) => index + Mathf.RoundToInt((float)(cellCount- 1) / 2);
+        public Vector2Int UncenterInput(Vector2Int coordinates)
         {
-            if (centered && !alreadyUncentered) index = UncenterInput(index);
-            int x = index % size.x;
-            int y = index / size.x;
-            return centered ? CenterInput(new Vector2Int(x, y)) : new Vector2Int(x, y);
+            coordinates.x += Mathf.RoundToInt((float)(size.x - 1) / 2);
+            coordinates.y += Mathf.RoundToInt((float)(size.y - 1) / 2);
+            return coordinates;
         }
 
         private Vector2 ApplyOriginTransform(Vector2 position)

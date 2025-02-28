@@ -13,8 +13,7 @@ namespace Kocmoc.UI
         public bool active {  get; private set; }
 
         [SerializeField] private Ship ship;
-        
-        private Grid<ShipCellData> grid => ship.data.grid;
+
         private ShipController shipController;
         private GridRenderer shipGridRenderer;
         [Space(10)]
@@ -36,7 +35,25 @@ namespace Kocmoc.UI
         private void Update()
         {
             if (!active) return;
-            if (selectedBlueprint && Input.GetKeyDown(KeyCode.R)) SetRotation(currentRotation.Next(skipIndexZero: true));
+            if (selectedBlueprint)
+            {
+                if (Input.GetKeyDown(KeyCode.R))
+                    SetRotation(currentRotation.Next(skipIndexZero: true));
+            }
+            else
+            {
+                if (gridSelector.selectedCell.HasValue && Input.GetKeyDown(KeyCode.Backspace))
+                {
+                    if (gridSelector.selectedCell.Value == Vector2Int.zero)
+                    {
+                        Debug.Log("Cant remove control cell");
+                        return;
+                    }
+
+                    ship.RemoveCell(gridSelector.selectedCell.Value);
+                    gridSelector.DeselectCell();
+                }
+            }
         }
 
         public void SelectBlueprint(ShipCellBlueprint blueprint)
@@ -50,7 +67,8 @@ namespace Kocmoc.UI
             gridSelector.highlightSpriteRenderer.size = blueprint.size;
             
             gridSelector.DeselectCell();
-            gridSelector.SetHighlightCellValidation(true);
+            gridSelector.SetHighlightValidation(true);
+            gridSelector.SetSelectValidation(false);
         }
 
         public void DeselectBlueprint()
@@ -61,7 +79,8 @@ namespace Kocmoc.UI
             gridSelector.fitToGroup = true;
             
             gridSelector.ResetHighlightSprite();
-            gridSelector.SetHighlightCellValidation(false);
+            gridSelector.SetHighlightValidation(false);
+            gridSelector.SetSelectValidation(true);
         }
 
         public void SetShip(Ship ship)
@@ -69,7 +88,7 @@ namespace Kocmoc.UI
             this.ship = ship;
             shipController = ship.GetComponent<ShipController>();
             shipGridRenderer = ship.gridRenderer;
-            gridSelector.grid = grid;
+            gridSelector.grid = ship.data.grid;
         }
 
         private void SetRotation(Rotation rotation)
@@ -77,9 +96,9 @@ namespace Kocmoc.UI
             if (currentRotation == rotation) return;
             currentRotation = rotation;
 
-            Vector3 targetRendererRotation = grid.origin.rotation.eulerAngles + new Vector3(0, 0, currentRotation.Angle());
+            Vector3 targetRendererRotation = ship.data.grid.origin.rotation.eulerAngles + new Vector3(0, 0, currentRotation.ToAngle());
             gridSelector.highlightSpriteRenderer.transform.DOLocalRotate(targetRendererRotation, .04f).SetEase(Ease.OutCubic);
-            gridSelector.UpdateHighlightCell();
+            gridSelector.UpdateHighlightSelector();
         }
 
         private void OnCellSelected(Vector2Int selectedCell, Vector2Int? previousSelectedCell)
@@ -127,12 +146,13 @@ namespace Kocmoc.UI
         {
             ShipSpawner.shipSpawned += OnShipSpawned;
             gridSelector.CellSelected += OnCellSelected;
-            gridSelector.ValidateInputFunc = ValidateCellPosition;
+            gridSelector.ValidateHighlightCellFunc = ValidateCellPlacement;
+            gridSelector.ValidateSelectCellFunc = ValidateCellSelection;
         }
 
-        private bool ValidateCellPosition(Vector2Int coordinates)
+        private bool ValidateCellPlacement(Vector2Int coordinates)
         {
-            if (selectedBlueprint.size == Vector2Int.one) return grid.IsOccupied(coordinates) == false;
+            if (selectedBlueprint.size == Vector2Int.one) return ship.data.grid.IsOccupied(coordinates) == false;
 
             Vector2Int rotatedSize = selectedBlueprint.size.RightAngleRotate(currentRotation);
             
@@ -141,11 +161,16 @@ namespace Kocmoc.UI
                 for (int x = 0; x < Mathf.Abs(rotatedSize.x); x++)
                 {
                     Vector2Int currentCoordinates = coordinates + new Vector2Int(x * (int)Mathf.Sign(rotatedSize.x), y * (int)Mathf.Sign(rotatedSize.y));
-                    if (grid.ValidateInput(currentCoordinates) == false || grid.IsOccupied(currentCoordinates)) return false;
+                    if (ship.data.grid.ValidateInput(currentCoordinates) == false || ship.data.grid.IsOccupied(currentCoordinates)) return false;
                 }
             }
 
             return true;
+        }
+
+        private bool ValidateCellSelection(Vector2Int coordinates)
+        {
+            return ship.data.grid.IsOccupied(coordinates);
         }
     }
 }

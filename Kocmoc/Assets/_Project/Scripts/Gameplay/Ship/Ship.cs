@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Kocmoc.Gameplay
@@ -20,6 +21,7 @@ namespace Kocmoc.Gameplay
         [SerializeField] private Transform cellsRoot;
 
         private Rigidbody2D rb;
+        private Dictionary<int, ShipCell> cells;
 
         public Transform GetCenterOfMass() => centerOfMass;
 
@@ -32,8 +34,12 @@ namespace Kocmoc.Gameplay
             this.data.grid.SetOrigin(transform);
             this.data.MassUpdated += OnMassUpdate;
 
+            cells = new(data.grid.GetCells().Count);
             foreach (GridCell<ShipCellData> cell in data.grid.GetCells())
+            {
+                if (cell.inGroup && !cell.isOrigin) continue;
                 SpawnCell(cell.value);
+            }
 
             rb = GetComponent<Rigidbody2D>();
             OnMassUpdate();
@@ -50,8 +56,11 @@ namespace Kocmoc.Gameplay
 
         public void RemoveCell(Vector2Int cellCoordinates)
         {
+            if (data.grid.IsInGroup(cellCoordinates, out GridGroup group)) cellCoordinates = group.origin;
             data.RemoveCell(cellCoordinates);
-            //DestroyGameObject
+            int cellIndex = data.grid.CoordinatesToIndex(cellCoordinates);
+            Destroy(cells[cellIndex].gameObject);
+            cells.Remove(cellIndex);
         }
 
         public void AttachController(ShipType type)
@@ -72,8 +81,9 @@ namespace Kocmoc.Gameplay
             Vector2 cellLocalPosition = data.grid.GetCellPosition(cellData.coordinates, centerOfCell: true);
             ShipCell cellGo = Instantiate(cellData.prefab, cellsRoot);
             cellGo.transform.localPosition = cellLocalPosition;
-
             cellGo.Init(this, cellData);
+            Debug.Log(data.grid.CoordinatesToIndex(cellData.coordinates), cellGo);
+            cells.Add(data.grid.CoordinatesToIndex(cellData.coordinates), cellGo);
         }
 
         private void OnMassUpdate()

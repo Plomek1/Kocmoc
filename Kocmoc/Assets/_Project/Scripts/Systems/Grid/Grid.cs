@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 namespace Kocmoc
 {
@@ -104,17 +101,20 @@ namespace Kocmoc
         public void RemoveGroup(Vector2Int coordinates)
         {
             if (IsInGroup(coordinates, out GridGroup group))
+                RemoveGroup(group);
+        }
+
+        public void RemoveGroup(GridGroup group)
+        {
+            foreach (Vector2Int cell in group.occupiedCells)
             {
-                foreach (Vector2Int cell in group.occupiedCells)
+                if (centered)
                 {
-                    if (centered)
-                    {
-                        Vector2Int uncenteredCell = UncenterInput(cell);
-                        SetCellRaw(uncenteredCell, default);
-                        continue;
-                    }
-                    SetCellRaw(cell, default);
+                    Vector2Int uncenteredCell = UncenterInput(cell);
+                    SetCellRaw(uncenteredCell, default);
+                    continue;
                 }
+                SetCellRaw(cell, default);
             }
         }
 
@@ -172,8 +172,6 @@ namespace Kocmoc
                     cells.Remove(index);
                     occupied[index] = false;
                     GridUpdated?.Invoke();
-                    Debug.Log(IndexToCoordinates(index, alreadyUncentered: true));
-
                 }
                 return;
             }

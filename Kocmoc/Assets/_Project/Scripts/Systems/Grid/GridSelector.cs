@@ -14,6 +14,9 @@ namespace Kocmoc
         public GridBase grid;
         public bool active { get; private set; }
 
+        public Vector2Int? highlightedCell {  get; private set; }
+        public Vector2Int? selectedCell    {  get; private set; }
+
         [Header("Renderers")]
         [field: SerializeField] public SpriteRenderer highlightSpriteRenderer { get; private set; }
         [field: SerializeField] public SpriteRenderer selectSpriteRenderer { get; private set; }
@@ -23,18 +26,18 @@ namespace Kocmoc
 
         [Header("Cell Validation")]
         [SerializeField] private bool validateHighlightCell;
+        [SerializeField] private bool validateSelectCell;
         [SerializeField] private Color validColor;
         [SerializeField] private Color invalidColor;
         private Color defaultColor;
 
+        public Func<Vector2Int, bool> ValidateHighlightCellFunc;
+        public Func<Vector2Int, bool> ValidateSelectCellFunc;
+        
         private bool highlightCellValid;
-        public Func<Vector2Int, bool> ValidateInputFunc;
 
         [Header("Other")]
         public bool fitToGroup;
-
-        private Vector2Int? highlightedCell;
-        private Vector2Int? selectedCell;
         
         private void Start()
         {
@@ -43,7 +46,7 @@ namespace Kocmoc
             defaultColor = highlightSpriteRenderer.color;
 
             if (!validateHighlightCell) highlightCellValid = true;
-            grid.GridUpdated += UpdateHighlightCell;
+            grid.GridUpdated += UpdateHighlightSelector;
         }
 
         private void Update()
@@ -85,25 +88,21 @@ namespace Kocmoc
         private void HighlightCell(Vector2Int? cell)
         {
             highlightedCell = cell;
-            
-            if (highlightedCell == null)
-            {
-                highlightSpriteRenderer.gameObject.SetActive(false);
-                return;
-            }
-            
-            UpdateSelectorTransform(highlightSpriteRenderer, highlightedCell.Value);
-            UpdateHighlightCell();
+            UpdateHighlightSelector();
             CellHighlighted?.Invoke(highlightedCell.Value);
         }
 
         private void SelectCell(Vector2Int cell)
         {
+            if (validateSelectCell && ValidateSelectCellFunc(cell) == false)
+            {
+                DeselectCell();
+                return;
+            }
+
             Vector2Int? previousSelectedCell = selectedCell;
             selectedCell = cell;
-
             UpdateSelectorTransform(selectSpriteRenderer, selectedCell.Value);
-
             CellSelected?.Invoke(selectedCell.Value, previousSelectedCell);
         }
 
@@ -118,6 +117,23 @@ namespace Kocmoc
             CellDeselected?.Invoke(lastSelectedCell);
         }
 
+        #region Selector handling
+        public void UpdateHighlightSelector()
+        {
+            if (highlightedCell == null)
+            {
+                highlightSpriteRenderer.gameObject.SetActive(false);
+                return;
+            }
+            if (validateHighlightCell && highlightedCell.HasValue)
+            {
+                highlightCellValid = ValidateHighlightCellFunc != null ? ValidateHighlightCellFunc(highlightedCell.Value) : true;
+                highlightSpriteRenderer.color = highlightCellValid ? validColor : invalidColor;
+            }
+
+            UpdateSelectorTransform(highlightSpriteRenderer, highlightedCell.Value);
+        }
+
         private void UpdateSelectorTransform(SpriteRenderer selector, Vector2Int coordinates)
         {
             bool centerCellPosition = selector.sprite.pivot != Vector2.zero;
@@ -129,7 +145,7 @@ namespace Kocmoc
                 if (grid.IsInGroup(coordinates, out GridGroup group))
                 {
                     targetPosition = grid.GetGroupCenterWorldPosition(group);
-                    targetSize = group.size;
+                    targetSize = group.sizeAbs;
                 }
                 else
                 {
@@ -152,12 +168,11 @@ namespace Kocmoc
             else
             {
                 selector.transform.DOMove(targetPosition, .04f).SetEase(Ease.OutCubic);
-                DOTween.To(() => highlightSpriteRenderer.size, x => selector.size = x, targetSize, .05f);
+                DOTween.To(() => highlightSpriteRenderer.size, x => selector.size = x, targetSize, .04f).SetEase(Ease.OutCubic);
             }
         }
 
-        #region Cell validation
-        public void SetHighlightCellValidation(bool validate)
+        public void SetHighlightValidation(bool validate)
         {
             validateHighlightCell = validate;
             if (!validateHighlightCell)
@@ -165,21 +180,17 @@ namespace Kocmoc
                 highlightCellValid = true;
                 highlightSpriteRenderer.color = defaultColor;
             }
-            else UpdateHighlightCell();
+            else UpdateHighlightSelector();
         }
 
-        public void UpdateHighlightCell()
+        public void SetSelectValidation(bool validate)
         {
-            if (validateHighlightCell && highlightedCell.HasValue)
-            {
-                highlightCellValid = ValidateInputFunc != null ? ValidateInputFunc(highlightedCell.Value) : true;
-                highlightSpriteRenderer.color = highlightCellValid ? validColor : invalidColor;
-            }
+            validateSelectCell = validate;
         }
-        #endregion
 
         public void ResetHighlightSprite() => highlightSpriteRenderer.sprite = defaultHighlightSprite;
         public void ResetSelectSprite() => selectSpriteRenderer.sprite = defaultSelectSprite;
+        #endregion
 
         public void ToggleActivation()
         {

@@ -40,9 +40,14 @@ namespace Kocmoc
             }
         }
 
-        public static float Angle(this Rotation value)
+        public static float ToInt(this Rotation value)
         {
-            return Mathf.Log((int)value, 2) * -90;
+            return Utility.TrailingZeroCount((int)value);
+        }
+
+        public static float ToAngle(this Rotation value)
+        {
+            return ToInt(value) * -90;
         }
 
         public static Vector2 ToVector(this Rotation value) => rotationVectors[value];
