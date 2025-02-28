@@ -18,7 +18,7 @@ namespace Kocmoc.UI
         [SerializeField] private Scrollbar scrollbar;
 
         private Dictionary<T, SelectorButton<T>> selectors;
-        private T selectedValue;
+        protected T selectedValue;
 
         private void Start() => OnStart();
         protected virtual void OnStart()

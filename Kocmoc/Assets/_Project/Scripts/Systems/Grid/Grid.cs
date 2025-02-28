@@ -8,38 +8,6 @@ namespace Kocmoc
         private bool[] occupied;
         private Dictionary<int, GridCell<T>> cells;
 
-        #region Cell setters
-        public bool SetCell(int index, T value)
-        {
-            if (centered) index = UncenterInput(index);
-            if (!ValidateInputUncentered(index)) return false;
-            SetCellRaw(index, value);
-            return true;
-        }
-
-        public bool SetCell(Vector2Int coordinates, T value)
-        {
-            if (centered) coordinates = UncenterInput(coordinates);
-            if (!ValidateInputUncentered(coordinates)) return false;
-            SetCellRaw(coordinates, value);
-            return true;
-        }
-
-        public void SetCellLimited(int index, T value)
-        {
-            if (centered) index = UncenterInput(index);
-            LimitInput(index, out int limitedIndex);
-            SetCellRaw(limitedIndex, value);
-        }
-
-        public void SetCellLimited(Vector2Int coordinates, T value)
-        {
-            if (centered) coordinates = UncenterInput(coordinates);
-            LimitInput(coordinates, out Vector2Int limitedCoordinates);
-            SetCellRaw(limitedCoordinates, value);
-        }
-        #endregion
-
         #region Cell getters
         public ICollection<GridCell<T>> GetCells() => cells.Values;
 
@@ -72,6 +40,42 @@ namespace Kocmoc
         }
         #endregion
 
+        #region Cell setters
+        public bool SetCell(int index, T value)
+        {
+            if (centered) index = UncenterInput(index);
+            if (!ValidateInputUncentered(index)) return false;
+            SetCellRaw(index, value);
+            GridUpdated?.Invoke();
+            return true;
+        }
+
+        public bool SetCell(Vector2Int coordinates, T value)
+        {
+            if (centered) coordinates = UncenterInput(coordinates);
+            if (!ValidateInputUncentered(coordinates)) return false;
+            SetCellRaw(coordinates, value);
+            GridUpdated?.Invoke();
+            return true;
+        }
+
+        public void SetCellLimited(int index, T value)
+        {
+            if (centered) index = UncenterInput(index);
+            LimitInput(index, out int limitedIndex);
+            SetCellRaw(limitedIndex, value);
+            GridUpdated?.Invoke();
+        }
+
+        public void SetCellLimited(Vector2Int coordinates, T value)
+        {
+            if (centered) coordinates = UncenterInput(coordinates);
+            LimitInput(coordinates, out Vector2Int limitedCoordinates);
+            SetCellRaw(limitedCoordinates, value);
+            GridUpdated?.Invoke();
+        }
+        #endregion
+
         #region Cell groups
         public bool CreateGroup(Vector2Int origin, Vector2Int size, T value, bool checkBounds = true)
         {
@@ -95,6 +99,7 @@ namespace Kocmoc
                 SetCellRaw(cell, value, group: group);
             }
 
+            GridUpdated?.Invoke();
             return true;
         }
 
@@ -116,6 +121,7 @@ namespace Kocmoc
                 }
                 SetCellRaw(cell, default);
             }
+            GridUpdated?.Invoke();
         }
 
         public bool GroupInBounds(GridGroup group)
@@ -171,7 +177,6 @@ namespace Kocmoc
                 {
                     cells.Remove(index);
                     occupied[index] = false;
-                    GridUpdated?.Invoke();
                 }
                 return;
             }
@@ -180,7 +185,6 @@ namespace Kocmoc
             {
                 if (group != null) cells[index].AddToGroup(value, group);
                 cells[index].SetData(value);
-                GridUpdated?.Invoke();
                 return;
             }
 
@@ -188,13 +192,10 @@ namespace Kocmoc
 
             cells.Add(index, new GridCell<T>(CoordinatesToIndex(coordinates), coordinates, value, group));
             occupied[index] = true;
-
-            GridUpdated?.Invoke();
         }
         #endregion
 
-        public bool IsOccupied(Vector2Int coordinates) => IsOccupied(CoordinatesToIndex(coordinates));
-        public bool IsOccupied(int index)
+        public override bool IsOccupied(int index)
         {
             if (centered) index = UncenterInput(index);
             return occupied[index];

@@ -60,7 +60,6 @@ namespace Kocmoc.UI
                         Debug.Log("Cant remove as it would leave dangling cell ");
                         return;
                     }
-                    
 
                     ship.RemoveCell(selectedCell);
                     gridSelector.DeselectCell();
@@ -70,6 +69,7 @@ namespace Kocmoc.UI
 
         public void SelectBlueprint(ShipCellBlueprint blueprint)
         {
+            if (selectedBlueprint == blueprint) return;
             selectedBlueprint = blueprint;
             SetRotation(Rotation.Up);
 
@@ -85,14 +85,12 @@ namespace Kocmoc.UI
 
         public void DeselectBlueprint()
         {
+            if (!selectedBlueprint) return;
             selectedBlueprint = null;
-            SetRotation(Rotation.Up);
-
             gridSelector.fitToGroup = true;
-            
-            gridSelector.ResetHighlightSprite();
             gridSelector.SetHighlightValidation(false);
             gridSelector.SetSelectValidation(true);
+            gridSelector.ResetHighlightSprite();
         }
 
         public void SetShip(Ship ship)
@@ -119,7 +117,7 @@ namespace Kocmoc.UI
             if (currentRotation == rotation) return;
             currentRotation = rotation;
 
-            Vector3 targetRendererRotation = ship.data.grid.origin.rotation.eulerAngles + new Vector3(0, 0, currentRotation.ToAngle());
+            Vector3 targetRendererRotation = new Vector3(0, 0, currentRotation.ToAngle());
             gridSelector.highlightSpriteRenderer.transform.DOLocalRotate(targetRendererRotation, .04f).SetEase(Ease.OutCubic);
             gridSelector.UpdateHighlightSelector();
         }
@@ -144,12 +142,11 @@ namespace Kocmoc.UI
         {
             active = true;
             shipController.enabled = false;
-            SetRotation(Rotation.Up);
-
+            gridSelector.occupiedOnly = false;
+            
             shipGridRenderer.Activate();
-            gridSelector.Activate();
-
             cameraMovement.ResetPosition();
+            
             Opened?.Invoke();
         }
 
@@ -157,11 +154,10 @@ namespace Kocmoc.UI
         {
             active = false;
             shipController.enabled = true;
-            SetRotation(Rotation.Up);
-
+            gridSelector.occupiedOnly = true;
+            
             shipGridRenderer.Deactivate();
-            gridSelector.Deactivate();
-
+            
             Closed?.Invoke();
         }
 

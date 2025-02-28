@@ -12,7 +12,7 @@ namespace Kocmoc
         public Action<Vector2Int> CellDeselected;
 
         public GridBase grid;
-        public bool active { get; private set; }
+        [field: SerializeField] public bool active { get; private set; }
 
         public Vector2Int? highlightedCell {  get; private set; }
         public Vector2Int? selectedCell    {  get; private set; }
@@ -37,10 +37,17 @@ namespace Kocmoc
         private bool highlightCellValid;
 
         [Header("Other")]
+        public bool occupiedOnly;
         public bool fitToGroup;
-        
+
         private void Start()
         {
+            if (grid.origin)
+            {
+                highlightSpriteRenderer.transform.SetParent(grid.origin);
+                selectSpriteRenderer.transform.SetParent(grid.origin);
+            }
+
             defaultHighlightSprite = highlightSpriteRenderer.sprite;
             defaultSelectSprite = selectSpriteRenderer.sprite;
             defaultColor = highlightSpriteRenderer.color;
@@ -52,7 +59,7 @@ namespace Kocmoc
         private void Update()
         {
             if (!active || grid == null) return;
-            
+
             if (EventSystem.current.IsPointerOverGameObject())
             {
                 if (highlightedCell.HasValue) HighlightCell(null);
@@ -63,6 +70,9 @@ namespace Kocmoc
             Vector2Int hoveredCell = grid.PositionToCell(mousePos);
 
             bool cellValid = grid.ValidateInput(hoveredCell);
+
+            if (occupiedOnly && grid.IsOccupied(hoveredCell) == false)
+                cellValid = false;
 
             if (Input.GetMouseButtonDown(0))
             {
@@ -102,7 +112,7 @@ namespace Kocmoc
 
             Vector2Int? previousSelectedCell = selectedCell;
             selectedCell = cell;
-            UpdateSelectorTransform(selectSpriteRenderer, selectedCell.Value);
+            UpdateSelectorTransform(selectSpriteRenderer, selectedCell.Value, tween: false);
             CellSelected?.Invoke(selectedCell.Value, previousSelectedCell);
         }
 
@@ -134,9 +144,8 @@ namespace Kocmoc
             UpdateSelectorTransform(highlightSpriteRenderer, highlightedCell.Value);
         }
 
-        private void UpdateSelectorTransform(SpriteRenderer selector, Vector2Int coordinates)
+        private void UpdateSelectorTransform(SpriteRenderer selector, Vector2Int coordinates, bool tween = true)
         {
-            bool centerCellPosition = selector.sprite.pivot != Vector2.zero;
             Vector2 targetPosition;
             Vector2 targetSize;
 
@@ -144,30 +153,30 @@ namespace Kocmoc
             {
                 if (grid.IsInGroup(coordinates, out GridGroup group))
                 {
-                    targetPosition = grid.GetGroupCenterWorldPosition(group);
+                    targetPosition = grid.GetGroupCenterPosition(group);
                     targetSize = group.sizeAbs;
                 }
                 else
                 {
-                    targetPosition = grid.GetCellWorldPosition(coordinates, centerOfCell: centerCellPosition);
+                    targetPosition = grid.GetCellPosition(coordinates, centerOfCell: true);
                     targetSize = Vector2.one;
                 }
             }
             else
             {
-                targetPosition = grid.GetCellWorldPosition(coordinates, centerOfCell: centerCellPosition);
+                targetPosition = grid.GetCellPosition(coordinates, centerOfCell: true);
                 targetSize = selector.size;
             }
 
-            if (selector.gameObject.activeSelf == false)
+            if (selector.gameObject.activeSelf == false || !tween)
             {
                 selector.gameObject.SetActive(true);
-                selector.transform.position = targetPosition;
+                selector.transform.localPosition = targetPosition;
                 selector.size = targetSize;
             }
             else
             {
-                selector.transform.DOMove(targetPosition, .04f).SetEase(Ease.OutCubic);
+                selector.transform.DOLocalMove(targetPosition, .04f).SetEase(Ease.OutCubic);
                 DOTween.To(() => highlightSpriteRenderer.size, x => selector.size = x, targetSize, .04f).SetEase(Ease.OutCubic);
             }
         }
@@ -180,7 +189,7 @@ namespace Kocmoc
                 highlightCellValid = true;
                 highlightSpriteRenderer.color = defaultColor;
             }
-            else UpdateHighlightSelector();
+            UpdateHighlightSelector();
         }
 
         public void SetSelectValidation(bool validate)
@@ -202,9 +211,6 @@ namespace Kocmoc
         {
             if (active) return;
             active = true;
-
-            highlightSpriteRenderer.transform.rotation = grid.origin.rotation;
-            selectSpriteRenderer.transform.rotation = grid.origin.rotation;
         }
 
         public void Deactivate() 

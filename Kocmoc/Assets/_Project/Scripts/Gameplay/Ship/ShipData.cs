@@ -28,11 +28,6 @@ namespace Kocmoc.Gameplay
             Vector2Int rotatedSize = cellData.size.RightAngleRotate(cellData.currentRotation);
             grid.CreateGroup(cellData.coordinates, rotatedSize, cellData, checkBounds: false);
             UpdateMass();
-
-            foreach (int dang in GetDanglingCells())
-            {
-                Debug.Log(grid.IndexToCoordinates(dang));
-            }
         }
 
         public void RemoveCell(Vector2Int cellCoordinates)
@@ -43,11 +38,6 @@ namespace Kocmoc.Gameplay
                 grid.SetCell(cellCoordinates, null);
             
             UpdateMass();
-
-            foreach(int dang in GetDanglingCells())
-            {
-                Debug.Log(grid.IndexToCoordinates(dang));
-            }
         }
 
         public HashSet<int> GetConnectedCells(int? indexToIgnore = null)
@@ -108,6 +98,8 @@ namespace Kocmoc.Gameplay
             }
             return danglingCells;
         }
+
+        //TODO CHECK FOR NEIGHBOUR
 
         private void UpdateMass()
         {

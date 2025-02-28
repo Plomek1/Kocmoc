@@ -22,6 +22,7 @@ namespace Kocmoc.UI
 
         protected override void Deselect()
         {
+            if (object.Equals(selectedValue, default)) return;
             base.Deselect();
             editor.DeselectBlueprint();
         }

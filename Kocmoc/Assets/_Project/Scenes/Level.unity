@@ -877,12 +877,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8d2196ce52ec87409efa1515a6f253d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <active>k__BackingField: 1
   <highlightSpriteRenderer>k__BackingField: {fileID: 885655527}
   <selectSpriteRenderer>k__BackingField: {fileID: 433367762}
   validateHighlightCell: 0
   validateSelectCell: 1
   validColor: {r: 1, g: 1, b: 1, a: 0.47058824}
   invalidColor: {r: 0.9811321, g: 0.31933072, b: 0.31933072, a: 0.7058824}
+  occupiedOnly: 1
   fitToGroup: 1
 --- !u!114 &606903381
 MonoBehaviour:

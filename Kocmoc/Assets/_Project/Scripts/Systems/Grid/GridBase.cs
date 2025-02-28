@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Kocmoc
 {
     [System.Serializable]
-    public class GridBase
+    public abstract class GridBase
     {
         public Action GridUpdated;
 
@@ -73,11 +73,7 @@ namespace Kocmoc
 
         #region Cell groups
         public bool IsInGroup(Vector2Int coordinates, out GridGroup group) => IsInGroup(CoordinatesToIndex(coordinates), out group);
-        public virtual bool IsInGroup(int index, out GridGroup gridGroup)
-        {
-            gridGroup = null;
-            return false;
-        }
+        public abstract bool IsInGroup(int index, out GridGroup gridGroup);
 
         public Vector2 GetGroupCenterCoordinates(GridGroup group)
         {
@@ -107,12 +103,12 @@ namespace Kocmoc
         #endregion
 
         #region Input validation
-
         public bool ValidateInput(int index)
         {
             if (centered) index = UncenterInput(index);
             return ValidateInputUncentered(index);
         }
+
         public bool ValidateInput(Vector2Int coordinates)
         {
             if (centered) coordinates = UncenterInput(coordinates);
@@ -174,6 +170,9 @@ namespace Kocmoc
             return position;
         }
         #endregion
+
+        public bool IsOccupied(Vector2Int coordinates) => IsOccupied(CoordinatesToIndex(coordinates));
+        public abstract bool IsOccupied(int index);
 
         public void SetOrigin(Transform origin) => this.origin = origin;
 
