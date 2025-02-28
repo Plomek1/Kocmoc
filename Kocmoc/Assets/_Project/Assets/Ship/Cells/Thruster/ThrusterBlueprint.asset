@@ -21,3 +21,4 @@ MonoBehaviour:
   connectionSides: 1
   modules:
   - {fileID: 11400000, guid: 684a7482acc700b48a5f333fa9ab1de2, type: 2}
+  connectionPoints: []

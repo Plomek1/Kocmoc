@@ -38,7 +38,7 @@ namespace Kocmoc.UI
             if (selectedBlueprint)
             {
                 if (Input.GetKeyDown(KeyCode.R))
-                    SetRotation(currentRotation.Next(skipIndexZero: true));
+                    SetRotation(FindNextPossibleRotation());
             }
             else
             {
@@ -89,6 +89,17 @@ namespace Kocmoc.UI
             shipController = ship.GetComponent<ShipController>();
             shipGridRenderer = ship.gridRenderer;
             gridSelector.grid = ship.data.grid;
+        }
+
+        private Rotation FindNextPossibleRotation()
+        {
+            Rotation rotation = currentRotation;
+            while (true)
+            {
+                rotation = rotation.Next(skipIndexZero: true);
+                if (selectedBlueprint.possibleRotations.HasFlag(rotation))
+                    return rotation;
+            }
         }
 
         private void SetRotation(Rotation rotation)
