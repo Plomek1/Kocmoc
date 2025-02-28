@@ -20,6 +20,3 @@ MonoBehaviour:
   possibleRotations: 1
   connectionSides: -1
   modules: []
-  connectionPoints:
-  - {x: 0, y: 2}
-  - {x: 1, y: 2}

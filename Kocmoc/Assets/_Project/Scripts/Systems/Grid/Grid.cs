@@ -181,13 +181,12 @@ namespace Kocmoc
                 if (group != null) cells[index].AddToGroup(value, group);
                 cells[index].SetData(value);
                 GridUpdated?.Invoke();
-                Debug.Log(IndexToCoordinates(index, alreadyUncentered: true));
                 return;
             }
 
             Vector2Int coordinates = IndexToCoordinates(index, alreadyUncentered: true);
 
-            cells.Add(index, new GridCell<T>(coordinates, value, group));
+            cells.Add(index, new GridCell<T>(CoordinatesToIndex(coordinates), coordinates, value, group));
             occupied[index] = true;
 
             GridUpdated?.Invoke();
@@ -218,7 +217,7 @@ namespace Kocmoc
                 {
                     Vector2Int coordinates = new Vector2Int(x, y);
                     int index = CoordinatesToIndex(coordinates);
-                    cells.Add(index, new GridCell<T>(coordinates, startingValue));
+                    cells.Add(index, new GridCell<T>(CoordinatesToIndex(coordinates), coordinates, startingValue));
                     occupied[index] = true;
                 }
             }

@@ -5,6 +5,7 @@ namespace Kocmoc
     public class GridCell<T>
     {
         public T value { get; private set; }
+        public int index { get; private set; }
         public Vector2Int coordinates { get; private set; }
 
         public bool inGroup => group != null;
@@ -23,8 +24,9 @@ namespace Kocmoc
             this.group = group;
         }
 
-        public GridCell(Vector2Int coordinates, T value = default, GridGroup group = null)
+        public GridCell(int index, Vector2Int coordinates, T value = default, GridGroup group = null)
         {
+            this.index = index;
             this.coordinates = coordinates;
             this.value = value;
             this.group = group;

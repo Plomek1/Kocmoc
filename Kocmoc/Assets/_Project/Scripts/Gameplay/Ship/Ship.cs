@@ -82,7 +82,6 @@ namespace Kocmoc.Gameplay
             ShipCell cellGo = Instantiate(cellData.prefab, cellsRoot);
             cellGo.transform.localPosition = cellLocalPosition;
             cellGo.Init(this, cellData);
-            Debug.Log(data.grid.CoordinatesToIndex(cellData.coordinates), cellGo);
             cells.Add(data.grid.CoordinatesToIndex(cellData.coordinates), cellGo);
         }
 

@@ -44,13 +44,25 @@ namespace Kocmoc.UI
             {
                 if (gridSelector.selectedCell.HasValue && Input.GetKeyDown(KeyCode.Backspace))
                 {
-                    if (gridSelector.selectedCell.Value == Vector2Int.zero)
+                    Vector2Int selectedCell = gridSelector.selectedCell.Value;
+
+
+                    if (selectedCell == Vector2Int.zero)
                     {
                         Debug.Log("Cant remove control cell");
                         return;
                     }
 
-                    ship.RemoveCell(gridSelector.selectedCell.Value);
+                    if (ship.data.grid.IsInGroup(selectedCell, out GridGroup group)) selectedCell = group.origin;
+
+                    if (ship.data.GetDanglingCells(ship.data.grid.CoordinatesToIndex(selectedCell)).Count > 0)
+                    {
+                        Debug.Log("Cant remove as it would leave dangling cell ");
+                        return;
+                    }
+                    
+
+                    ship.RemoveCell(selectedCell);
                     gridSelector.DeselectCell();
                 }
             }

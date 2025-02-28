@@ -23,12 +23,11 @@ namespace Kocmoc.Gameplay
         [Space(20)]
         public ModuleBlueprint[] modules;
 
-        [HideInInspector] public HashSet<Vector2Int> connectionPoints = new();
+        [HideInInspector] public HashSet<Vector2Int> connectionPoints;
 
-        [ProButton] //HACK
-        private void CalculateInternalValues()
+        private void CalculateInternalValues() //HACK
         {
-            connectionPoints.Clear();
+            connectionPoints = new();
             if (connectionSides.HasFlag(Rotation.Up))
             {
                 for (int x = 0; x < size.x; x++)
@@ -52,9 +51,11 @@ namespace Kocmoc.Gameplay
                 for (int y = 0; y < size.y; y++)
                     connectionPoints.Add(new Vector2Int(-1, y));
             }
+        }
 
-            foreach (var item in connectionPoints)
-                Debug.Log(item);
+        private void OnValidate()
+        {
+            CalculateInternalValues();
         }
     }
 

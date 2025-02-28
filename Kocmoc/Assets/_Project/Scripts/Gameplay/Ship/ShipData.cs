@@ -23,10 +23,90 @@ namespace Kocmoc.Gameplay
             { Rotation.Left, 0f },
         };
 
-        public Rotation GetStrongestThrustDirection()
+        public void AddCell(ShipCellData cellData)
         {
-            var strongestThrust = thrustForces.Aggregate((a, b) => a.Value > b.Value ? a : b);
-            return strongestThrust.Value > thrustForces[Rotation.Up] ? strongestThrust.Key : Rotation.Up;
+            Vector2Int rotatedSize = cellData.size.RightAngleRotate(cellData.currentRotation);
+            grid.CreateGroup(cellData.coordinates, rotatedSize, cellData, checkBounds: false);
+            UpdateMass();
+
+            foreach (int dang in GetDanglingCells())
+            {
+                Debug.Log(grid.IndexToCoordinates(dang));
+            }
+        }
+
+        public void RemoveCell(Vector2Int cellCoordinates)
+        {
+            if (grid.IsInGroup(cellCoordinates, out GridGroup group))
+                grid.RemoveGroup(group.origin);
+            else
+                grid.SetCell(cellCoordinates, null);
+            
+            UpdateMass();
+
+            foreach(int dang in GetDanglingCells())
+            {
+                Debug.Log(grid.IndexToCoordinates(dang));
+            }
+        }
+
+        public HashSet<int> GetConnectedCells(int? indexToIgnore = null)
+        {
+            HashSet<int> visited = new();
+            Queue<int> cellsQueue = new();
+            
+            visited.Add(0);
+            cellsQueue.Enqueue(0);
+
+            while (cellsQueue.Count > 0)
+            {
+                int cellIndex = cellsQueue.Dequeue();
+                GridCell<ShipCellData> cell = grid.GetCell(cellIndex);
+
+                if (cell.inGroup && visited.Contains(grid.CoordinatesToIndex(cell.group.origin))) 
+                    continue;
+
+                foreach (Vector2Int connectionPoint in cell.value.connectionPoints)
+                {
+                    int connectionPointIndex = grid.CoordinatesToIndex(connectionPoint);
+                    
+                    GridCell<ShipCellData> neighbourCell = grid.GetCell(connectionPointIndex);
+                    if (neighbourCell == null) continue;
+
+                    if (!neighbourCell.value.connectionPoints.Contains(cell.coordinates)) 
+                        continue; //Neighbour cell isnt connected
+
+                    if (grid.IsInGroup(connectionPointIndex, out GridGroup group))
+                        connectionPointIndex = grid.CoordinatesToIndex(group.origin);
+
+                    if (indexToIgnore.HasValue && indexToIgnore.Value == connectionPointIndex) 
+                        continue; //Neighbour cell is the cell to ignore
+
+                    if (!visited.Contains(connectionPointIndex) && grid.IsOccupied(connectionPointIndex))
+                    {
+                        visited.Add(connectionPointIndex);
+                        cellsQueue.Enqueue(connectionPointIndex);
+                    }
+                }
+            }
+
+            return visited;
+        }
+
+        public HashSet<int> GetDanglingCells(int? indexToIgnore = null)
+        {
+            HashSet<int> danglingCells = new();
+            HashSet<int> connectedCells = GetConnectedCells(indexToIgnore);
+
+            foreach (GridCell<ShipCellData> cell in grid.GetCells())
+            {
+                if (cell.inGroup && !cell.isOrigin) continue;
+                if (indexToIgnore.HasValue && cell.index == indexToIgnore.Value) continue;
+                
+                if (!connectedCells.Contains(cell.index))
+                    danglingCells.Add(cell.index);
+            }
+            return danglingCells;
         }
 
         private void UpdateMass()
@@ -37,7 +117,7 @@ namespace Kocmoc.Gameplay
             foreach (var cell in grid.GetCells())
             {
                 float cellMass = cell.value.mass;
-                
+
                 if (cell.inGroup)
                 {
                     if (!cell.isOrigin) continue;
@@ -55,21 +135,10 @@ namespace Kocmoc.Gameplay
             MassUpdated?.Invoke();
         }
 
-        public void AddCell(ShipCellData cellData)
+        public Rotation GetStrongestThrustDirection()
         {
-            Vector2Int rotatedSize = cellData.size.RightAngleRotate(cellData.currentRotation);
-            grid.CreateGroup(cellData.coordinates, rotatedSize, cellData, checkBounds: false);
-            UpdateMass();
-        }
-
-        public void RemoveCell(Vector2Int cellCoordinates)
-        {
-            if (grid.IsInGroup(cellCoordinates, out GridGroup group))
-                grid.RemoveGroup(group.origin);
-            else
-                grid.SetCell(cellCoordinates, null);
-            
-            UpdateMass();
+            var strongestThrust = thrustForces.Aggregate((a, b) => a.Value > b.Value ? a : b);
+            return strongestThrust.Value > thrustForces[Rotation.Up] ? strongestThrust.Key : Rotation.Up;
         }
 
         public void Init(Grid<ShipCellData> grid)
