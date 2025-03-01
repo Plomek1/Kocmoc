@@ -17,7 +17,7 @@ namespace Kocmoc
         public Vector2Int? highlightedCell {  get; private set; }
         public Vector2Int? selectedCell    {  get; private set; }
 
-        [Header("Renderers")]
+        [field: Space(10), Header("Renderers")]
         [field: SerializeField] public SpriteRenderer highlightSpriteRenderer { get; private set; }
         [field: SerializeField] public SpriteRenderer selectSpriteRenderer { get; private set; }
 

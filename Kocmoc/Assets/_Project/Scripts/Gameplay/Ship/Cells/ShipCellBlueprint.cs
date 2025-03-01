@@ -1,4 +1,3 @@
-using com.cyborgAssets.inspectorButtonPro;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,7 +22,7 @@ namespace Kocmoc.Gameplay
         [Space(20)]
         public ModuleBlueprint[] modules;
 
-        [HideInInspector] public HashSet<Vector2Int> connectionPoints;
+        [HideInInspector] public HashSet<Vector2Int> connectionPoints = new();
 
         private void CalculateInternalValues() //HACK
         {
@@ -53,10 +52,17 @@ namespace Kocmoc.Gameplay
             }
         }
 
+        private void Awake()
+        {
+            CalculateInternalValues();
+        }
+
+#if UNITY_EDITOR
         private void OnValidate()
         {
             CalculateInternalValues();
         }
+#endif
     }
 
     [System.Serializable]
