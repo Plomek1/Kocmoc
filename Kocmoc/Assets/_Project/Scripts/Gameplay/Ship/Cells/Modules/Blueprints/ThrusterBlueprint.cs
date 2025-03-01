@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Kocmoc.Gameplay
@@ -33,7 +32,7 @@ namespace Kocmoc.Gameplay
 
         public override Module CreateModuleComponent(ShipCell cell)
         {
-            Module module = cell.AddComponent<Thruster>();
+            Module module = cell.gameObject.AddComponent<Thruster>();
             module.Init(cell, this);
             return module;
         }

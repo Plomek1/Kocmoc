@@ -1,6 +1,5 @@
 using com.cyborgAssets.inspectorButtonPro;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Kocmoc
@@ -145,7 +144,7 @@ namespace Kocmoc
         {
             if (!repeatingSprite)
             {
-                repeatingSprite = spritesRoot.AddComponent<SpriteRenderer>();
+                repeatingSprite = spritesRoot.gameObject.AddComponent<SpriteRenderer>();
                 repeatingSprite.sprite = cellSprite;
                 repeatingSprite.drawMode = SpriteDrawMode.Tiled;
             }

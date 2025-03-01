@@ -1,5 +1,3 @@
-using System.Xml.Serialization;
-using TMPro;
 using UnityEngine;
 
 namespace Kocmoc.Gameplay
