@@ -1,12 +1,10 @@
 {
-    "name": "Project.Gameplay",
+    "name": "Project.EditorPlugins",
     "rootNamespace": "",
-    "references": [
-        "GUID:9b34b39398a33cb4e8b71b1de40b73a9",
-        "GUID:f966786520716b34490765253d1eaec4",
-        "GUID:5ebcb82cd497bba47bed95ca5e5ef7db"
+    "references": [],
+    "includePlatforms": [
+        "Editor"
     ],
-    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

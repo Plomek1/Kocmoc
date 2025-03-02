@@ -98,32 +98,43 @@ namespace Kocmoc.Gameplay
 
         public bool CanPlaceCell(ShipCellData cell)
         {
-            //Checking if every cell is empty
+            HashSet<Vector2Int> occupiedCells;
+
             if (cell.size == Vector2Int.one)
-            {
-                if (grid.IsOccupied(cell.coordinates)) return false;
-            }
+                occupiedCells = new() { cell.coordinates };
             else
             {
+                occupiedCells = new(cell.size.x * cell.size.y);
                 Vector2Int rotatedSize = cell.size.RightAngleRotate(cell.currentRotation);
 
                 for (int y = 0; y < Mathf.Abs(rotatedSize.y); y++)
                 {
                     for (int x = 0; x < Mathf.Abs(rotatedSize.x); x++)
                     {
-                        Vector2Int currentCoordinates = cell.coordinates + new Vector2Int(x * (int)Mathf.Sign(rotatedSize.x), y * (int)Mathf.Sign(rotatedSize.y));
-                        if (grid.ValidateInput(currentCoordinates) == false || grid.IsOccupied(currentCoordinates)) return false;
+                        Vector2Int cellCoordinates = cell.coordinates + new Vector2Int(x * (int)Mathf.Sign(rotatedSize.x), y * (int)Mathf.Sign(rotatedSize.y));
+                        occupiedCells.Add(cellCoordinates);
                     }
                 }
             }
 
-            //Checking if there is any part to connect
+            //Checking if the space cell wants to be in is free
+            foreach (Vector2Int occupiedCell in occupiedCells)
+                if (grid.IsOccupied(occupiedCell)) return false;
 
+            //Checking if there is any cell that this cell can connect to
+            bool canConnect = false;
             foreach (Vector2Int connectionPoint in cell.connectionPoints)
             {
-                var neighbour = grid.GetCell(connectionPoint);
-                if (neighbour == null) continue;
+                var neighbourCell = grid.GetCell(connectionPoint);
+                if (neighbourCell == null) continue;
+
+                if (occupiedCells.Intersect(neighbourCell.value.connectionPoints).Count() > 0)
+                {
+                    canConnect = true;
+                    break;
+                }
             }
+            if (!canConnect) return false;
 
             return true;
         }

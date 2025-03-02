@@ -1,6 +1,9 @@
-using com.cyborgAssets.inspectorButtonPro;
 using System.Collections.Generic;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using com.cyborgAssets.inspectorButtonPro;
+#endif
 
 namespace Kocmoc
 {
@@ -72,7 +75,9 @@ namespace Kocmoc
 
         public GridBase GetGrid() => grid;
 
+        #if UNITY_EDITOR
         [ProPlayButton]
+        #endif
         public void ToggleActivation()
         {
             if (active) Deactivate();

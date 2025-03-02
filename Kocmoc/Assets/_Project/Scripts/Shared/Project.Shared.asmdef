@@ -2,7 +2,8 @@
     "name": "Project.Shared",
     "rootNamespace": "",
     "references": [
-        "GUID:9b34b39398a33cb4e8b71b1de40b73a9"
+        "GUID:9b34b39398a33cb4e8b71b1de40b73a9",
+        "GUID:f966786520716b34490765253d1eaec4"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

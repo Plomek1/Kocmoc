@@ -20,11 +20,11 @@ namespace Kocmoc.Gameplay
         {
             if (Input.GetKeyDown(KeyCode.B))
             {
-                if (playerShip.inMotion)
-                {
-                    Debug.Log("Can't open ship editor, stop first!");
-                    return;
-                }
+                //if (playerShip.inMotion)
+                //{
+                //    Debug.Log("Can't open ship editor, stop first!");
+                //    return;
+                //}
                 editorMenu.Toggle();
             }
 

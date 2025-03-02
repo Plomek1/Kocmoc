@@ -38,7 +38,7 @@ namespace Kocmoc.UI
             if (selectedCell != null)
             {
                 if (Input.GetKeyDown(KeyCode.R))
-                    SetRotation(FindNextPossibleRotation());
+                    SetRotation(FindNextPossibleRotation(!Input.GetKey(KeyCode.LeftShift)));
             }
             else
             {
@@ -104,12 +104,12 @@ namespace Kocmoc.UI
             gridSelector.grid = ship.data.grid;
         }
 
-        private Rotation FindNextPossibleRotation()
+        private Rotation FindNextPossibleRotation(bool clockwise = true)
         {
             Rotation rotation = selectedCell.currentRotation;
             while (true)
             {
-                rotation = rotation.Next(skipIndexZero: true);
+                rotation = clockwise ? rotation.Next(true) : rotation.Previous(true);
                 if (selectedCell.validRotations.HasFlag(rotation))
                     return rotation;
             }
