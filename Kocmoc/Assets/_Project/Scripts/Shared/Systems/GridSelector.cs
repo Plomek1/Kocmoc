@@ -98,8 +98,9 @@ namespace Kocmoc
         private void HighlightCell(Vector2Int? cell)
         {
             highlightedCell = cell;
+            if (highlightedCell.HasValue) CellHighlighted?.Invoke(highlightedCell.Value);
+            
             UpdateHighlightSelector();
-            CellHighlighted?.Invoke(highlightedCell.Value);
         }
 
         private void SelectCell(Vector2Int cell)
@@ -130,7 +131,7 @@ namespace Kocmoc
         #region Selector handling
         public void UpdateHighlightSelector()
         {
-            if (highlightedCell == null)
+            if (highlightedCell.HasValue == false)
             {
                 highlightSpriteRenderer.gameObject.SetActive(false);
                 return;

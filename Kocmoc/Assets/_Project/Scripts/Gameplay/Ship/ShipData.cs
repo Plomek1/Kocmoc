@@ -52,9 +52,7 @@ namespace Kocmoc.Gameplay
             {
                 int cellIndex = cellsQueue.Dequeue();
                 GridCell<ShipCellData> cell = grid.GetCell(cellIndex);
-
-                if (cell.inGroup && visited.Contains(grid.CoordinatesToIndex(cell.group.origin))) 
-                    continue;
+                HashSet<Vector2Int> occupiedCells = cell.inGroup ? cell.group.occupiedCells : new() { cell.coordinates };
 
                 foreach (Vector2Int connectionPoint in cell.value.connectionPoints)
                 {
@@ -62,15 +60,14 @@ namespace Kocmoc.Gameplay
                     
                     GridCell<ShipCellData> neighbourCell = grid.GetCell(connectionPointIndex);
                     if (neighbourCell == null) continue;
-
-                    if (!neighbourCell.value.connectionPoints.Contains(cell.coordinates)) 
-                        continue; //Neighbour cell isnt connected
-
-                    if (grid.IsInGroup(connectionPointIndex, out GridGroup group))
-                        connectionPointIndex = grid.CoordinatesToIndex(group.origin);
+                    if (grid.IsInGroup(connectionPointIndex, out GridGroup neighbourGroup))
+                        connectionPointIndex = grid.CoordinatesToIndex(neighbourGroup.origin);
 
                     if (indexToIgnore.HasValue && indexToIgnore.Value == connectionPointIndex) 
                         continue; //Neighbour cell is the cell to ignore
+
+                    if (occupiedCells.Intersect(neighbourCell.value.connectionPoints).Count() == 0)
+                        continue; //Neighbour isnt connected to the cell
 
                     if (!visited.Contains(connectionPointIndex) && grid.IsOccupied(connectionPointIndex))
                     {
@@ -99,7 +96,37 @@ namespace Kocmoc.Gameplay
             return danglingCells;
         }
 
-        //TODO CHECK FOR NEIGHBOUR
+        public bool CanPlaceCell(ShipCellData cell)
+        {
+            //Checking if every cell is empty
+            if (cell.size == Vector2Int.one)
+            {
+                if (grid.IsOccupied(cell.coordinates)) return false;
+            }
+            else
+            {
+                Vector2Int rotatedSize = cell.size.RightAngleRotate(cell.currentRotation);
+
+                for (int y = 0; y < Mathf.Abs(rotatedSize.y); y++)
+                {
+                    for (int x = 0; x < Mathf.Abs(rotatedSize.x); x++)
+                    {
+                        Vector2Int currentCoordinates = cell.coordinates + new Vector2Int(x * (int)Mathf.Sign(rotatedSize.x), y * (int)Mathf.Sign(rotatedSize.y));
+                        if (grid.ValidateInput(currentCoordinates) == false || grid.IsOccupied(currentCoordinates)) return false;
+                    }
+                }
+            }
+
+            //Checking if there is any part to connect
+
+            foreach (Vector2Int connectionPoint in cell.connectionPoints)
+            {
+                var neighbour = grid.GetCell(connectionPoint);
+                if (neighbour == null) continue;
+            }
+
+            return true;
+        }
 
         private void UpdateMass()
         {

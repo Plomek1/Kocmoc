@@ -21,13 +21,13 @@ namespace Kocmoc.UI
         [SerializeField] private GridSelector gridSelector;
         private CameraMovement cameraMovement;
 
-        private ShipCellBlueprint selectedBlueprint;
-        private Rotation currentRotation = Rotation.Up;
+        private ShipCellData selectedCell;
 
         private void Awake()
         {
             cameraMovement = Camera.main.GetComponent<CameraMovement>();
             ConnectCallbacks();
+            selectedCell = null;
 
             if (ship) SetShip(ship);
         }
@@ -35,7 +35,7 @@ namespace Kocmoc.UI
         private void Update()
         {
             if (!active) return;
-            if (selectedBlueprint)
+            if (selectedCell != null)
             {
                 if (Input.GetKeyDown(KeyCode.R))
                     SetRotation(FindNextPossibleRotation());
@@ -57,6 +57,8 @@ namespace Kocmoc.UI
 
                     if (ship.data.GetDanglingCells(ship.data.grid.CoordinatesToIndex(selectedCell)).Count > 0)
                     {
+                        foreach (var a in ship.data.GetDanglingCells(ship.data.grid.CoordinatesToIndex(selectedCell))) 
+                            Debug.Log("UNCONNECTED: " + ship.data.grid.IndexToCoordinates(a));
                         Debug.Log("Cant remove as it would leave dangling cell ");
                         return;
                     }
@@ -69,13 +71,14 @@ namespace Kocmoc.UI
 
         public void SelectBlueprint(ShipCellBlueprint blueprint)
         {
-            if (selectedBlueprint == blueprint) return;
-            selectedBlueprint = blueprint;
+            if (selectedCell?.blueprint == blueprint) return;
+            selectedCell = new ShipCellData(blueprint, Vector2Int.zero, Rotation.Up);
+
             SetRotation(Rotation.Up);
 
             gridSelector.fitToGroup = false;
 
-            gridSelector.highlightSpriteRenderer.sprite = selectedBlueprint.icon;
+            gridSelector.highlightSpriteRenderer.sprite = selectedCell.icon;
             gridSelector.highlightSpriteRenderer.size = blueprint.size;
             
             gridSelector.DeselectCell();
@@ -85,8 +88,8 @@ namespace Kocmoc.UI
 
         public void DeselectBlueprint()
         {
-            if (!selectedBlueprint) return;
-            selectedBlueprint = null;
+            if (selectedCell == null) return;
+            selectedCell = null;
             gridSelector.fitToGroup = true;
             gridSelector.SetHighlightValidation(false);
             gridSelector.SetSelectValidation(true);
@@ -103,33 +106,39 @@ namespace Kocmoc.UI
 
         private Rotation FindNextPossibleRotation()
         {
-            Rotation rotation = currentRotation;
+            Rotation rotation = selectedCell.currentRotation;
             while (true)
             {
                 rotation = rotation.Next(skipIndexZero: true);
-                if (selectedBlueprint.possibleRotations.HasFlag(rotation))
+                if (selectedCell.validRotations.HasFlag(rotation))
                     return rotation;
             }
         }
 
         private void SetRotation(Rotation rotation)
         {
-            if (currentRotation == rotation) return;
-            currentRotation = rotation;
-
-            Vector3 targetRendererRotation = new Vector3(0, 0, currentRotation.ToAngle());
+            if (selectedCell.currentRotation != rotation)
+                selectedCell.Rotate(rotation);
+            
+            Vector3 targetRendererRotation = new Vector3(0, 0, rotation.ToAngle());
             gridSelector.highlightSpriteRenderer.transform.DOLocalRotate(targetRendererRotation, .04f).SetEase(Ease.OutCubic);
             gridSelector.UpdateHighlightSelector();
         }
 
-        private void OnCellSelected(Vector2Int selectedCell, Vector2Int? previousSelectedCell)
+        private void OnCellSelected(Vector2Int selectedCellCoordinates, Vector2Int? previousSelectedCellCoordinates)
         {
-            if (selectedBlueprint)
+            if (selectedCell != null)
             {
-                ShipCellData cellData = new ShipCellData(selectedBlueprint, selectedCell, currentRotation);
-                ship.AddCell(cellData);
+                ship.AddCell(selectedCell);
                 gridSelector.DeselectCell();
+                selectedCell = new ShipCellData(selectedCell.blueprint, selectedCell.coordinates, selectedCell.currentRotation);
             }
+        }
+
+        private void OnCellHighlighted(Vector2Int highlightedCell)
+        {
+            if (selectedCell == null) return;
+            selectedCell.Move(highlightedCell);
         }
 
         private void OnShipSpawned(Ship ship)
@@ -164,6 +173,7 @@ namespace Kocmoc.UI
         private void ConnectCallbacks()
         {
             ShipSpawner.shipSpawned += OnShipSpawned;
+            gridSelector.CellHighlighted += OnCellHighlighted;
             gridSelector.CellSelected += OnCellSelected;
             gridSelector.ValidateHighlightCellFunc = ValidateCellPlacement;
             gridSelector.ValidateSelectCellFunc = ValidateCellSelection;
@@ -171,20 +181,7 @@ namespace Kocmoc.UI
 
         private bool ValidateCellPlacement(Vector2Int coordinates)
         {
-            if (selectedBlueprint.size == Vector2Int.one) return ship.data.grid.IsOccupied(coordinates) == false;
-
-            Vector2Int rotatedSize = selectedBlueprint.size.RightAngleRotate(currentRotation);
-            
-            for (int y = 0; y < Mathf.Abs(rotatedSize.y); y++)
-            {
-                for (int x = 0; x < Mathf.Abs(rotatedSize.x); x++)
-                {
-                    Vector2Int currentCoordinates = coordinates + new Vector2Int(x * (int)Mathf.Sign(rotatedSize.x), y * (int)Mathf.Sign(rotatedSize.y));
-                    if (ship.data.grid.ValidateInput(currentCoordinates) == false || ship.data.grid.IsOccupied(currentCoordinates)) return false;
-                }
-            }
-
-            return true;
+            return ship.data.CanPlaceCell(selectedCell);
         }
 
         private bool ValidateCellSelection(Vector2Int coordinates)

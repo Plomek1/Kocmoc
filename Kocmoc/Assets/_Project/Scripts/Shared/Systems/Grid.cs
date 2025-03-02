@@ -231,7 +231,7 @@ namespace Kocmoc
         public Vector2Int size;
         public Vector2Int sizeAbs;
 
-        public List<Vector2Int> occupiedCells; 
+        public HashSet<Vector2Int> occupiedCells; 
 
         public GridGroup(Vector2Int origin, Vector2Int size)
         {
@@ -239,7 +239,7 @@ namespace Kocmoc
             this.size = size;
             sizeAbs = new Vector2Int(Mathf.Abs(size.x), Mathf.Abs(size.y));
 
-            occupiedCells = new List<Vector2Int>(sizeAbs.x * sizeAbs.y);
+            occupiedCells = new HashSet<Vector2Int>(sizeAbs.x * sizeAbs.y);
 
             for (int y = 0; y < sizeAbs.y; y++)
             {
