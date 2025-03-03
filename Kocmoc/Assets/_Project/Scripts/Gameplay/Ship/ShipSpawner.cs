@@ -9,13 +9,11 @@ namespace Kocmoc.Gameplay
 
         const int SHIP_GRID_SIZE = 31;
 
-        public static Ship SpawnShip(ShipCellData[] cells, Vector2 position)
+        public static Ship SpawnShip(ShipBlueprint shipBlueprint, Vector2 position)
         {
             Ship ship = GameObject.Instantiate(Assets.Instance.shipPrefab, position, Quaternion.identity);
             
-            ShipData shipData = (ShipData)ScriptableObject.CreateInstance(typeof(ShipData));
-            shipData.Init(CreateShipGrid(cells));
-            
+            ShipData shipData = new ShipData(CreateShipGrid(shipBlueprint.cells));
             ship.Init(shipData, ShipType.Player);
 
             shipSpawned?.Invoke(ship);
@@ -32,6 +30,11 @@ namespace Kocmoc.Gameplay
             }
 
             return shipGrid;
+        }
+
+        public static void ClearCallbacks()
+        {
+            shipSpawned = null;
         }
     }
 }

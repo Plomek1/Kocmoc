@@ -13,6 +13,7 @@ namespace Kocmoc.Gameplay
         public ShipType type { get; private set; }
 
         public GridRenderer gridRenderer { get; private set; }
+        public GridSelector gridSelector { get; private set; }
 
         public bool inMotion => rb.linearVelocity.magnitude > 0 || rb.angularVelocity != 0;
         public bool inCombat => false;
@@ -45,7 +46,9 @@ namespace Kocmoc.Gameplay
             OnMassUpdate();
 
             gridRenderer = GetComponentInChildren<GridRenderer>();
+            gridSelector = GetComponentInChildren<GridSelector>();
             gridRenderer.SetGrid(data.grid);
+            gridSelector.SetGrid(data.grid);
         }
 
         public void AddCell(ShipCellData cellData)

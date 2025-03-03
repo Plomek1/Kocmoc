@@ -11,7 +11,7 @@ namespace Kocmoc
         public Action<Vector2Int, Vector2Int?> CellSelected;
         public Action<Vector2Int> CellDeselected;
 
-        public GridBase grid;
+        public GridBase grid {  get; private set; }
         [field: SerializeField] public bool active { get; private set; }
 
         public Vector2Int? highlightedCell {  get; private set; }
@@ -42,18 +42,11 @@ namespace Kocmoc
 
         private void Start()
         {
-            if (grid.origin)
-            {
-                highlightSpriteRenderer.transform.SetParent(grid.origin);
-                selectSpriteRenderer.transform.SetParent(grid.origin);
-            }
-
             defaultHighlightSprite = highlightSpriteRenderer.sprite;
             defaultSelectSprite = selectSpriteRenderer.sprite;
             defaultColor = highlightSpriteRenderer.color;
 
             if (!validateHighlightCell) highlightCellValid = true;
-            grid.GridUpdated += UpdateHighlightSelector;
         }
 
         private void Update()
@@ -80,8 +73,8 @@ namespace Kocmoc
                 {
                     if (selectedCell.HasValue && selectedCell.Value == hoveredCell)
                         DeselectCell();
-                    else
-                        if (highlightCellValid) SelectCell(hoveredCell);
+                    else if (highlightCellValid)
+                        SelectCell(hoveredCell);
                 }
                 else DeselectCell();
             }
@@ -201,6 +194,22 @@ namespace Kocmoc
         public void ResetHighlightSprite() => highlightSpriteRenderer.sprite = defaultHighlightSprite;
         public void ResetSelectSprite() => selectSpriteRenderer.sprite = defaultSelectSprite;
         #endregion
+
+        public void SetGrid(GridBase grid)
+        {
+            if (this.grid != null)
+                this.grid.GridUpdated -= UpdateHighlightSelector;
+
+            this.grid = grid;
+
+            if (this.grid.origin)
+            {
+                highlightSpriteRenderer.transform.SetParent(grid.origin);
+                selectSpriteRenderer.transform.SetParent(grid.origin);
+            }
+
+            this.grid.GridUpdated += UpdateHighlightSelector;
+        }
 
         public void ToggleActivation()
         {

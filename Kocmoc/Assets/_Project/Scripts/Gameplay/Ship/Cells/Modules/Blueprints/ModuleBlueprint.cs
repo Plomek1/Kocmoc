@@ -16,7 +16,7 @@ namespace Kocmoc.Gameplay
 
         public ShipCellData cell {  get; protected set; }
 
-        public virtual void Init() { if (cell.ship) OnShipAttach(); }
+        public virtual void Init() { if (cell.ship != null) OnShipAttach(); }
         public virtual void OnShipAttach() { }
         public virtual void OnShipDettach() { }
 

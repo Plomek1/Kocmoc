@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Kocmoc.Gameplay
 {
-    [CreateAssetMenu(fileName = "Cell", menuName = "Ship/Cell Blueprint", order = 0)]
+    [CreateAssetMenu(fileName = "Cell", menuName = "Ship/Cell Blueprint", order = 1)]
     public class ShipCellBlueprint : ScriptableObject
     {
         public ShipCell prefab;
@@ -86,7 +86,6 @@ namespace Kocmoc.Gameplay
 
         public HashSet<Vector2Int> connectionPoints {  get; private set; }
         public ModuleData[] modules {  get; private set; }
-        public int health;
         
         public void SetShip(ShipData ship) => this.ship = ship;
 

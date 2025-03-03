@@ -12,13 +12,14 @@ namespace Kocmoc.UI
 
         public bool active {  get; private set; }
 
-        [SerializeField] private Ship ship;
+        private Ship ship;
 
         private ShipController shipController;
         private GridRenderer shipGridRenderer;
+        private GridSelector shipGridSelector;
+
         [Space(10)]
 
-        [SerializeField] private GridSelector gridSelector;
         private CameraMovement cameraMovement;
 
         private ShipCellData selectedCell;
@@ -26,7 +27,7 @@ namespace Kocmoc.UI
         private void Awake()
         {
             cameraMovement = Camera.main.GetComponent<CameraMovement>();
-            ConnectCallbacks();
+            ShipSpawner.shipSpawned += OnShipSpawned;
             selectedCell = null;
 
             if (ship) SetShip(ship);
@@ -42,9 +43,9 @@ namespace Kocmoc.UI
             }
             else
             {
-                if (gridSelector.selectedCell.HasValue && Input.GetKeyDown(KeyCode.Backspace))
+                if (shipGridSelector.selectedCell.HasValue && Input.GetKeyDown(KeyCode.Backspace))
                 {
-                    Vector2Int selectedCell = gridSelector.selectedCell.Value;
+                    Vector2Int selectedCell = shipGridSelector.selectedCell.Value;
 
 
                     if (selectedCell == Vector2Int.zero)
@@ -57,14 +58,12 @@ namespace Kocmoc.UI
 
                     if (ship.data.GetDanglingCells(ship.data.grid.CoordinatesToIndex(selectedCell)).Count > 0)
                     {
-                        foreach (var a in ship.data.GetDanglingCells(ship.data.grid.CoordinatesToIndex(selectedCell))) 
-                            Debug.Log("UNCONNECTED: " + ship.data.grid.IndexToCoordinates(a));
                         Debug.Log("Cant remove as it would leave dangling cell ");
                         return;
                     }
 
                     ship.RemoveCell(selectedCell);
-                    gridSelector.DeselectCell();
+                    shipGridSelector.DeselectCell();
                 }
             }
         }
@@ -76,32 +75,24 @@ namespace Kocmoc.UI
 
             SetRotation(Rotation.Up);
 
-            gridSelector.fitToGroup = false;
+            shipGridSelector.fitToGroup = false;
 
-            gridSelector.highlightSpriteRenderer.sprite = selectedCell.icon;
-            gridSelector.highlightSpriteRenderer.size = blueprint.size;
+            shipGridSelector.highlightSpriteRenderer.sprite = selectedCell.icon;
+            shipGridSelector.highlightSpriteRenderer.size = blueprint.size;
             
-            gridSelector.DeselectCell();
-            gridSelector.SetHighlightValidation(true);
-            gridSelector.SetSelectValidation(false);
+            shipGridSelector.DeselectCell();
+            shipGridSelector.SetHighlightValidation(true);
+            shipGridSelector.SetSelectValidation(false);
         }
 
         public void DeselectBlueprint()
         {
             if (selectedCell == null) return;
             selectedCell = null;
-            gridSelector.fitToGroup = true;
-            gridSelector.SetHighlightValidation(false);
-            gridSelector.SetSelectValidation(true);
-            gridSelector.ResetHighlightSprite();
-        }
-
-        public void SetShip(Ship ship)
-        {
-            this.ship = ship;
-            shipController = ship.GetComponent<ShipController>();
-            shipGridRenderer = ship.gridRenderer;
-            gridSelector.grid = ship.data.grid;
+            shipGridSelector.fitToGroup = true;
+            shipGridSelector.SetHighlightValidation(false);
+            shipGridSelector.SetSelectValidation(true);
+            shipGridSelector.ResetHighlightSprite();
         }
 
         private Rotation FindNextPossibleRotation(bool clockwise = true)
@@ -121,8 +112,8 @@ namespace Kocmoc.UI
                 selectedCell.Rotate(rotation);
             
             Vector3 targetRendererRotation = new Vector3(0, 0, rotation.ToAngle());
-            gridSelector.highlightSpriteRenderer.transform.DOLocalRotate(targetRendererRotation, .04f).SetEase(Ease.OutCubic);
-            gridSelector.UpdateHighlightSelector();
+            shipGridSelector.highlightSpriteRenderer.transform.DOLocalRotate(targetRendererRotation, .04f).SetEase(Ease.OutCubic);
+            shipGridSelector.UpdateHighlightSelector();
         }
 
         private void OnCellSelected(Vector2Int selectedCellCoordinates, Vector2Int? previousSelectedCellCoordinates)
@@ -130,7 +121,7 @@ namespace Kocmoc.UI
             if (selectedCell != null)
             {
                 ship.AddCell(selectedCell);
-                gridSelector.DeselectCell();
+                shipGridSelector.DeselectCell();
                 selectedCell = new ShipCellData(selectedCell.blueprint, selectedCell.coordinates, selectedCell.currentRotation);
             }
         }
@@ -147,11 +138,42 @@ namespace Kocmoc.UI
                 SetShip(ship);
         }
 
+        public void SetShip(Ship ship)
+        {
+            if (this.ship)
+                ClearCallbacks();
+
+            this.ship = ship;
+            shipController = ship.GetComponent<ShipController>();
+            shipGridRenderer = ship.gridRenderer;
+            shipGridSelector = ship.gridSelector;
+
+            SetCallbacks();
+        }
+
+        private void SetCallbacks()
+        {
+            shipGridSelector.CellHighlighted += OnCellHighlighted;
+            shipGridSelector.CellSelected += OnCellSelected;
+            shipGridSelector.ValidateHighlightCellFunc = ValidateCellPlacement;
+            shipGridSelector.ValidateSelectCellFunc = ValidateCellSelection;
+        }
+
+        private void ClearCallbacks()
+        {
+            shipGridSelector.SetHighlightValidation(false);
+            shipGridSelector.SetSelectValidation(false);
+            shipGridSelector.CellHighlighted -= OnCellHighlighted;
+            shipGridSelector.CellSelected -= OnCellSelected;
+            shipGridSelector.ValidateSelectCellFunc = null;
+            shipGridSelector.ValidateHighlightCellFunc = null;
+        }
+
         public void Open()
         {
             active = true;
             shipController.enabled = false;
-            gridSelector.occupiedOnly = false;
+            shipGridSelector.occupiedOnly = false;
             
             shipGridRenderer.Activate();
             cameraMovement.ResetPosition();
@@ -163,20 +185,11 @@ namespace Kocmoc.UI
         {
             active = false;
             shipController.enabled = true;
-            gridSelector.occupiedOnly = true;
+            shipGridSelector.occupiedOnly = true;
             
             shipGridRenderer.Deactivate();
             
             Closed?.Invoke();
-        }
-
-        private void ConnectCallbacks()
-        {
-            ShipSpawner.shipSpawned += OnShipSpawned;
-            gridSelector.CellHighlighted += OnCellHighlighted;
-            gridSelector.CellSelected += OnCellSelected;
-            gridSelector.ValidateHighlightCellFunc = ValidateCellPlacement;
-            gridSelector.ValidateSelectCellFunc = ValidateCellSelection;
         }
 
         private bool ValidateCellPlacement(Vector2Int coordinates)

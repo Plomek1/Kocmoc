@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Kocmoc.Gameplay
 {
-    public class ShipData : ScriptableObject
+    public class ShipData
     {
         public Action MassUpdated;
 
@@ -171,7 +171,7 @@ namespace Kocmoc.Gameplay
             return strongestThrust.Value > thrustForces[Rotation.Up] ? strongestThrust.Key : Rotation.Up;
         }
 
-        public void Init(Grid<ShipCellData> grid)
+        public ShipData(Grid<ShipCellData> grid)
         {
             this.grid = grid;
             foreach (var cell in grid.GetCells()) cell.value.SetShip(this);
