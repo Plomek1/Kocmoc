@@ -1,5 +1,5 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Kocmoc
 {
@@ -26,8 +26,11 @@ namespace Kocmoc
 
         private void Update()
         {
-            targetZoom = targetZoom - Input.mouseScrollDelta.y * zoomSensitivity;
-            targetZoom = Mathf.Clamp(targetZoom, minZoom, maxZoom);
+            if (!EventSystem.current.IsPointerOverGameObject())
+            {
+                targetZoom = targetZoom - Input.mouseScrollDelta.y * zoomSensitivity;
+                targetZoom = Mathf.Clamp(targetZoom, minZoom, maxZoom);
+            }
 
             cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, targetZoom, smoothness * Time.deltaTime);
             if (Mathf.Abs(cam.orthographicSize - targetZoom) < .01f) cam.orthographicSize = targetZoom;

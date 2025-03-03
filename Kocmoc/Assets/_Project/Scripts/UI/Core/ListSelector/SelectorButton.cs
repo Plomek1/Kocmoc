@@ -4,19 +4,29 @@ using UnityEngine.UI;
 
 namespace Kocmoc.UI
 {
-    [RequireComponent(typeof(Button))]
     public abstract class SelectorButton<T> : MonoBehaviour
     {
         public Action<T> Selected;
 
         private T value;
 
-        private Button button;
+        [SerializeField] protected Button button;
 
         public virtual void Init(T value)
         {
             this.value = value;
-            button = GetComponent<Button>();
+
+            if (!button)
+            {
+                if (TryGetComponent(out Button button))
+                    button = GetComponent<Button>();
+                else
+                {
+                    Debug.LogWarning("Button selector doesn't have button component assigned!");
+                    return;
+                }
+            }
+
             button.onClick.AddListener(OnClick);
         }
 
@@ -25,14 +35,14 @@ namespace Kocmoc.UI
             Selected?.Invoke(value);
         }
 
-        public void Select()
+        public virtual void Select()
         {
-            //button.interactable = false;
+            button.interactable = false;
         }
 
-        public void Deselect()
+        public virtual void Deselect()
         {
-            //button.interactable = true;
+            button.interactable = true;
 
         }
     }
