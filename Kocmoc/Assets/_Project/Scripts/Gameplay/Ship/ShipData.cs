@@ -9,6 +9,8 @@ namespace Kocmoc.Gameplay
     {
         public Action MassUpdated;
 
+        public string name {  get; private set; }
+
         public Grid<ShipCellData> grid {  get; private set; }
 
         public Vector2 centerOfMass { get; private set; }
@@ -171,10 +173,12 @@ namespace Kocmoc.Gameplay
             return strongestThrust.Value > thrustForces[Rotation.Up] ? strongestThrust.Key : Rotation.Up;
         }
 
-        public ShipData(Grid<ShipCellData> grid)
+        public ShipData(string name, Grid<ShipCellData> grid)
         {
+            this.name = name;
             this.grid = grid;
-            foreach (var cell in grid.GetCells()) cell.value.SetShip(this);
+            foreach (var cell in grid.GetCells()) 
+                cell.value.SetShip(this);
 
             UpdateMass();
         }

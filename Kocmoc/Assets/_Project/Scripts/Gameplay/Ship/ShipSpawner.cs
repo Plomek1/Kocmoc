@@ -13,7 +13,7 @@ namespace Kocmoc.Gameplay
         {
             Ship ship = GameObject.Instantiate(Assets.Instance.shipPrefab, position, Quaternion.identity);
             
-            ShipData shipData = new ShipData(CreateShipGrid(shipBlueprint.cells));
+            ShipData shipData = new ShipData(shipBlueprint.shipName, CreateShipGrid(shipBlueprint.cells));
             ship.Init(shipData, ShipType.Player);
 
             shipSpawned?.Invoke(ship);

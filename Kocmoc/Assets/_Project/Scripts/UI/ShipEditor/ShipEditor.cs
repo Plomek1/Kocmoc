@@ -12,25 +12,22 @@ namespace Kocmoc.UI
 
         public bool active {  get; private set; }
 
-        private Ship ship;
+        protected Ship ship;
 
-        private ShipController shipController;
-        private GridRenderer shipGridRenderer;
-        private GridSelector shipGridSelector;
+        protected ShipController shipController;
+        protected GridRenderer shipGridRenderer;
+        protected GridSelector shipGridSelector;
 
-        [Space(10)]
-
-        private CameraMovement cameraMovement;
-
-        private ShipCellData selectedCell;
+        protected CameraMovement cameraMovement;
+        protected ShipCellData selectedCell;
 
         private void Awake()
         {
             cameraMovement = Camera.main.GetComponent<CameraMovement>();
-            ShipSpawner.shipSpawned += OnShipSpawned;
             selectedCell = null;
 
-            if (ship) SetShip(ship);
+            if (LevelManager.instance)
+                LevelManager.instance.PlayerShipSet += SetShip;
         }
 
         private void Update()
