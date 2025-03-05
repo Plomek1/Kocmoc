@@ -17,6 +17,8 @@ namespace Kocmoc.Gameplay
         void Start()
         {
             Application.targetFrameRate = 144;
+            Assets.Instance.inputReader.EnablePlayerActions();
+
             SetPlayerShip(ShipSpawner.SpawnShip(starterShip, Vector2.zero));
         }
 

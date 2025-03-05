@@ -44,4 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8940dddadfdc922439002378ff3924de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shipPrefab: {fileID: 8438869332923262597, guid: 90a6b5c3946f337478e4a0d268f9a107, type: 3}
+  <inputReader>k__BackingField: {fileID: 11400000, guid: 2613054a7380f254fb2b234ddd12b029, type: 2}
+  <shipPrefab>k__BackingField: {fileID: 8438869332923262597, guid: 90a6b5c3946f337478e4a0d268f9a107, type: 3}

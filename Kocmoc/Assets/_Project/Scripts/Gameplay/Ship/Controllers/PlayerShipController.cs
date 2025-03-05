@@ -4,7 +4,6 @@ namespace Kocmoc.Gameplay
 {
     public class PlayerShipController : ShipController
     {
-
         private bool buildingMoveOpened;
 
         private GridRenderer gridRenderer;
@@ -13,39 +12,51 @@ namespace Kocmoc.Gameplay
         {
             base.OnStart();
             Camera.main.GetComponent<CameraMovement>().target = centerOfMass;
+
+            Assets.Instance.inputReader.ShipSetDestination += SetDestination;
+            Assets.Instance.inputReader.ShipRotate         += Rotate;
+            Assets.Instance.inputReader.ShipManualThrust   += ManualThrust;
+            Assets.Instance.inputReader.ShipManualBrake    += ManualBrake;
+            Assets.Instance.inputReader.ShipManualRotate   += ManualRotation;
         }
 
-        private void Update()
+        private void SetDestination()
         {
-            float horizontalInput = Input.GetAxisRaw("Horizontal");
-            float verticalInput   = Input.GetAxisRaw("Vertical");
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            SetPositionTarget(mousePos);
+            SetRotationTarget(mousePos);
+        }
 
-            if (horizontalInput != 0 || verticalInput != 0) // Manual steering
+        private void Rotate()
+        {
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            SetRotationTarget(mousePos);
+        }
+
+        private void ManualThrust(Vector2 direction)
+        {
+            thrustState = ShipThrustState.ManualThrust;
+
+            Vector2 thrustDirection = Quaternion.AngleAxis(centerOfMass.rotation.eulerAngles.z, Vector3.forward) * direction;
+            SetThrustDirection(thrustDirection);
+        }
+
+        private void ManualBrake(bool activate)
+        {
+            if (activate)
             {
-                movingTowardsTarget = false;
-                Vector2 thrustDirection = (centerOfMass.right * horizontalInput + centerOfMass.up * verticalInput).normalized;
-                SetThrustDirection(thrustDirection);
-                return;
+                thrustState = ShipThrustState.Braking;
             }
-
-            if (Input.GetKey(KeyCode.Space)) // Manual brake
+            else
             {
-                movingTowardsTarget = false;
-                SetThrustDirection(Vector2.ClampMagnitude(-shipRb.linearVelocity, 1));
-                return;
-            }
-
-            if (Input.GetMouseButtonDown(1)) // Autopilot
-            {
-                Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                SetRotationTarget(mousePos);
-
-                if (!Input.GetKey(KeyCode.LeftShift))
-                    SetPositionTarget(mousePos);
-            }
-
-            if (!movingTowardsTarget && currentThrust.sqrMagnitude > 0) // No input
+                thrustState = ShipThrustState.Idle;
                 SetThrustDirection(Vector2.zero);
+            }
+        }
+
+        private void ManualRotation(int direction)
+        {
+
         }
     }
 }

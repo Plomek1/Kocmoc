@@ -1,3 +1,4 @@
+using PlasticGui.WorkspaceWindow.QueryViews.Changesets;
 using System;
 using UnityEditor;
 using UnityEngine;
@@ -9,17 +10,17 @@ namespace Kocmoc.Gameplay
     {
         public Action<Vector2> ThrustDirectionUpdated;
 
+        [HideInInspector] public ShipThrustState thrustState = ShipThrustState.Idle;
+        [HideInInspector] public ShipRotationState rotationState = ShipRotationState.Idle;
+
         protected Ship ship;
         protected Rigidbody2D shipRb;
-
         protected Transform centerOfMass;
 
         protected Vector2 currentThrust;
 
-        protected bool movingTowardsTarget;
         private Vector2 targetPosition;
 
-        protected bool rotatingTowardsTarget;
         private float targetAngle;
         private float targetAngularVelocity;
 
@@ -28,6 +29,8 @@ namespace Kocmoc.Gameplay
 
         protected void SetThrustDirection(Vector2 direction)
         {
+            Debug.Log(direction);
+
             currentThrust = direction;
             ThrustDirectionUpdated?.Invoke(currentThrust);
         }
@@ -35,7 +38,7 @@ namespace Kocmoc.Gameplay
         protected void SetPositionTarget(Vector2 target)
         {
             targetPosition = target;
-            movingTowardsTarget = true;
+            thrustState = ShipThrustState.MovingTowardsTarget;
         }
 
         protected void SetRotationTarget(Vector2 target)
@@ -43,20 +46,19 @@ namespace Kocmoc.Gameplay
             Vector2 directionToTarget = (target - (Vector2)centerOfMass.position).normalized;
             targetAngle = Mathf.Atan2(directionToTarget.x, directionToTarget.y) * Mathf.Rad2Deg;
 
-            rotatingTowardsTarget = true;
+            rotationState = ShipRotationState.RotatingTowardsTarget;
         }
 
-        private void HandleMovement()
+        private void MoveTowardsTarget()
         {
-            if (!movingTowardsTarget) return;
-
             Vector2 targetPositionDelta = targetPosition - (Vector2)centerOfMass.position;
 
+            //TODO calculate stopping distance
             if (targetPositionDelta.magnitude <= MOVEMENT_STOP_TRESHOLD && shipRb.linearVelocity.magnitude <= MOVEMENT_STOP_TRESHOLD)
             {
                 SetThrustDirection(Vector2.zero);
                 shipRb.linearVelocity = Vector2.zero;
-                movingTowardsTarget = false;
+                thrustState = ShipThrustState.Idle;
                 return;
             }
 
@@ -66,31 +68,46 @@ namespace Kocmoc.Gameplay
             SetThrustDirection(thrustDirection);
         }
 
-        private void HandleRotation()
+        private void DecreaseLinearVelocity()
         {
-            if (!rotatingTowardsTarget) return;
+            SetThrustDirection(Vector2.ClampMagnitude(-shipRb.linearVelocity, 1));
+            
+            if (shipRb.linearVelocity.magnitude <= MOVEMENT_STOP_TRESHOLD)
+            {
+                SetThrustDirection(Vector2.zero);
+                shipRb.linearVelocity = Vector2.zero;
+                thrustState = ShipThrustState.Idle;
+            }
+        }
 
+        private void RotateTowardsTarget()
+        {
             float currentAngle = Mathf.Atan2(centerOfMass.up.x, centerOfMass.up.y) * Mathf.Rad2Deg;
             float angleDelta = Mathf.DeltaAngle(currentAngle, targetAngle);
 
-            float brakingAngle = (Mathf.Pow(shipRb.angularVelocity, 2) * Time.deltaTime) / (2f * ship.data.angularAcceleration / shipRb.inertia);
+            //TODO braking angle is too high
+            float brakingAngle = (Mathf.Pow(shipRb.angularVelocity, 2)) / (2f * ship.data.angularAcceleration / shipRb.inertia) * Time.deltaTime;
 
-            if (Mathf.Abs(angleDelta) > brakingAngle) targetAngularVelocity = Mathf.Sign(angleDelta) * ship.data.angularAcceleration;
-            else targetAngularVelocity = 0;
+            if (Mathf.Abs(angleDelta) > brakingAngle)
+                ApplyTorque((int)Mathf.Sign(angleDelta));
+            else rotationState = ShipRotationState.Braking;
+        }
 
-            if (Mathf.Abs(angleDelta) > ROTATION_STOP_TRESHOLD * ship.data.angularAcceleration)
+        private void DecreaseAngularVelocity()
+        {
+            ApplyTorque((int)Mathf.Sign(shipRb.angularVelocity));
+
+            if (Mathf.Abs(shipRb.angularVelocity) == 0)
             {
-                float torgue;
-                if (targetAngularVelocity == 0) torgue = Mathf.Sign(shipRb.angularVelocity) * ship.data.angularAcceleration * -1;
-                else torgue = Mathf.Sign(targetAngularVelocity) * ship.data.angularAcceleration * -1;
-                shipRb.AddTorque(torgue);
-            }
-            else
-            {
-                shipRb.rotation = -targetAngle;
                 shipRb.angularVelocity = 0;
-                rotatingTowardsTarget = false;
+                rotationState = ShipRotationState.Idle;
             }
+        }
+
+        private void ApplyTorque(int direction)
+        {
+            float torgue = -direction * ship.data.angularAcceleration;
+            shipRb.AddTorque(torgue);
         }
 
         private void Start() => OnStart();
@@ -98,8 +115,23 @@ namespace Kocmoc.Gameplay
 
         protected virtual void OnFixedUpdate()
         {
-            HandleMovement();
-            HandleRotation();
+            switch(thrustState)
+            {
+                case ShipThrustState.MovingTowardsTarget:
+                    MoveTowardsTarget(); break;
+                case ShipThrustState.Braking:
+                    DecreaseLinearVelocity(); break;
+                default: break;
+            }
+
+            switch(rotationState)
+            {
+                case ShipRotationState.RotatingTowardsTarget:
+                    RotateTowardsTarget(); break;
+                case ShipRotationState.Braking:
+                    DecreaseAngularVelocity(); break;
+                default: break;
+            }
         }
 
         protected virtual void OnStart()
@@ -107,6 +139,22 @@ namespace Kocmoc.Gameplay
             ship = GetComponent<Ship>();
             shipRb = GetComponent<Rigidbody2D>();
             centerOfMass = ship.GetCenterOfMass();
+        }
+
+        public enum ShipThrustState
+        {
+            Idle,
+            MovingTowardsTarget,
+            ManualThrust,
+            Braking,
+        }
+
+        public enum ShipRotationState
+        {
+            Idle,
+            RotatingTowardsTarget,
+            ManualRotation,
+            Braking,
         }
     }
 }

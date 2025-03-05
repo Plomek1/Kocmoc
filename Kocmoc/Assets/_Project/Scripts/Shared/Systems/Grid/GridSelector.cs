@@ -64,7 +64,7 @@ namespace Kocmoc
 
             bool cellValid = grid.ValidateInput(hoveredCell);
 
-            if (occupiedOnly && grid.IsOccupied(hoveredCell) == false)
+            if (cellValid && occupiedOnly && grid.IsOccupied(hoveredCell) == false)
                 cellValid = false;
 
             if (Input.GetMouseButtonDown(0))

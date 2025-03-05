@@ -2,8 +2,9 @@
     "name": "Project.Shared",
     "rootNamespace": "Kocmoc",
     "references": [
-        "GUID:9b34b39398a33cb4e8b71b1de40b73a9",
-        "GUID:f966786520716b34490765253d1eaec4"
+        "GUID:75469ad4d38634e559750d17036d5f7c",
+        "GUID:f966786520716b34490765253d1eaec4",
+        "GUID:9b34b39398a33cb4e8b71b1de40b73a9"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

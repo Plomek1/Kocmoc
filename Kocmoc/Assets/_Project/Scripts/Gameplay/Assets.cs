@@ -16,7 +16,10 @@ namespace Kocmoc.Gameplay
             }
         }
 
+        [Header("Settings")]
+        [field: SerializeField] public InputReader inputReader {  get; private set; }
+
         [Header("Prefabs")]
-        public Ship shipPrefab;
+        [field: SerializeField] public Ship shipPrefab {  get; private set; }
     }
 }
