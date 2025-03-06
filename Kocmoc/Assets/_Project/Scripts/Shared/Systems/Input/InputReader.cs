@@ -1,12 +1,12 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace Kocmoc
 {
     [CreateAssetMenu(fileName = "InputReader", menuName = "Settings/Input Reader", order = 0)]
-    public class InputReader : ScriptableObject, InputSystemActions.IShipActions, InputSystemActions.ICameraActions
+    public class InputReader : ScriptableObject, InputSystemActions.IShipActions, InputSystemActions.ICameraActions, InputSystemActions.IUIActions
     {
         public Action ShipSetDestination;
         public Action ShipRotate;
@@ -19,6 +19,10 @@ namespace Kocmoc
         public Action<float> CameraZoom;
         public Action        CameraReset;
 
+        public Action UIOpenBuildingMenu;
+
+        public Stack<Action> UIBackCallbacks { get; private set; }
+
         private InputSystemActions inputActions;
 
         public void EnablePlayerActions()
@@ -28,6 +32,8 @@ namespace Kocmoc
                 inputActions = new InputSystemActions();
                 inputActions.Ship.SetCallbacks(this);
                 inputActions.Camera.SetCallbacks(this);
+                inputActions.UI.SetCallbacks(this);
+                UIBackCallbacks = new Stack<Action>();
             }
             inputActions.Enable();
         }
@@ -90,6 +96,52 @@ namespace Kocmoc
         {
             if (context.performed)
                 CameraReset?.Invoke();
+        }
+        #endregion
+
+        #region User Interface
+        public void OnNavigate(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnSubmit(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnCancel(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnPoint(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnClick(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnRightClick(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnMiddleClick(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnScrollWheel(InputAction.CallbackContext context)
+        {
+        }
+
+        public void OnBack(InputAction.CallbackContext context)
+        {
+            if (context.performed && UIBackCallbacks.Count > 0)
+                UIBackCallbacks.Pop().Invoke();
+        }
+
+        public void OnBuildingMenu(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                UIOpenBuildingMenu?.Invoke();
         }
         #endregion
     }

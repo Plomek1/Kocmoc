@@ -8,29 +8,20 @@ namespace Kocmoc.Gameplay
     {
         public Action<Ship> PlayerShipSet;
 
-        public UnityEvent EditorMenuToggle;
-
         [SerializeField] private ShipBlueprint starterShip;
 
-        public Ship playerShip {  get; private set; }
+        public Ship playerShip { get; private set; }
 
         void Start()
         {
             Application.targetFrameRate = 144;
             Assets.Instance.inputReader.EnablePlayerActions();
+            Assets.Instance.inputReader.UIBackCallbacks.Push(() => { Application.Quit(); Debug.Log("QUITTING..."); });
+
 
             SetPlayerShip(ShipSpawner.SpawnShip(starterShip, Vector2.zero));
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.B))
-                EditorMenuToggle.Invoke();
-
-            if (Input.GetKeyDown(KeyCode.Escape)) 
-                Application.Quit();
-        }
-    
         public void SetPlayerShip(Ship ship)
         {
             playerShip = ship;

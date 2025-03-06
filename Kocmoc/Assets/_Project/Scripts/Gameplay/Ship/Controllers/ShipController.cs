@@ -1,6 +1,4 @@
-using PlasticGui.WorkspaceWindow.QueryViews.Changesets;
 using System;
-using UnityEditor;
 using UnityEngine;
 
 namespace Kocmoc.Gameplay
@@ -29,8 +27,6 @@ namespace Kocmoc.Gameplay
 
         protected void SetThrustDirection(Vector2 direction)
         {
-            Debug.Log(direction);
-
             currentThrust = direction;
             ThrustDirectionUpdated?.Invoke(currentThrust);
         }

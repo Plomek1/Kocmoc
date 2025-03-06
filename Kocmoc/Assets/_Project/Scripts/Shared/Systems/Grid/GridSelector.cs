@@ -47,6 +47,7 @@ namespace Kocmoc
             defaultColor = highlightSpriteRenderer.color;
 
             if (!validateHighlightCell) highlightCellValid = true;
+
         }
 
         private void Update()

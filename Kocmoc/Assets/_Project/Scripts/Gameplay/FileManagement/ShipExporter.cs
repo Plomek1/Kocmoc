@@ -1,9 +1,6 @@
 using UnityEngine;
 using System.Linq;
 using System.IO;
-using System.Diagnostics.CodeAnalysis;
-
-
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -37,6 +34,6 @@ namespace Kocmoc.Gameplay
             AssetDatabase.CreateAsset(blueprint, directiory + fileName + ".asset");
             AssetDatabase.SaveAssets();
         }
-    }
 #endif
+    }
 }

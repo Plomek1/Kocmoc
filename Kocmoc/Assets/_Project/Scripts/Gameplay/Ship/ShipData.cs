@@ -114,6 +114,7 @@ namespace Kocmoc.Gameplay
                     for (int x = 0; x < Mathf.Abs(rotatedSize.x); x++)
                     {
                         Vector2Int cellCoordinates = cell.coordinates + new Vector2Int(x * (int)Mathf.Sign(rotatedSize.x), y * (int)Mathf.Sign(rotatedSize.y));
+                        if (!grid.ValidateInput(cellCoordinates)) return false;
                         occupiedCells.Add(cellCoordinates);
                     }
                 }

@@ -18,6 +18,7 @@ namespace Kocmoc.UI
             Open();
         }
 
+#if UNITY_EDITOR
         public void Save()
         {
             if (string.IsNullOrEmpty(fileNameInput.text))
@@ -37,5 +38,6 @@ namespace Kocmoc.UI
             SetShip(ship);
             Open();
         }
+#endif
     }
 }

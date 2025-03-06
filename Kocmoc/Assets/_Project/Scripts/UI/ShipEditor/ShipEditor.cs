@@ -5,12 +5,10 @@ using DG.Tweening;
 
 namespace Kocmoc.UI
 {
-    public class ShipEditor : MonoBehaviour
+    public class ShipEditor : Menu
     {
         public Action Opened;
         public Action Closed;
-
-        public bool active {  get; private set; }
 
         protected Ship ship;
 
@@ -27,12 +25,15 @@ namespace Kocmoc.UI
             selectedCell = null;
 
             if (LevelManager.instance)
+            {
                 LevelManager.instance.PlayerShipSet += SetShip;
+                Assets.Instance.inputReader.UIOpenBuildingMenu += Toggle;
+            }
         }
 
         private void Update()
         {
-            if (!active) return;
+            if (!opened) return;
             if (selectedCell != null)
             {
                 if (Input.GetKeyDown(KeyCode.R))
@@ -43,7 +44,6 @@ namespace Kocmoc.UI
                 if (shipGridSelector.selectedCell.HasValue && Input.GetKeyDown(KeyCode.Backspace))
                 {
                     Vector2Int selectedCell = shipGridSelector.selectedCell.Value;
-
 
                     if (selectedCell == Vector2Int.zero)
                     {
@@ -166,21 +166,23 @@ namespace Kocmoc.UI
             shipGridSelector.ValidateHighlightCellFunc = null;
         }
 
-        public void Open()
+        public override void Open()
         {
-            active = true;
+            base.Open();
+
             shipController.enabled = false;
             shipGridSelector.occupiedOnly = false;
             
             shipGridRenderer.Activate();
             cameraMovement.ResetPosition();
-            
+
             Opened?.Invoke();
         }
 
-        public void Close()
+        public override void Close()
         {
-            active = false;
+            base.Close();
+
             shipController.enabled = true;
             shipGridSelector.occupiedOnly = true;
             

@@ -1,9 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+using Kocmoc.Gameplay;
 
 namespace Kocmoc
 {
@@ -19,6 +16,8 @@ namespace Kocmoc
         {
             if (opened) return;
             opened = true;
+            Assets.Instance.inputReader.UIBackCallbacks.Push(Close);
+
             MenuOpened?.Invoke();
         }
 
@@ -26,6 +25,11 @@ namespace Kocmoc
         {
             if (!opened) return;
             opened = false;
+
+            //If the menu was closed without pressing esc we need to pop the callback
+            if (Assets.Instance.inputReader.UIBackCallbacks.Peek() == Close)
+                Assets.Instance.inputReader.UIBackCallbacks.Pop();
+
             MenuClosed?.Invoke();
         }
 

@@ -16,8 +16,13 @@ namespace Kocmoc.Gameplay
             }
         }
 
+        private void Awake()
+        {
+            inputReader = ScriptableObject.CreateInstance<InputReader>();
+        }
+
         [Header("Settings")]
-        [field: SerializeField] public InputReader inputReader {  get; private set; }
+        public InputReader inputReader {  get; private set; }
 
         [Header("Prefabs")]
         [field: SerializeField] public Ship shipPrefab {  get; private set; }
