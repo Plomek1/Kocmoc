@@ -1,4 +1,5 @@
 using UnityEngine;
+using DG.Tweening;
 
 namespace Kocmoc.Gameplay
 {
@@ -20,10 +21,11 @@ namespace Kocmoc.Gameplay
         private Vector2 dragPosition;
         
         private Camera cam;
+        private bool dragging;
 
         public void ResetPosition()
         {
-            transform.position = resetPosition;
+            transform.DOMove(resetPosition, .3f).SetEase(Ease.OutCubic);
             dragPosition = Vector3.zero;
         }
 
@@ -31,19 +33,15 @@ namespace Kocmoc.Gameplay
         {
             cam = GetComponent<Camera>();
             transform.position = resetPosition;
+            Assets.Instance.inputReader.CameraDrag += performed => dragging = performed;
+            Assets.Instance.inputReader.CameraReset += ResetPosition;
         }
 
         private void LateUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                ResetPosition();
-                return;
-            }
-
             Vector2 lastDragPosition = dragPosition;
 
-            if (Input.GetMouseButton(2))
+            if (dragging)
             {
                 Vector2 currentMousePos = cam.ScreenToWorldPoint(Input.mousePosition);
                 Vector2 previousMousePos = cam.ScreenToWorldPoint(Input.mousePosition - Input.mousePositionDelta);

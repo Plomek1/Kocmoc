@@ -595,6 +595,7 @@ GameObject:
   - component: {fileID: 996710497}
   - component: {fileID: 996710499}
   - component: {fileID: 996710498}
+  - component: {fileID: 996710501}
   - component: {fileID: 996710500}
   m_Layer: 5
   m_Name: FpsCounter
@@ -731,6 +732,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f99adc67c750dc748aea5a51ca81e439, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &996710501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996710496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99e6144ab1501b24486176697310b4ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1532860454

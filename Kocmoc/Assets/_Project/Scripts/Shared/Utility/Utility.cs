@@ -1,8 +1,27 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Kocmoc
 {
     public static class Utility
     {
+        public static bool IsMouseOverUI()
+        {
+            PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+            pointerEventData.position = Input.mousePosition;
+
+            List<RaycastResult> objectsUnderMouse = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerEventData, objectsUnderMouse);
+            int ignoreCounter = 0;
+            foreach (var obj in objectsUnderMouse)
+            {
+                if (obj.gameObject.TryGetComponent(out MouseUIClickthrough m))
+                    ignoreCounter++;
+            }
+            return objectsUnderMouse.Count - ignoreCounter > 0;
+        }
+
         public static string ArrayToString<T>(T[] array)
         {
             string arrString = "(";
