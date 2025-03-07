@@ -24,10 +24,10 @@ namespace Kocmoc.UI
             cameraMovement = Camera.main.GetComponent<CameraMovement>();
             selectedCell = null;
 
-            if (LevelManager.instance)
+            if (LevelManager.Instance)
             {
-                LevelManager.instance.PlayerShipSet += SetShip;
-                Assets.Instance.inputReader.UIOpenBuildingMenu += Toggle;
+                LevelManager.Instance.PlayerShipSet += SetShip;
+                Globals.Instance.inputReader.UIOpenBuildingMenu += Toggle;
             }
         }
 
@@ -172,6 +172,7 @@ namespace Kocmoc.UI
 
             shipController.enabled = false;
             shipGridSelector.occupiedOnly = false;
+            shipGridSelector.DeselectCell();
             
             shipGridRenderer.Activate();
             cameraMovement.ResetPosition();

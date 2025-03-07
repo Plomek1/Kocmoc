@@ -33,8 +33,8 @@ namespace Kocmoc.Gameplay
         {
             cam = GetComponent<Camera>();
             transform.position = resetPosition;
-            Assets.Instance.inputReader.CameraDrag += performed => dragging = performed;
-            Assets.Instance.inputReader.CameraReset += ResetPosition;
+            Globals.Instance.inputReader.CameraDrag += performed => dragging = performed;
+            Globals.Instance.inputReader.CameraReset += ResetPosition;
         }
 
         private void LateUpdate()

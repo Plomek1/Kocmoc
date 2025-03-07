@@ -4,13 +4,14 @@ namespace Kocmoc
 {
     public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
-        public static T instance { get; private set; }
+        public static T Instance { get; private set; }
 
         private void Awake()
         {
-            if (instance)
-                Destroy(instance.gameObject);
-            instance = this as T;
+            if (Instance)
+                Destroy(gameObject);
+            else
+                Instance = this as T;
         }
     }
 }

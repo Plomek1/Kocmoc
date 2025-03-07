@@ -23,7 +23,7 @@ namespace Kocmoc
             cam.orthographicSize = startZoom;
             targetZoom = startZoom;
 
-            Assets.Instance.inputReader.CameraZoom += ChangeTargetZoom;
+            Globals.Instance.inputReader.CameraZoom += ChangeTargetZoom;
         }
 
         private void Update()

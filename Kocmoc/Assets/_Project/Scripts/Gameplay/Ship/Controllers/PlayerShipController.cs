@@ -13,11 +13,11 @@ namespace Kocmoc.Gameplay
             base.OnStart();
             Camera.main.GetComponent<CameraMovement>().target = centerOfMass;
 
-            Assets.Instance.inputReader.ShipSetDestination += SetDestination;
-            Assets.Instance.inputReader.ShipRotate         += Rotate;
-            Assets.Instance.inputReader.ShipManualThrust   += ManualThrust;
-            Assets.Instance.inputReader.ShipManualBrake    += ManualBrake;
-            Assets.Instance.inputReader.ShipManualRotate   += ManualRotation;
+            Globals.Instance.inputReader.ShipSetDestination += SetDestination;
+            Globals.Instance.inputReader.ShipRotate         += Rotate;
+            Globals.Instance.inputReader.ShipManualThrust   += ManualThrust;
+            Globals.Instance.inputReader.ShipManualBrake    += ManualBrake;
+            Globals.Instance.inputReader.ShipManualRotate   += ManualRotation;
         }
 
         private void SetDestination()

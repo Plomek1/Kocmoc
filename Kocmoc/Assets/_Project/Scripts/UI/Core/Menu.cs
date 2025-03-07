@@ -16,7 +16,7 @@ namespace Kocmoc
         {
             if (opened) return;
             opened = true;
-            Assets.Instance.inputReader.UIBackCallbacks.Push(Close);
+            Globals.Instance.inputReader.UIBackCallbacks.Add(Close);
 
             MenuOpened?.Invoke();
         }
@@ -27,9 +27,7 @@ namespace Kocmoc
             opened = false;
 
             //If the menu was closed without pressing esc we need to pop the callback
-            if (Assets.Instance.inputReader.UIBackCallbacks.Peek() == Close)
-                Assets.Instance.inputReader.UIBackCallbacks.Pop();
-
+            Globals.Instance.inputReader.UIBackCallbacks.Remove(Close);
             MenuClosed?.Invoke();
         }
 

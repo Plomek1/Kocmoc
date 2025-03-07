@@ -108,6 +108,8 @@ namespace Kocmoc
             Vector2Int? previousSelectedCell = selectedCell;
             selectedCell = cell;
             UpdateSelectorTransform(selectSpriteRenderer, selectedCell.Value, tween: false);
+
+            Globals.Instance.inputReader.UIBackCallbacks.Add(DeselectCell);
             CellSelected?.Invoke(selectedCell.Value, previousSelectedCell);
         }
 
@@ -119,6 +121,8 @@ namespace Kocmoc
             selectedCell = null;
 
             selectSpriteRenderer.gameObject.SetActive(false);
+
+            Globals.Instance.inputReader.UIBackCallbacks.Remove(DeselectCell);
             CellDeselected?.Invoke(lastSelectedCell);
         }
 

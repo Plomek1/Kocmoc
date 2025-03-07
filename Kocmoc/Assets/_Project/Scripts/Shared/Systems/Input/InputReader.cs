@@ -21,7 +21,7 @@ namespace Kocmoc
 
         public Action UIOpenBuildingMenu;
 
-        public Stack<Action> UIBackCallbacks { get; private set; }
+        public List<Action> UIBackCallbacks { get; private set; }
 
         private InputSystemActions inputActions;
 
@@ -33,7 +33,6 @@ namespace Kocmoc
                 inputActions.Ship.SetCallbacks(this);
                 inputActions.Camera.SetCallbacks(this);
                 inputActions.UI.SetCallbacks(this);
-                UIBackCallbacks = new Stack<Action>();
             }
             inputActions.Enable();
         }
@@ -41,6 +40,22 @@ namespace Kocmoc
         public void DisablePlayerActions()
         {
             inputActions?.Disable();
+        }
+
+        public void ResetCallbacks()
+        {
+            ShipSetDestination = null;
+            ShipRotate = null;
+            ShipManualThrust = null;
+            ShipManualBrake = null;
+            ShipManualRotate = null;
+
+            CameraDrag = null;
+            CameraZoom = null;
+            CameraReset = null;
+
+            UIOpenBuildingMenu = null;
+            UIBackCallbacks = new List<Action>();
         }
 
         #region Ship
@@ -135,7 +150,10 @@ namespace Kocmoc
         public void OnBack(InputAction.CallbackContext context)
         {
             if (context.performed && UIBackCallbacks.Count > 0)
-                UIBackCallbacks.Pop().Invoke();
+            {
+                Debug.Log(UIBackCallbacks.Count);
+                UIBackCallbacks[UIBackCallbacks.Count - 1].Invoke();
+            }
         }
 
         public void OnBuildingMenu(InputAction.CallbackContext context)
