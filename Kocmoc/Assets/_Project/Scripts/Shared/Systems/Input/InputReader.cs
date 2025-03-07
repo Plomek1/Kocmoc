@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 namespace Kocmoc
 {
@@ -12,13 +13,15 @@ namespace Kocmoc
         public Action ShipRotate;
 
         public Action<Vector2> ShipManualThrust;
-        public Action<bool>    ShipManualBrake;
-        public Action<int>     ShipManualRotate;
+        public Action<bool> ShipManualBrake;
+        public Action<float> ShipManualRotate;
 
-        public Action<bool>  CameraDrag;
+        public Action<bool> CameraDrag;
         public Action<float> CameraZoom;
-        public Action        CameraReset;
+        public Action CameraReset;
 
+        public Action UISubmit;
+        public Action UIOpenDevConsole;
         public Action UIOpenBuildingMenu;
 
         public List<Action> UIBackCallbacks { get; private set; }
@@ -33,6 +36,7 @@ namespace Kocmoc
                 inputActions.Ship.SetCallbacks(this);
                 inputActions.Camera.SetCallbacks(this);
                 inputActions.UI.SetCallbacks(this);
+                EnableKeyboard();
             }
             inputActions.Enable();
         }
@@ -41,6 +45,18 @@ namespace Kocmoc
         {
             inputActions?.Disable();
         }
+
+        public void EnableShipInput() =>  inputActions.Ship.Enable();
+        public void DisableShipInput() => inputActions.Ship.Disable();
+
+        public void EnableCameraInput() =>  inputActions.Camera.Enable();
+        public void DisableCameraInput() => inputActions.Camera.Disable();
+
+        public void EnableUIInput() =>  inputActions.UI.Enable();
+        public void DisableUIInput() => inputActions.UI.Disable();
+
+        public void EnableKeyboard()  => InputSystem.EnableDevice(Keyboard.current);
+        public void DisableKeyboard() => InputSystem.DisableDevice(Keyboard.current);
 
         public void ResetCallbacks()
         {
@@ -54,6 +70,8 @@ namespace Kocmoc
             CameraZoom = null;
             CameraReset = null;
 
+            UISubmit = null;
+            UIOpenDevConsole = null;
             UIOpenBuildingMenu = null;
             UIBackCallbacks = new List<Action>();
         }
@@ -87,7 +105,7 @@ namespace Kocmoc
         public void OnRotate(InputAction.CallbackContext context)
         {
             if (context.performed || context.canceled)
-                ShipManualRotate?.Invoke(context.ReadValue<int>());
+                ShipManualRotate?.Invoke(context.ReadValue<float>());
         }
         #endregion
 
@@ -121,6 +139,8 @@ namespace Kocmoc
 
         public void OnSubmit(InputAction.CallbackContext context)
         {
+            if (context.performed)
+                UISubmit?.Invoke();
         }
 
         public void OnCancel(InputAction.CallbackContext context)
@@ -150,10 +170,13 @@ namespace Kocmoc
         public void OnBack(InputAction.CallbackContext context)
         {
             if (context.performed && UIBackCallbacks.Count > 0)
-            {
-                Debug.Log(UIBackCallbacks.Count);
                 UIBackCallbacks[UIBackCallbacks.Count - 1].Invoke();
-            }
+        }
+
+        public void OnDevConsole(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                UIOpenDevConsole?.Invoke();
         }
 
         public void OnBuildingMenu(InputAction.CallbackContext context)

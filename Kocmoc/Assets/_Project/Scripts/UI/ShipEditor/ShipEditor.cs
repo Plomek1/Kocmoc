@@ -25,10 +25,7 @@ namespace Kocmoc.UI
             selectedCell = null;
 
             if (LevelManager.Instance)
-            {
                 LevelManager.Instance.PlayerShipSet += SetShip;
-                Globals.Instance.inputReader.UIOpenBuildingMenu += Toggle;
-            }
         }
 
         private void Update()

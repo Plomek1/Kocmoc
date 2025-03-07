@@ -112,7 +112,7 @@
                 {
                     "name": "1D Axis",
                     "id": "9c7da627-2209-4d6a-8fa3-1677f4b57ecb",
-                    "path": "1DAxis",
+                    "path": "1DAxis(whichSideWins=1)",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -325,6 +325,15 @@
                     "name": "Back",
                     "type": "Button",
                     "id": "3ee48e32-3f21-441a-b220-b26e1cb1af3f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "DevConsole",
+                    "type": "Button",
+                    "id": "fc0be62d-ee17-4e3b-b182-321657319e30",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -756,6 +765,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "BuildingMenu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3ce71a1c-0647-4aba-9839-1b49e6accbb3",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DevConsole",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

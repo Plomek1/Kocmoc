@@ -54,7 +54,7 @@ namespace Kocmoc.Gameplay
             }
         }
 
-        private void ManualRotation(int direction)
+        private void ManualRotation(float direction)
         {
 
         }

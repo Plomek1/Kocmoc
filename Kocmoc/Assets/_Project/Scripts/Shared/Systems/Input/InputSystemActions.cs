@@ -200,7 +200,7 @@ namespace Kocmoc
                 {
                     ""name"": ""1D Axis"",
                     ""id"": ""9c7da627-2209-4d6a-8fa3-1677f4b57ecb"",
-                    ""path"": ""1DAxis"",
+                    ""path"": ""1DAxis(whichSideWins=1)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -413,6 +413,15 @@ namespace Kocmoc
                     ""name"": ""Back"",
                     ""type"": ""Button"",
                     ""id"": ""3ee48e32-3f21-441a-b220-b26e1cb1af3f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DevConsole"",
+                    ""type"": ""Button"",
+                    ""id"": ""fc0be62d-ee17-4e3b-b182-321657319e30"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -846,6 +855,17 @@ namespace Kocmoc
                     ""action"": ""BuildingMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3ce71a1c-0647-4aba-9839-1b49e6accbb3"",
+                    ""path"": ""<Keyboard>/backquote"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DevConsole"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -935,6 +955,7 @@ namespace Kocmoc
             m_UI_MiddleClick = m_UI.FindAction("MiddleClick", throwIfNotFound: true);
             m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
             m_UI_Back = m_UI.FindAction("Back", throwIfNotFound: true);
+            m_UI_DevConsole = m_UI.FindAction("DevConsole", throwIfNotFound: true);
             m_UI_BuildingMenu = m_UI.FindAction("BuildingMenu", throwIfNotFound: true);
         }
 
@@ -1274,6 +1295,7 @@ namespace Kocmoc
         private readonly InputAction m_UI_MiddleClick;
         private readonly InputAction m_UI_ScrollWheel;
         private readonly InputAction m_UI_Back;
+        private readonly InputAction m_UI_DevConsole;
         private readonly InputAction m_UI_BuildingMenu;
         /// <summary>
         /// Provides access to input actions defined in input action map "UI".
@@ -1322,6 +1344,10 @@ namespace Kocmoc
             /// Provides access to the underlying input action "UI/Back".
             /// </summary>
             public InputAction @Back => m_Wrapper.m_UI_Back;
+            /// <summary>
+            /// Provides access to the underlying input action "UI/DevConsole".
+            /// </summary>
+            public InputAction @DevConsole => m_Wrapper.m_UI_DevConsole;
             /// <summary>
             /// Provides access to the underlying input action "UI/BuildingMenu".
             /// </summary>
@@ -1379,6 +1405,9 @@ namespace Kocmoc
                 @Back.started += instance.OnBack;
                 @Back.performed += instance.OnBack;
                 @Back.canceled += instance.OnBack;
+                @DevConsole.started += instance.OnDevConsole;
+                @DevConsole.performed += instance.OnDevConsole;
+                @DevConsole.canceled += instance.OnDevConsole;
                 @BuildingMenu.started += instance.OnBuildingMenu;
                 @BuildingMenu.performed += instance.OnBuildingMenu;
                 @BuildingMenu.canceled += instance.OnBuildingMenu;
@@ -1420,6 +1449,9 @@ namespace Kocmoc
                 @Back.started -= instance.OnBack;
                 @Back.performed -= instance.OnBack;
                 @Back.canceled -= instance.OnBack;
+                @DevConsole.started -= instance.OnDevConsole;
+                @DevConsole.performed -= instance.OnDevConsole;
+                @DevConsole.canceled -= instance.OnDevConsole;
                 @BuildingMenu.started -= instance.OnBuildingMenu;
                 @BuildingMenu.performed -= instance.OnBuildingMenu;
                 @BuildingMenu.canceled -= instance.OnBuildingMenu;
@@ -1656,6 +1688,13 @@ namespace Kocmoc
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnBack(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "DevConsole" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnDevConsole(InputAction.CallbackContext context);
             /// <summary>
             /// Method invoked when associated input action "BuildingMenu" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
             /// </summary>

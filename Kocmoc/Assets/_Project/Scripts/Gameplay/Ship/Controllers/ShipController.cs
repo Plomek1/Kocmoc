@@ -81,12 +81,12 @@ namespace Kocmoc.Gameplay
             float currentAngle = Mathf.Atan2(centerOfMass.up.x, centerOfMass.up.y) * Mathf.Rad2Deg;
             float angleDelta = Mathf.DeltaAngle(currentAngle, targetAngle);
 
-            //TODO braking angle is too high
             float brakingAngle = (Mathf.Pow(shipRb.angularVelocity, 2)) / (2f * ship.data.angularAcceleration / shipRb.inertia) * Time.deltaTime;
 
             if (Mathf.Abs(angleDelta) > brakingAngle)
                 ApplyTorque((int)Mathf.Sign(angleDelta));
-            else rotationState = ShipRotationState.Braking;
+            else 
+                DecreaseAngularVelocity();
         }
 
         private void DecreaseAngularVelocity()

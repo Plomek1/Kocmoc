@@ -6,8 +6,9 @@ namespace Kocmoc
 {
     public class Menu : MonoBehaviour
     {
-        [SerializeField] protected bool opened;
-        
+        [field: SerializeField] public bool opened {  get; private set; }
+        [SerializeField] private bool closeWithEscape = true;
+
         [Header("Menu Events")]
         public UnityEvent MenuOpened;
         public UnityEvent MenuClosed;
@@ -16,8 +17,9 @@ namespace Kocmoc
         {
             if (opened) return;
             opened = true;
-            Globals.Instance.inputReader.UIBackCallbacks.Add(Close);
 
+            if (closeWithEscape)
+                Globals.Instance.inputReader.UIBackCallbacks.Add(Close);
             MenuOpened?.Invoke();
         }
 
@@ -27,7 +29,8 @@ namespace Kocmoc
             opened = false;
 
             //If the menu was closed without pressing esc we need to pop the callback
-            Globals.Instance.inputReader.UIBackCallbacks.Remove(Close);
+            if (closeWithEscape)
+                Globals.Instance.inputReader.UIBackCallbacks.Remove(Close);
             MenuClosed?.Invoke();
         }
 

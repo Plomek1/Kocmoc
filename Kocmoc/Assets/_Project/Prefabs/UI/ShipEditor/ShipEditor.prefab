@@ -1181,7 +1181,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c09a2378590fb8642952e19c36233576, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  opened: 0
+  <opened>k__BackingField: 0
+  closeWithEscape: 1
   MenuOpened:
     m_PersistentCalls:
       m_Calls:
