@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bb69cafd879942e4897e3dd3eac3ccf6, type: 3}
-  m_Name: ThrusterModuleBlueprint
+  m_Name: ThrusterModule
   m_EditorClassIdentifier: 
   type: 8
   thrustForce: 200

@@ -26,17 +26,17 @@ MonoBehaviour:
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 924c085561f034d47917d4cae374ee6f, type: 2}
     <coordinates>k__BackingField: {x: 0, y: 3}
     <currentRotation>k__BackingField: 1
-  - <blueprint>k__BackingField: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
-    <coordinates>k__BackingField: {x: 1, y: -1}
-    <currentRotation>k__BackingField: 1
-  - <blueprint>k__BackingField: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
-    <coordinates>k__BackingField: {x: -1, y: -1}
-    <currentRotation>k__BackingField: 1
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 924c085561f034d47917d4cae374ee6f, type: 2}
     <coordinates>k__BackingField: {x: -1, y: 0}
     <currentRotation>k__BackingField: 1
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 924c085561f034d47917d4cae374ee6f, type: 2}
     <coordinates>k__BackingField: {x: 1, y: 0}
+    <currentRotation>k__BackingField: 1
+  - <blueprint>k__BackingField: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
+    <coordinates>k__BackingField: {x: 1, y: -1}
+    <currentRotation>k__BackingField: 1
+  - <blueprint>k__BackingField: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
+    <coordinates>k__BackingField: {x: -1, y: -1}
     <currentRotation>k__BackingField: 1
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
     <coordinates>k__BackingField: {x: -1, y: 1}
@@ -50,3 +50,6 @@ MonoBehaviour:
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
     <coordinates>k__BackingField: {x: -2, y: 0}
     <currentRotation>k__BackingField: 2
+  - <blueprint>k__BackingField: {fileID: 11400000, guid: 2b8176dc5a041a247a243d9fac6ac9d1, type: 2}
+    <coordinates>k__BackingField: {x: 0, y: 4}
+    <currentRotation>k__BackingField: 1

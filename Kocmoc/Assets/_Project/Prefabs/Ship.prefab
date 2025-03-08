@@ -100,7 +100,7 @@ CompositeCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
+  m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths: []
@@ -292,7 +292,7 @@ MonoBehaviour:
   <highlightSpriteRenderer>k__BackingField: {fileID: 4149940582666156982}
   <selectSpriteRenderer>k__BackingField: {fileID: 3180866484760226496}
   validateHighlightCell: 0
-  validateSelectCell: 1
+  validateSelectCell: 0
   validColor: {r: 1, g: 1, b: 1, a: 0.47058824}
   invalidColor: {r: 0.9811321, g: 0.31933072, b: 0.31933072, a: 0.7058824}
   occupiedOnly: 1

@@ -106,6 +106,7 @@ namespace Kocmoc.UI
                 selectedCell.Rotate(rotation);
             
             Vector3 targetRendererRotation = new Vector3(0, 0, rotation.ToAngle());
+            Debug.Log(shipGridSelector);
             shipGridSelector.highlightSpriteRenderer.transform.DOLocalRotate(targetRendererRotation, .04f).SetEase(Ease.OutCubic);
             shipGridSelector.UpdateHighlightSelector();
         }
@@ -167,8 +168,9 @@ namespace Kocmoc.UI
         {
             base.Open();
 
-            shipController.enabled = false;
+            if (shipController) shipController.enabled = false;
             shipGridSelector.occupiedOnly = false;
+            shipGridSelector.SetSelectValidation(true);
             shipGridSelector.DeselectCell();
             
             shipGridRenderer.Activate();
@@ -181,9 +183,10 @@ namespace Kocmoc.UI
         {
             base.Close();
 
-            shipController.enabled = true;
+            if (shipController) shipController.enabled = true;
             shipGridSelector.occupiedOnly = true;
-            
+            shipGridSelector.DeselectCell();
+
             shipGridRenderer.Deactivate();
             
             Closed?.Invoke();

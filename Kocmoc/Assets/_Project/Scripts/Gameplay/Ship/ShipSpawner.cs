@@ -9,12 +9,12 @@ namespace Kocmoc.Gameplay
 
         const int SHIP_GRID_SIZE = 31;
 
-        public static Ship SpawnShip(ShipBlueprint shipBlueprint, Vector2 position)
+        public static Ship SpawnShip(ShipBlueprint shipBlueprint, ShipType type, Vector2 position)
         {
             Ship ship = GameObject.Instantiate(Assets.Instance.shipPrefab, position, Quaternion.identity);
             
             ShipData shipData = new ShipData(shipBlueprint.shipName, CreateShipGrid(shipBlueprint.cells));
-            ship.Init(shipData, ShipType.Player);
+            ship.Init(shipData, type);
 
             shipSpawned?.Invoke(ship);
             return ship;

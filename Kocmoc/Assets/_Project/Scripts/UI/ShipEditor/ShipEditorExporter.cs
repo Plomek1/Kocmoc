@@ -13,7 +13,7 @@ namespace Kocmoc.UI
 
         private void Start()
         {
-            Ship ship = ShipSpawner.SpawnShip(defaultShip, Vector2.zero);
+            Ship ship = ShipSpawner.SpawnShip(defaultShip, ShipType.Wreck, Vector2.zero);
             SetShip(ship);
             Open();
         }
@@ -34,7 +34,7 @@ namespace Kocmoc.UI
         public void Clear()
         {
             Destroy(this.ship.gameObject);
-            Ship ship = ShipSpawner.SpawnShip(defaultShip, Vector2.zero);
+            Ship ship = ShipSpawner.SpawnShip(defaultShip, ShipType.Wreck, Vector2.zero);
             SetShip(ship);
             Open();
         }

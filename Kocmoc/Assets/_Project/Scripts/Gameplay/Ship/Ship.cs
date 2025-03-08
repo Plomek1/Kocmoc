@@ -104,6 +104,7 @@ namespace Kocmoc.Gameplay
 
     public enum ShipType
     {
+        Wreck,
         Player,
         AI
     }
