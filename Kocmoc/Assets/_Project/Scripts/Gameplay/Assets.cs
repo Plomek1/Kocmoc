@@ -10,7 +10,7 @@ namespace Kocmoc.Gameplay
         { 
             get 
             { 
-                if (_instance == null) 
+                if (_instance == null)
                     _instance = Instantiate((GameObject)Resources.Load("Assets")).GetComponent<Assets>();
                 return _instance;
             }

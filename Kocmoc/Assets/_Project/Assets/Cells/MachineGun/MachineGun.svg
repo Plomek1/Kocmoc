@@ -9,6 +9,9 @@
    id="svg1"
    inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
    sodipodi:docname="MachineGun.svg"
+   inkscape:export-filename="MachineGunIcon.png"
+   inkscape:export-xdpi="25.4"
+   inkscape:export-ydpi="25.4"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,14 +27,14 @@
      inkscape:deskcolor="#505050"
      inkscape:document-units="mm"
      inkscape:zoom="0.5"
-     inkscape:cx="168"
-     inkscape:cy="587"
+     inkscape:cx="358"
+     inkscape:cy="515"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg1" />
+     inkscape:current-layer="layer1" />
   <defs
      id="defs1">
     <inkscape:path-effect
@@ -65,7 +68,8 @@
   <g
      inkscape:groupmode="layer"
      id="layer2"
-     inkscape:label="Base">
+     inkscape:label="Base"
+     style="display:inline">
     <path
        id="path3"
        style="fill:#2b2b36;fill-opacity:1;stroke:#000000;stroke-width:0"
@@ -83,13 +87,14 @@
   <g
      inkscape:label="Barrel"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     style="display:inline">
     <rect
        style="fill:#757575;fill-opacity:1;stroke:#000000;stroke-width:0"
        id="rect2"
        width="20"
        height="181.23956"
-       x="118"
+       x="78"
        y="34.512001"
        rx="1.5875"
        ry="1.5874999" />
@@ -98,7 +103,7 @@
        id="rect3"
        width="19.948948"
        height="10.114638"
-       x="118.03872"
+       x="78.038719"
        y="34.42971"
        rx="1.5874999"
        ry="1.5875" />
@@ -107,7 +112,40 @@
        id="rect5"
        width="19.948948"
        height="2.6778636"
-       x="118.03872"
+       x="78.038719"
+       y="42.971169"
+       rx="0"
+       ry="0" />
+  </g>
+  <g
+     inkscape:label="Barrel"
+     inkscape:groupmode="layer"
+     id="g8"
+     style="display:inline">
+    <rect
+       style="fill:#757575;fill-opacity:1;stroke:#000000;stroke-width:0"
+       id="rect6"
+       width="20"
+       height="181.23956"
+       x="158"
+       y="34.512001"
+       rx="1.5875"
+       ry="1.5874999" />
+    <rect
+       style="fill:#a4a639;fill-opacity:1;stroke:#000000;stroke-width:0"
+       id="rect7"
+       width="19.948948"
+       height="10.114638"
+       x="158.03871"
+       y="34.42971"
+       rx="1.5874999"
+       ry="1.5875" />
+    <rect
+       style="fill:#525252;fill-opacity:1;stroke:#000000;stroke-width:0"
+       id="rect8"
+       width="19.948948"
+       height="2.6778636"
+       x="158.03871"
        y="42.971169"
        rx="0"
        ry="0" />

@@ -7,6 +7,7 @@ namespace Kocmoc.Gameplay
     public class ShipController : MonoBehaviour
     {
         public Action<Vector2> ThrustDirectionUpdated;
+        public Action<Transform> AttackTargetChanged;
 
         [HideInInspector] public ShipThrustState thrustState = ShipThrustState.Idle;
         [HideInInspector] public ShipRotationState rotationState = ShipRotationState.Idle;
@@ -15,8 +16,9 @@ namespace Kocmoc.Gameplay
         protected Rigidbody2D shipRb;
         protected Transform centerOfMass;
 
-        protected Vector2 currentThrust;
+        private Transform target;
 
+        protected Vector2 currentThrust;
         private Vector2 targetPosition;
 
         private float targetAngle;
@@ -39,10 +41,29 @@ namespace Kocmoc.Gameplay
 
         protected void SetRotationTarget(Vector2 target)
         {
-            Vector2 directionToTarget = (target - (Vector2)centerOfMass.position).normalized;
-            targetAngle = Mathf.Atan2(directionToTarget.x, directionToTarget.y) * Mathf.Rad2Deg;
-
+            targetAngle = CalculateAngleToTarget(target);
             rotationState = ShipRotationState.RotatingTowardsTarget;
+            Debug.Log("NIGGERs");
+        }
+
+        protected void LockOnTarget(Transform target)
+        {
+            if (!target) UnlockRotation();
+            this.target = target;
+            rotationState = ShipRotationState.LockedOnTarget;
+        }
+
+        protected void UnlockRotation()
+        {
+            if (!target) return;
+            target = null;
+            rotationState = ShipRotationState.Braking;
+        }
+
+        private float CalculateAngleToTarget(Vector2 targetPosition)
+        {
+            Vector2 directionToTarget = (targetPosition - (Vector2)centerOfMass.position).normalized;
+            return Mathf.Atan2(directionToTarget.x, directionToTarget.y) * Mathf.Rad2Deg;
         }
 
         private void MoveTowardsTarget()
@@ -91,13 +112,8 @@ namespace Kocmoc.Gameplay
 
         private void DecreaseAngularVelocity()
         {
-            ApplyTorque((int)Mathf.Sign(shipRb.angularVelocity));
-
-            if (Mathf.Abs(shipRb.angularVelocity) == 0)
-            {
-                shipRb.angularVelocity = 0;
-                rotationState = ShipRotationState.Idle;
-            }
+            if (Mathf.Abs(shipRb.angularVelocity) > 0)
+                ApplyTorque((int)Mathf.Sign(shipRb.angularVelocity));
         }
 
         private void ApplyTorque(int direction)
@@ -122,6 +138,9 @@ namespace Kocmoc.Gameplay
 
             switch(rotationState)
             {
+                case ShipRotationState.LockedOnTarget:
+                    targetAngle = CalculateAngleToTarget(target.position);
+                    RotateTowardsTarget(); break;
                 case ShipRotationState.RotatingTowardsTarget:
                     RotateTowardsTarget(); break;
                 case ShipRotationState.Braking:
@@ -151,6 +170,7 @@ namespace Kocmoc.Gameplay
             RotatingTowardsTarget,
             ManualRotation,
             Braking,
+            LockedOnTarget,
         }
     }
 }

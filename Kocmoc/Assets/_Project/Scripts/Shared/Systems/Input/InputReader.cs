@@ -9,8 +9,7 @@ namespace Kocmoc
     [CreateAssetMenu(fileName = "InputReader", menuName = "Settings/Input Reader", order = 0)]
     public class InputReader : ScriptableObject, InputSystemActions.IShipActions, InputSystemActions.ICameraActions, InputSystemActions.IUIActions
     {
-        public Action ShipSetDestination;
-        public Action ShipRotate;
+        public Action<bool, bool> ShipCommand;
 
         public Action<Vector2> ShipManualThrust;
         public Action<bool> ShipManualBrake;
@@ -60,8 +59,7 @@ namespace Kocmoc
 
         public void ResetCallbacks()
         {
-            ShipSetDestination = null;
-            ShipRotate = null;
+            ShipCommand = null;
             ShipManualThrust = null;
             ShipManualBrake = null;
             ShipManualRotate = null;
@@ -82,9 +80,11 @@ namespace Kocmoc
             if (context.performed)
             {
                 if (Keyboard.current.shiftKey.isPressed)
-                    ShipRotate?.Invoke();
+                    ShipCommand?.Invoke(true, false);
+                else if (Keyboard.current.ctrlKey.isPressed)
+                    ShipCommand?.Invoke(false, true);
                 else
-                    ShipSetDestination?.Invoke();
+                    ShipCommand?.Invoke(true, true);
             }
         }
 
