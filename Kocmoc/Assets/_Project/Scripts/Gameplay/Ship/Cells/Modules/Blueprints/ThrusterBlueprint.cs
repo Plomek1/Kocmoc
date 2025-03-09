@@ -12,29 +12,22 @@ namespace Kocmoc.Gameplay
     [System.Serializable]
     public class ThrusterData : ModuleData
     {
-        public new ThrusterBlueprint blueprint
+        private new ThrusterBlueprint blueprint
         {
             get => (ThrusterBlueprint)base.blueprint;
-            private set => base.blueprint = value;
+            set => base.blueprint = value;
         }
 
         public float thrustForce => blueprint.thrustForce;
 
-        public override void OnShipAttach()
+        protected override void OnShipAttach()
         {
             cell.ship.thrustForces[cell.currentRotation] += thrustForce;
         }
 
-        public override void OnShipDettach()
+        protected override void OnShipDettach()
         {
             cell.ship.thrustForces[cell.currentRotation] -= thrustForce;
-        }
-
-        public override Module CreateModuleComponent(ShipCell cell)
-        {
-            Module module = cell.gameObject.AddComponent<Thruster>();
-            module.Init(cell, this);
-            return module;
         }
 
         public ThrusterData(ThrusterBlueprint blueprint, ShipCellData cell) : base(blueprint, cell) { }

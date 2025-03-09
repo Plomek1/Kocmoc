@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 794755613748452208}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.15, y: 0, z: 0}
+  m_LocalPosition: {x: 0.155, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -112,8 +112,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7493261170733743405}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -178,7 +178,7 @@ Transform:
   m_GameObject: {fileID: 8892923535018041415}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.15, y: 0, z: 0}
+  m_LocalPosition: {x: -0.155, y: 0.4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -339,14 +339,17 @@ PrefabInstance:
       addedObject: {fileID: 1840071796189393668}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6311137735059369463, guid: fb52d4f05d8a41640b5dfe561fd6fa78, type: 3}
-      insertIndex: -1
+      insertIndex: 2
       addedObject: {fileID: 7492022542794723197}
     - targetCorrespondingSourceObject: {fileID: 6311137735059369463, guid: fb52d4f05d8a41640b5dfe561fd6fa78, type: 3}
-      insertIndex: -1
+      insertIndex: 3
       addedObject: {fileID: 2268081861756213758}
     - targetCorrespondingSourceObject: {fileID: 6311137735059369463, guid: fb52d4f05d8a41640b5dfe561fd6fa78, type: 3}
-      insertIndex: -1
+      insertIndex: 4
       addedObject: {fileID: 8450360942024512818}
+    - targetCorrespondingSourceObject: {fileID: 6311137735059369463, guid: fb52d4f05d8a41640b5dfe561fd6fa78, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -9109910951072579651}
   m_SourcePrefab: {fileID: 100100000, guid: fb52d4f05d8a41640b5dfe561fd6fa78, type: 3}
 --- !u!4 &6430952840055671394 stripped
 Transform:
@@ -496,3 +499,16 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &-9109910951072579651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8069364970507335139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b2621806827b4346aeb95dbd08c83ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  barrelBase: {fileID: 1840071796189393668}

@@ -1,3 +1,4 @@
+using Codice.CM.SEIDInfo;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -5,26 +6,29 @@ namespace Kocmoc.Gameplay
 {
     public class Thruster : Module
     {
-        private ShipController controller;
         private Rigidbody2D shipRb;
 
         private Vector2 currentThrustDirection;
 
         public new ThrusterData data
         {
-            get => (ThrusterData)base.data;
-            set => base.data = value;
+            get => base.data as ThrusterData;
+            protected set => base.data = value;
         }
 
-        private void Start()
+        protected override void OnStart()
         {
+            base.OnStart();
             shipRb = ship.GetComponent<Rigidbody2D>();
-
-            if (ship.TryGetComponent(out controller))
-                ConnectControllerEvents();
-            else
-                ship.ControllerAttached += OnControllerAttached;
         }
+
+        protected override void SetController(ShipController controller)
+        {
+            base.SetController(controller);
+            controller.ThrustDirectionUpdated += OnThrustDirectionUpdate;
+        }
+        
+        private void OnThrustDirectionUpdate(Vector2 newThrustDirection) => currentThrustDirection = newThrustDirection;
 
         private void FixedUpdate()
         {
@@ -43,20 +47,17 @@ namespace Kocmoc.Gameplay
             }
             else
                 GetComponent<SpriteRenderer>().color = Color.white;
-
         }
 
-        private void ConnectControllerEvents()
+        public override void Init()
         {
-            controller.ThrustDirectionUpdated += OnThrustDirectionUpdate;
-        }
-
-        private void OnThrustDirectionUpdate(Vector2 newThrustDirection) => currentThrustDirection = newThrustDirection;
-
-        private void OnControllerAttached(ShipController controller)
-        {
-            this.controller = controller;
-            ConnectControllerEvents();
+            cell = GetComponent<ShipCell>();
+            
+            foreach (ModuleData data in cell.data.modules)
+            {
+                this.data = data as ThrusterData;
+                if (this.data != null) break;
+            }
         }
     }
 }

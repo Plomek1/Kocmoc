@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Kocmoc.Gameplay
@@ -5,15 +6,23 @@ namespace Kocmoc.Gameplay
     public abstract class Module : MonoBehaviour
     {
         public ModuleType type => data.type;
-
         public Ship ship => cell.ship;
-        public ShipCell cell {  get; private set; }
-        public ModuleData data {  get; protected set; }
+        public ShipCell cell { get; protected set; }
+        public ModuleData data { get; protected set; }
 
-        public virtual void Init(ShipCell cell, ModuleData data)
+        protected ShipController controller;
+
+        private void Start() => OnStart();
+
+        protected virtual void OnStart()
         {
-            this.cell = cell;
-            this.data = data;
+            if (ship.TryGetComponent(out ShipController controller))
+                SetController(controller);
+            else
+                ship.ControllerAttached += SetController;
         }
+
+        protected virtual void SetController(ShipController controller) => this.controller = controller;
+        public abstract void Init();
     }
 }

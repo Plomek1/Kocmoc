@@ -17,24 +17,22 @@ namespace Kocmoc.Gameplay
         public ShipCellData cell {  get; protected set; }
 
         public virtual void Init() { if (cell.ship != null) OnShipAttach(); }
-        public virtual void OnShipAttach() { }
-        public virtual void OnShipDettach() { }
+        protected virtual void OnShipAttach() { }
+        protected virtual void OnShipDettach() { }
 
-        public abstract Module CreateModuleComponent(ShipCell cell);
-        protected ModuleData(ModuleBlueprint blueprint, ShipCellData cell) 
+        protected ModuleData(ModuleBlueprint blueprint, ShipCellData cell)
         { 
             this.blueprint = blueprint; 
             this.cell = cell;
         }
     }
 
-    [Flags]
     public enum ModuleType
     {
-        None = 0,
-        ControlRoom =    1 << 0,
-        PowerGenerator = 1 << 1,
-        PowerStorage =   1 << 2,
-        Thruster =       1 << 3,
+        ControlRoom,
+        PowerGenerator,
+        PowerStorage,
+        Thruster,
+        Weapon,
     }
 }

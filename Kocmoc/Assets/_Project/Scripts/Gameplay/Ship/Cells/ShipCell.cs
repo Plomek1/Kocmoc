@@ -21,11 +21,9 @@ namespace Kocmoc.Gameplay
             this.data = data;
             this.ship = ship;
 
-            int modulesCount = data.modules.Length;
-            modules = new Module[modulesCount];
-            for (int i = 0; i < modulesCount; i++)
-                modules[i] = data.modules[i].CreateModuleComponent(this);
-        
+            modules = GetComponents<Module>();
+            foreach (Module module in modules) module.Init();
+            
             UpdateRotation();
         }
 

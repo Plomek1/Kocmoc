@@ -43,7 +43,7 @@ namespace Kocmoc.Gameplay
         {
             targetAngle = CalculateAngleToTarget(target);
             rotationState = ShipRotationState.RotatingTowardsTarget;
-            Debug.Log("NIGGERs");
+            AttackTargetChanged?.Invoke(null);
         }
 
         protected void LockOnTarget(Transform target)
