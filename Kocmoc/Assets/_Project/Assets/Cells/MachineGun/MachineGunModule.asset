@@ -14,9 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 4
   projectilePrefab: {fileID: 1362861682613259189, guid: f1acc0618e5ca004a9ac58ddc620a03e, type: 3}
+  damage:
+    damage: 10
+    armorPenetration: 0
+    shieldPenetration: 0
   projectileSpeed: 50
-  projectileLifetime: 2
-  damage: 10
+  projectileLifetime: 8.91
   shootCooldown: 0.2
   shootOffset: 0.999
   rotationSpeed: 30

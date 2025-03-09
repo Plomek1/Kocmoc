@@ -3,13 +3,19 @@ using UnityEngine;
 
 namespace Kocmoc.Gameplay
 {
+    [RequireComponent(typeof(Rigidbody2D))]
     public class Projectile : MonoBehaviour
     {
         private ProjectileData data;
+        private Rigidbody2D rb;
 
         public void Init(ProjectileData data)
         {
             this.data = data;
+
+            rb = GetComponent<Rigidbody2D>();
+            rb.linearVelocity = transform.up * data.speed;
+            
             StartCoroutine(DeleteAfterTime());
         }
 
@@ -21,7 +27,6 @@ namespace Kocmoc.Gameplay
 
         public void Update()
         {
-            transform.position += transform.up * data.speed * Time.deltaTime;
         }
 
         private void Delete()

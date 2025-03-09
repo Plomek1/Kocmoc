@@ -19,5 +19,6 @@ MonoBehaviour:
   mass: 1
   validRotations: -1
   connectionSides: 4
+  maxHealth: 200
   modules:
   - {fileID: 11400000, guid: 9f5ec08c45566a5438975ea8c56d876c, type: 2}
