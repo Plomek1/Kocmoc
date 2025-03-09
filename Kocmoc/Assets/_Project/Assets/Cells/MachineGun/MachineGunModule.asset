@@ -19,7 +19,7 @@ MonoBehaviour:
     armorPenetration: 0
     shieldPenetration: 0
   projectileSpeed: 50
-  projectileLifetime: 8.91
+  projectileLifetime: 2
   shootCooldown: 0.2
   shootOffset: 0.999
   rotationSpeed: 30

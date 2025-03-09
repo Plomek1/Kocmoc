@@ -68,6 +68,11 @@ namespace Kocmoc.Gameplay
         public ShipCell GetCell(Vector2Int coordinates) => cells[data.grid.CoordinatesToIndex(coordinates)];
         public ShipCell GetCell(int index) => cells[index];
 
+        public void DestroyShip()
+        {
+            Destroy(gameObject);
+        }
+
         public void AttachController(ShipType type)
         {
             ShipController controller = null;

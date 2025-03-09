@@ -49,6 +49,12 @@ namespace Kocmoc.Gameplay
 
         public void Die()
         {
+            if (data.coordinates == Vector2Int.zero)
+            {
+                ship.DestroyShip();
+                return;
+            }
+
             RemoveFromShip();
             foreach(int cell in ship.data.GetDanglingCells())
                 ship.GetCell(cell).RemoveFromShip();
