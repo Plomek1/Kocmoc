@@ -19,4 +19,5 @@ MonoBehaviour:
   mass: 20
   validRotations: -1
   connectionSides: -1
+  maxHealth: 2000
   modules: []

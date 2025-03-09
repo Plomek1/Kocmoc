@@ -139,6 +139,11 @@ namespace Kocmoc.Gameplay
             switch(rotationState)
             {
                 case ShipRotationState.LockedOnTarget:
+                    if (!target)
+                    {
+                        rotationState = ShipRotationState.Braking;
+                        break;
+                    }
                     targetAngle = CalculateAngleToTarget(target.position);
                     RotateTowardsTarget(); break;
                 case ShipRotationState.RotatingTowardsTarget:

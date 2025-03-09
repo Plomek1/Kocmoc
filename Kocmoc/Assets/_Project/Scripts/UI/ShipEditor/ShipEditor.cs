@@ -56,7 +56,7 @@ namespace Kocmoc.UI
                         return;
                     }
 
-                    ship.RemoveCell(selectedCell);
+                    ship.GetCell(selectedCell).RemoveFromShip();
                     shipGridSelector.DeselectCell();
                 }
             }

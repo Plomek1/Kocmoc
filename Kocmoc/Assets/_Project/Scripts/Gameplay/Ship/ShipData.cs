@@ -32,6 +32,7 @@ namespace Kocmoc.Gameplay
             UpdateMass();
         }
 
+        public void RemoveCell(int index) => RemoveCell(grid.IndexToCoordinates(index));
         public void RemoveCell(Vector2Int cellCoordinates)
         {
             if (grid.IsInGroup(cellCoordinates, out GridGroup group))
@@ -42,6 +43,12 @@ namespace Kocmoc.Gameplay
             UpdateMass();
         }
 
+        public HashSet<int> GetConnectedCells(Vector2Int? coordinatesToIgnore)
+        {
+            if (coordinatesToIgnore.HasValue)
+                return GetConnectedCells(grid.CoordinatesToIndex(coordinatesToIgnore.Value));
+            return GetConnectedCells();
+        }
         public HashSet<int> GetConnectedCells(int? indexToIgnore = null)
         {
             HashSet<int> visited = new();
@@ -82,6 +89,12 @@ namespace Kocmoc.Gameplay
             return visited;
         }
 
+        public HashSet<int> GetDanglingCells(Vector2Int? coordinatesToIgnore)
+        {
+            if (coordinatesToIgnore.HasValue)
+                return GetDanglingCells(grid.CoordinatesToIndex(coordinatesToIgnore.Value));
+            return GetDanglingCells();
+        }
         public HashSet<int> GetDanglingCells(int? indexToIgnore = null)
         {
             HashSet<int> danglingCells = new();

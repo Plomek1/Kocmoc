@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.Graphs;
 using UnityEngine;
 
 namespace Kocmoc.Gameplay
@@ -18,6 +19,9 @@ namespace Kocmoc.Gameplay
         [Space(10)]
         public Rotation validRotations = Rotation.Up;
         public Rotation connectionSides;
+
+        [Space(10)]
+        public int maxHealth;
 
         [Space(20)]
         public ModuleBlueprint[] modules;
@@ -84,6 +88,9 @@ namespace Kocmoc.Gameplay
         public Rotation validRotations => blueprint.validRotations;
         public float mass      => blueprint.mass;
 
+        public int maxHealth => blueprint.maxHealth;
+        public int health;
+
         public HashSet<Vector2Int> connectionPoints {  get; private set; }
         public ModuleData[] modules {  get; private set; }
         
@@ -127,6 +134,7 @@ namespace Kocmoc.Gameplay
         {
             CalculateConnectionPoints();
             AddModules();
+            health = maxHealth;
         }
 
         public ShipCellData(ShipCellBlueprint blueprint, Vector2Int coordinates, Rotation rotation)

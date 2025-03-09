@@ -57,14 +57,16 @@ namespace Kocmoc.Gameplay
             SpawnCell(cellData);
         }
 
-        public void RemoveCell(Vector2Int cellCoordinates)
+        public void RemoveCell(Vector2Int cellCoordinates) => RemoveCell(data.grid.CoordinatesToIndex(cellCoordinates));
+        public void RemoveCell(int index)
         {
-            if (data.grid.IsInGroup(cellCoordinates, out GridGroup group)) cellCoordinates = group.origin;
-            data.RemoveCell(cellCoordinates);
-            int cellIndex = data.grid.CoordinatesToIndex(cellCoordinates);
-            Destroy(cells[cellIndex].gameObject);
-            cells.Remove(cellIndex);
+            if (data.grid.IsInGroup(index, out GridGroup group)) index = data.grid.CoordinatesToIndex(group.origin);
+            data.RemoveCell(index);
+            cells.Remove(index);
         }
+
+        public ShipCell GetCell(Vector2Int coordinates) => cells[data.grid.CoordinatesToIndex(coordinates)];
+        public ShipCell GetCell(int index) => cells[index];
 
         public void AttachController(ShipType type)
         {
