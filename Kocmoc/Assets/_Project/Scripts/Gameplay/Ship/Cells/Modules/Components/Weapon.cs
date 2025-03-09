@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 
 namespace Kocmoc.Gameplay
 {
@@ -52,11 +52,13 @@ namespace Kocmoc.Gameplay
         private void Shoot()
         {
             Projectile projectile = Instantiate(data.projectilePrefab, firePoints[currentFirePoint].position, barrelBase.rotation);
-            projectile.Init(new ProjectileData() { 
-                source = ship.gameObject, 
-                damage = data.damage, 
+            projectile.Init(new ProjectileData()
+            {
+                source = ship.gameObject,
+                damage = data.damage,
                 speed = data.projectileSpeed,
                 lifetime = data.projectileLifetime,
+                ignores = new List<Transform>() { transform },
             });
 
             timeToShoot = data.shootCooldown;
