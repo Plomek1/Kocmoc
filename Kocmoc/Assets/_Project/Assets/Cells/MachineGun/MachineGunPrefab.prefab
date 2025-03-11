@@ -121,7 +121,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1840071796189393668}
   m_Layer: 0
-  m_Name: Barrels
+  m_Name: BarrelBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -557,7 +557,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2621806827b4346aeb95dbd08c83ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firePoints:
-  - {fileID: 8199131183087401001}
-  - {fileID: 5695740769855583155}
   barrelBase: {fileID: 1840071796189393668}
+  barrels:
+  - firePoint: {fileID: 8199131183087401001}
+    animator: {fileID: 7079830807738597996}
+  - firePoint: {fileID: 5695740769855583155}
+    animator: {fileID: 263597893512640309}

@@ -7,8 +7,8 @@ namespace Kocmoc.Gameplay
     {
         public Transform attackTarget {  get; private set; }
 
-        [SerializeField] private Transform[] firePoints;
         [SerializeField] private Transform barrelBase;
+        [SerializeField] private Barrel[] barrels;
 
         private float timeToShoot;
 
@@ -51,7 +51,7 @@ namespace Kocmoc.Gameplay
 
         private void Shoot()
         {
-            Projectile projectile = Instantiate(data.projectilePrefab, firePoints[currentFirePoint].position, barrelBase.rotation);
+            Projectile projectile = Instantiate(data.projectilePrefab, barrels[currentFirePoint].firePoint.position, barrelBase.rotation);
             projectile.Init(new ProjectileData()
             {
                 source = ship.gameObject,
@@ -61,10 +61,12 @@ namespace Kocmoc.Gameplay
                 ignores = new List<Transform>() { transform },
             });
 
+            barrels[currentFirePoint].animator?.SetTrigger("Shoot");
+
             timeToShoot = data.shootCooldown;
 
             currentFirePoint++;
-            if (currentFirePoint == firePoints.Length) currentFirePoint = 0;
+            if (currentFirePoint == barrels.Length) currentFirePoint = 0;
         }
 
         private void RotateTowardsTarget()
@@ -100,6 +102,14 @@ namespace Kocmoc.Gameplay
                 this.data = data as WeaponData;
                 if (this.data != null) break;
             }
+        }
+
+        [System.Serializable]
+        public struct Barrel
+        {
+            public Transform firePoint;
+            public Animator animator;
+            
         }
     }
 }
