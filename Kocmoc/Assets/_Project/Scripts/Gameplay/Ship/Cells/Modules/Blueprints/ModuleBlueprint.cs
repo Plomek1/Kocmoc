@@ -1,11 +1,10 @@
-using System;
 using UnityEngine;
 
 namespace Kocmoc.Gameplay
 {
     public abstract class ModuleBlueprint : ScriptableObject
     {
-        public ModuleType type;
+        [field: SerializeField] public ModuleType type { get; private set; }
         public abstract ModuleData CreateDataClass(ShipCellData cell);
     }
 

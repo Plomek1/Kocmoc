@@ -37,7 +37,7 @@ namespace Kocmoc.Gameplay
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (data.ignores.Contains(collision.transform)) return;
+            if (collision.isTrigger || data.ignores.Contains(collision.transform)) return;
             if (collision.TryGetComponent(out IDamageable damageable))
             {
                 damageable.Damage(data.damage);

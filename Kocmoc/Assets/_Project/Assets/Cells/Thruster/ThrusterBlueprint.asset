@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ca7edfbf147a3a4186769a42e3f924b, type: 3}
   m_Name: ThrusterBlueprint
   m_EditorClassIdentifier: 
-  prefab: {fileID: 6138459358621207694, guid: c4b34a3203d166f4282f4cbc964c0cb8, type: 3}
-  cellName: Thruster
-  icon: {fileID: 21300000, guid: 23c503aab481bfd4397f352825a9a183, type: 3}
-  size: {x: 1, y: 1}
-  mass: 5
-  validRotations: -1
-  connectionSides: 1
-  maxHealth: 100
-  modules:
+  <prefab>k__BackingField: {fileID: 6138459358621207694, guid: c4b34a3203d166f4282f4cbc964c0cb8, type: 3}
+  <cellName>k__BackingField: Thruster
+  <icon>k__BackingField: {fileID: 21300000, guid: 23c503aab481bfd4397f352825a9a183, type: 3}
+  <size>k__BackingField: {x: 1, y: 1}
+  <mass>k__BackingField: 3
+  <validRotations>k__BackingField: -1
+  <connectionSides>k__BackingField: 1
+  <maxHealth>k__BackingField: 50
+  <modules>k__BackingField:
   - {fileID: 11400000, guid: 684a7482acc700b48a5f333fa9ab1de2, type: 2}

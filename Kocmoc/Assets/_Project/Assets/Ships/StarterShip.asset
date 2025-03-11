@@ -12,44 +12,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48a878acea6a489458791918cd97f226, type: 3}
   m_Name: StarterShip
   m_EditorClassIdentifier: 
-  shipName: 
+  shipName: Starter Ship
   cells:
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 4c9bc1aadea21be4789273e6ee07a8d7, type: 2}
     <coordinates>k__BackingField: {x: 0, y: 0}
     <currentRotation>k__BackingField: 1
+    health: 1000
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 924c085561f034d47917d4cae374ee6f, type: 2}
     <coordinates>k__BackingField: {x: 0, y: 1}
     <currentRotation>k__BackingField: 1
+    health: 400
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 924c085561f034d47917d4cae374ee6f, type: 2}
     <coordinates>k__BackingField: {x: 0, y: 2}
     <currentRotation>k__BackingField: 1
+    health: 400
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 924c085561f034d47917d4cae374ee6f, type: 2}
     <coordinates>k__BackingField: {x: 0, y: 3}
     <currentRotation>k__BackingField: 1
+    health: 400
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 924c085561f034d47917d4cae374ee6f, type: 2}
     <coordinates>k__BackingField: {x: -1, y: 0}
     <currentRotation>k__BackingField: 1
+    health: 400
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 924c085561f034d47917d4cae374ee6f, type: 2}
     <coordinates>k__BackingField: {x: 1, y: 0}
     <currentRotation>k__BackingField: 1
+    health: 400
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
     <coordinates>k__BackingField: {x: 1, y: -1}
     <currentRotation>k__BackingField: 1
+    health: 100
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
     <coordinates>k__BackingField: {x: -1, y: -1}
     <currentRotation>k__BackingField: 1
+    health: 100
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
     <coordinates>k__BackingField: {x: -1, y: 1}
     <currentRotation>k__BackingField: 4
+    health: 100
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
     <coordinates>k__BackingField: {x: 1, y: 1}
     <currentRotation>k__BackingField: 4
+    health: 100
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
     <coordinates>k__BackingField: {x: 2, y: 0}
     <currentRotation>k__BackingField: 8
+    health: 100
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 9c52afba9aabc11499c6f660b983c387, type: 2}
     <coordinates>k__BackingField: {x: -2, y: 0}
     <currentRotation>k__BackingField: 2
+    health: 100
   - <blueprint>k__BackingField: {fileID: 11400000, guid: 2b8176dc5a041a247a243d9fac6ac9d1, type: 2}
     <coordinates>k__BackingField: {x: 0, y: 4}
     <currentRotation>k__BackingField: 1
+    health: 200

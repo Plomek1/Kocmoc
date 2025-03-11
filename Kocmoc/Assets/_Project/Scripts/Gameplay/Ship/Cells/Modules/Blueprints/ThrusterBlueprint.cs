@@ -5,7 +5,7 @@ namespace Kocmoc.Gameplay
     [CreateAssetMenu(fileName = "ThrusterBlueprint", menuName = "Ship/Modules/Thruster Blueprint")]
     public class ThrusterBlueprint : ModuleBlueprint
     {
-        public float thrustForce;
+        [field: SerializeField] public float thrustForce { get; private set; }
         public override ModuleData CreateDataClass(ShipCellData cell) => new ThrusterData(this, cell);
     }
 

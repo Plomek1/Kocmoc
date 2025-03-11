@@ -6,24 +6,24 @@ namespace Kocmoc.Gameplay
     [CreateAssetMenu(fileName = "Cell", menuName = "Ship/Cell Blueprint", order = 1)]
     public class ShipCellBlueprint : ScriptableObject
     {
-        public ShipCell prefab;
-        [Space(10)]
+        [field: SerializeField] public ShipCell prefab { get; private set; }
+        [field: Space(10)]
 
         [Header("General")]
-        public string cellName;
-        public Sprite icon;
-        [Space(10)]
-        public Vector2Int size = Vector2Int.one;
-        public float mass = 1;
-        [Space(10)]
-        public Rotation validRotations = Rotation.Up;
-        public Rotation connectionSides;
+        [field: SerializeField] public string cellName { get; private set; }
+        [field: SerializeField] public Sprite icon { get; private set; }
+        [field: Space(10)]
+        [field: SerializeField] public Vector2Int size { get; private set; } = Vector2Int.one;
+        [field: SerializeField] public float mass { get; private set; } = 1;
+        [field: Space(10)]
+        [field: SerializeField] public Rotation validRotations { get; private set; } = Rotation.Up;
+        [field: SerializeField] public Rotation connectionSides { get; private set; }
 
-        [Space(10)]
-        public int maxHealth;
+        [field: Space(10)]
+        [field: SerializeField] public int maxHealth { get; private set; }
 
-        [Space(20)]
-        public ModuleBlueprint[] modules;
+        [field: Space(20)]
+        [field: SerializeField] public ModuleBlueprint[] modules { get; private set; }
 
         [HideInInspector] public HashSet<Vector2Int> connectionPoints = new();
 
@@ -73,12 +73,9 @@ namespace Kocmoc.Gameplay
     {
         public ShipData ship { get; private set; }
         
-        [field: SerializeField] 
-        public ShipCellBlueprint blueprint { get; private set; }
-        [field: SerializeField]
-        public Vector2Int coordinates {  get; private set; }
-        [field: SerializeField]
-        public Rotation currentRotation { get; private set; } = Rotation.Up;
+        [field: SerializeField] public ShipCellBlueprint blueprint { get; private set; }
+        [field: SerializeField] public Vector2Int coordinates {  get; private set; }
+        [field: SerializeField] public Rotation currentRotation { get; private set; } = Rotation.Up;
 
         public ShipCell prefab => blueprint.prefab;
         public string cellName => blueprint.cellName;

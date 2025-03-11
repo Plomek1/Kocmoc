@@ -5,19 +5,21 @@ namespace Kocmoc.Gameplay
     [CreateAssetMenu(fileName = "WeaponBlueprint", menuName = "Ship/Modules/Weapon Blueprint")]
     public class WeaponBlueprint : ModuleBlueprint
     {
-        [Header("Shooting")]
-        public Projectile projectilePrefab;
+        [field: Header("Shooting")]
+        [field: SerializeField] public Projectile projectilePrefab { get; private set; }
 
-        public DamageData damage;
-        public float projectileSpeed;
-        public float projectileLifetime;
-        public float shootCooldown;
+        [field: SerializeField] public DamageData damage { get; private set; }
+        
+        [field: Space(5)]
+        [field: SerializeField] public float projectileSpeed { get; private set; }
+        [field: SerializeField] public float projectileLifetime { get; private set; }
+        [field: SerializeField] public float shootCooldown { get; private set; }
 
-        [Header("Barrel rotation")]
-        [Range(0f, .999f)]
-        public float shootOffset;
-        public float rotationSpeed;
-        public float rotationRange;
+        [field: Header("Barrel rotation")]
+        [field: Range(0f, .999f)]
+        [field: SerializeField] public float shootOffset { get; private set; }
+        [field: SerializeField] public float rotationSpeed { get; private set; }
+        [field: SerializeField] public float rotationRange { get; private set; }
 
         public override ModuleData CreateDataClass(ShipCellData cell) => new WeaponData(this, cell);
     }

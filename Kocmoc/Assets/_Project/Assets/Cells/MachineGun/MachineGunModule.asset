@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce5b8630aaf53234aa33c64fbfc1eb21, type: 3}
   m_Name: MachineGunModule
   m_EditorClassIdentifier: 
-  type: 4
-  projectilePrefab: {fileID: 1362861682613259189, guid: f1acc0618e5ca004a9ac58ddc620a03e, type: 3}
-  damage:
+  <type>k__BackingField: 4
+  <projectilePrefab>k__BackingField: {fileID: 1362861682613259189, guid: f1acc0618e5ca004a9ac58ddc620a03e, type: 3}
+  <damage>k__BackingField:
     damage: 10
     armorPenetration: 0
     shieldPenetration: 0
-  projectileSpeed: 50
-  projectileLifetime: 2
-  shootCooldown: 0.2
-  shootOffset: 0.999
-  rotationSpeed: 30
-  rotationRange: 25
+  <projectileSpeed>k__BackingField: 40
+  <projectileLifetime>k__BackingField: 3
+  <shootCooldown>k__BackingField: 0.2
+  <shootOffset>k__BackingField: 0.999
+  <rotationSpeed>k__BackingField: 20
+  <rotationRange>k__BackingField: 25
