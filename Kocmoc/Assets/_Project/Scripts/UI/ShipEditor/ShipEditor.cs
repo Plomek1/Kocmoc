@@ -107,7 +107,6 @@ namespace Kocmoc.UI
                 selectedCell.Rotate(rotation);
             
             Vector3 targetRendererRotation = new Vector3(0, 0, rotation.ToAngle());
-            Debug.Log(shipGridSelector);
             shipGridSelector.highlightSpriteRenderer.transform.DOLocalRotate(targetRendererRotation, .04f).SetEase(Ease.OutCubic);
             shipGridSelector.UpdateHighlightSelector();
         }

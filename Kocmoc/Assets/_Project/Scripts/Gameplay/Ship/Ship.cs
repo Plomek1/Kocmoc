@@ -117,7 +117,13 @@ namespace Kocmoc.Gameplay
 
         public List<TooltipField> GetTooltipFields()
         {
-            throw new NotImplementedException();
+            return new()
+            {
+                new TooltipField("Total mass", data.totalMass.ToString()),
+                new TooltipField("Center of mass", data.centerOfMass.ToString()),
+                new TooltipField(),
+                new TooltipField("Rotation speed", data.angularAcceleration.ToString()),
+            };
         }
     }
 

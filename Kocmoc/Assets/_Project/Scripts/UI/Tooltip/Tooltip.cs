@@ -13,8 +13,6 @@ namespace Kocmoc.UI
 
         public virtual void ShowTooltip(ITooltipTarget target)
         {
-            Debug.Log(target);
-
             this.target = target;
             ConnectTargetCallbacks(target);
             UpdateTooltip();

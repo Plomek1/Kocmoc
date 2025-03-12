@@ -1,6 +1,7 @@
 using Kocmoc.Gameplay;
 using UnityEngine;
 using TMPro;
+using System.Text;
 
 namespace Kocmoc.UI
 {
@@ -9,6 +10,7 @@ namespace Kocmoc.UI
         [SerializeField] private ShipEditor editor;
 
         [SerializeField] private TMP_Text nameLabel;
+        [SerializeField] private TMP_Text contentLabel;
 
         private void Awake()
         {
@@ -17,11 +19,15 @@ namespace Kocmoc.UI
 
         protected override void UpdateTooltip()
         {
-            Debug.Log(target);
             Ship targetShip = target as Ship;
             if (!targetShip) return;
 
             nameLabel.text= targetShip.data.name;
+
+            StringBuilder builder = new StringBuilder();
+            foreach (TooltipField field in target.GetTooltipFields())
+                builder.Append(field.GetString());
+            contentLabel.text= builder.ToString();
         }
     }
 }
