@@ -9,6 +9,7 @@ namespace Kocmoc.UI
     {
         public Action Opened;
         public Action Closed;
+        public Action<Ship> ShipChanged;
 
         protected Ship ship;
 
@@ -127,12 +128,6 @@ namespace Kocmoc.UI
             selectedCell.Move(highlightedCell);
         }
 
-        private void OnShipSpawned(Ship ship)
-        {
-            if (ship.type == ShipType.Player)
-                SetShip(ship);
-        }
-
         public void SetShip(Ship ship)
         {
             if (this.ship)
@@ -144,6 +139,7 @@ namespace Kocmoc.UI
             shipGridSelector = ship.gridSelector;
 
             SetCallbacks();
+            ShipChanged?.Invoke(this.ship);
         }
 
         private void SetCallbacks()

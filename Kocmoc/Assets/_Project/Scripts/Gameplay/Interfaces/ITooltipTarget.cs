@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 namespace Kocmoc.Gameplay
 {
     public interface ITooltipTarget
     {
-        Action TooltipUpdate {  get; }
+        UnityEvent TooltipUpdate { get; }
+        UnityEvent TooltipDelete { get; }
 
         List<TooltipField> GetTooltipFields();
     }

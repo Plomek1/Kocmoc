@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine.Events;
 using UnityEngine;
 
 namespace Kocmoc.Gameplay
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public class Ship : MonoBehaviour
+    public class Ship : MonoBehaviour, ITooltipTarget
     {
+        public UnityEvent TooltipUpdate {  get; private set; } = new UnityEvent();
+        public UnityEvent TooltipDelete {  get; private set; } = new UnityEvent();
         public Action<ShipController> ControllerAttached;
 
         public ShipData data { get; private set; }
@@ -17,6 +20,7 @@ namespace Kocmoc.Gameplay
 
         public bool inMotion => rb.linearVelocity.magnitude > 0 || rb.angularVelocity != 0;
         public bool inCombat => false;
+
 
         [SerializeField] private Transform centerOfMass;
         [SerializeField] private Transform cellsRoot;
@@ -55,6 +59,7 @@ namespace Kocmoc.Gameplay
         {
             data.AddCell(cellData);
             SpawnCell(cellData);
+            TooltipUpdate.Invoke();
         }
 
         public void RemoveCell(Vector2Int cellCoordinates) => RemoveCell(data.grid.CoordinatesToIndex(cellCoordinates));
@@ -63,6 +68,7 @@ namespace Kocmoc.Gameplay
             if (data.grid.IsInGroup(index, out GridGroup group)) index = data.grid.CoordinatesToIndex(group.origin);
             data.RemoveCell(index);
             cells.Remove(index);
+            TooltipUpdate.Invoke();
         }
 
         public ShipCell GetCell(Vector2Int coordinates) => cells[data.grid.CoordinatesToIndex(coordinates)];
@@ -70,6 +76,7 @@ namespace Kocmoc.Gameplay
 
         public void DestroyShip()
         {
+            TooltipDelete.Invoke();
             Destroy(gameObject);
         }
 
@@ -106,6 +113,11 @@ namespace Kocmoc.Gameplay
                 rb.inertia = data.totalMass;
                 rb.centerOfMass = data.centerOfMass;
             }
+        }
+
+        public List<TooltipField> GetTooltipFields()
+        {
+            throw new NotImplementedException();
         }
     }
 
