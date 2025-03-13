@@ -1,9 +1,14 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Kocmoc.Gameplay
 {
-    public class ShipCell : MonoBehaviour, IDamageable
+    public class ShipCell : MonoBehaviour, IDamageable, ITooltipTarget
     {
+        public UnityEvent TooltipUpdate { get; private set; } = new UnityEvent();
+        public UnityEvent TooltipDelete{ get; private set; } = new UnityEvent();
+        
         public Ship ship { get; private set; }
         public ShipCellData data { get; private set; }
 
@@ -58,6 +63,14 @@ namespace Kocmoc.Gameplay
             RemoveFromShip();
             foreach(int cell in ship.data.GetDanglingCells())
                 ship.GetCell(cell).RemoveFromShip();
+        }
+
+        public List<TooltipField> GetTooltipFields()
+        {
+            return new()
+            {
+                new TooltipField()
+            };
         }
     }
 }
