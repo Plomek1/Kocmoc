@@ -2310,6 +2310,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2641721959332593053, guid: 868f2c653dd930a4ba4ae78baac40092, type: 3}
+      propertyPath: m_text
+      value: SHIP NAMEe
+      objectReference: {fileID: 0}
     - target: {fileID: 4046000424680645906, guid: 868f2c653dd930a4ba4ae78baac40092, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
